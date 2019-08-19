@@ -57,6 +57,7 @@ namespace Dax.Model.Extractor
         {
             var allColumns = (from t in DaxModel.Tables
                      from c in t.Columns
+                     where c.State == "Ready"
                      select c).ToList();
             var loopColumns = allColumns.SplitList(50); // no more than 9999
             foreach ( var columnSet in loopColumns ) {

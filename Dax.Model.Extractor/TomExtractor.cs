@@ -223,7 +223,7 @@ namespace Dax.Model.Extractor
         {
             Microsoft.AnalysisServices.Server server = new Microsoft.AnalysisServices.Server();
             server.Connect(serverName);
-            Microsoft.AnalysisServices.Database db = server.Databases[databaseName];
+            Microsoft.AnalysisServices.Database db = server.Databases.FindByName(databaseName);
             Microsoft.AnalysisServices.Tabular.Model tomModel = db.Model;
 
             var daxModel = Dax.Model.Extractor.TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);

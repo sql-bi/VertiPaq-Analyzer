@@ -15,7 +15,7 @@ namespace TestDaxModel
     class Program
     {
         static void Main(string[] args)
-        {
+        { 
             //
             // Retrieve DAX model from database connection
             //
