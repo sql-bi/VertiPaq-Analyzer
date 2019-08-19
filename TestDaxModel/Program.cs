@@ -25,7 +25,7 @@ namespace TestDaxModel
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
 
-            var m = TestDaxModelHelper.GetDaxModel(serverName, databaseName);
+            var model = Dax.Model.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.1");
 
             //
             // Test serialization of Dax.Model in JSON file
@@ -37,15 +37,16 @@ namespace TestDaxModel
             // 
             // Create VertiPaq Analyzer views
             //
-            Dax.ViewVpaExport.Model export = new Dax.ViewVpaExport.Model(m);
+            Dax.ViewVpaExport.Model export = new Dax.ViewVpaExport.Model(model);
 
             // Save JSON file
             // ExportJSON(pathOutput, export);
 
-            Console.WriteLine("Saving {0}{1}.VPAX...", pathOutput, databaseName);
+            string filename = pathOutput + databaseName + ".vpax";
+            Console.WriteLine("Saving {0}...", filename);
 
             // Save VPAX file
-            ExportVPAX(databaseName, pathOutput, export);
+            ExportVPAX(filename, model, export);
 
             Console.WriteLine("File saved.");
         }
@@ -94,13 +95,28 @@ namespace TestDaxModel
         /// <param name="databaseName"></param>
         /// <param name="pathOutput"></param>
         /// <param name="export"></param>
-        private static void ExportVPAX(string databaseName, string pathOutput, Dax.ViewVpaExport.Model export)
+        private static void ExportVPAX(string path, Dax.Model.Model model, Dax.ViewVpaExport.Model export)
         {
-            string path = pathOutput + databaseName + ".vpax";
-            Uri uri = PackUriHelper.CreatePartUri(new Uri("DaxModelVpa.json", UriKind.Relative));
+            Uri uriModel = PackUriHelper.CreatePartUri(new Uri("DaxModel.json", UriKind.Relative));
+            Uri uriModelVpa = PackUriHelper.CreatePartUri(new Uri("DaxModelVpa.json", UriKind.Relative));
             using (Package package = Package.Open(path, FileMode.Create))
             {
-                using (TextWriter tw = new StreamWriter(package.CreatePart(uri, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
+                using (TextWriter tw = new StreamWriter(package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
+                {
+                    tw.Write(
+                        JsonConvert.SerializeObject(
+                            model,
+                            Formatting.Indented,
+                            new JsonSerializerSettings
+                            {
+                                PreserveReferencesHandling = PreserveReferencesHandling.All,
+                                ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                            }
+                        )
+                    );
+                    tw.Close();
+                }
+                using (TextWriter tw = new StreamWriter(package.CreatePart(uriModelVpa, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
                 {
                     tw.Write(JsonConvert.SerializeObject(export, Formatting.Indented));
                     tw.Close();
@@ -191,49 +207,5 @@ namespace TestDaxModel
         }
     }
 
-    static class TestDaxModelHelper
-    {
-        public static Dax.Model.Model GetDaxModel(string serverName, string databaseName, bool readStatisticsFromData = true)
-        {
-            Microsoft.AnalysisServices.Server server = new Microsoft.AnalysisServices.Server();
-            server.Connect(serverName);
-            Microsoft.AnalysisServices.Database db = server.Databases[databaseName];
-            Microsoft.AnalysisServices.Tabular.Model tomModel = db.Model;
-            var daxModel = Dax.Model.Extractor.TomExtractor.GetDaxModel(tomModel, "TestDaxModel", "0.1");
-
-            var connectionString = GetConnectionString(serverName, databaseName);
-
-            using (var connection = new OleDbConnection(connectionString))
-            {
-                // Populate statistics from DMV
-                Dax.Model.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, databaseName, "TestDaxModel", "0.1");
-
-                // Populate statistics by querying the data model
-                if (readStatisticsFromData)
-                {
-                    Dax.Model.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection);
-                }
-            }
-            return daxModel;
-        }
-
-        private static string GetConnectionString(string dataSourceOrConnectionString, string databaseName)
-        {
-            var csb = new OleDbConnectionStringBuilder();
-            try
-            {
-                csb.ConnectionString = dataSourceOrConnectionString;
-            }
-            catch
-            {
-                // Assume servername
-                csb.Provider = "MSOLAP";
-                csb.DataSource = dataSourceOrConnectionString;
-            }
-            csb["Initial Catalog"] = databaseName;
-            return csb.ConnectionString;
-        }
-
-    }
 
 }

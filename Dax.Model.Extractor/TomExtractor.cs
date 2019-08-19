@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -218,5 +219,46 @@ namespace Dax.Model.Extractor
             return extractor.DaxModel;
         }
 
+        public static Dax.Model.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true)
+        {
+            Microsoft.AnalysisServices.Server server = new Microsoft.AnalysisServices.Server();
+            server.Connect(serverName);
+            Microsoft.AnalysisServices.Database db = server.Databases[databaseName];
+            Microsoft.AnalysisServices.Tabular.Model tomModel = db.Model;
+
+            var daxModel = Dax.Model.Extractor.TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
+
+            var connectionString = GetConnectionString(serverName, databaseName);
+
+            using (var connection = new OleDbConnection(connectionString))
+            {
+                // Populate statistics from DMV
+                Dax.Model.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, databaseName, applicationName, applicationVersion);
+
+                // Populate statistics by querying the data model
+                if (readStatisticsFromData)
+                {
+                    Dax.Model.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection);
+                }
+            }
+            return daxModel;
+        }
+
+        private static string GetConnectionString(string dataSourceOrConnectionString, string databaseName)
+        {
+            var csb = new OleDbConnectionStringBuilder();
+            try
+            {
+                csb.ConnectionString = dataSourceOrConnectionString;
+            }
+            catch
+            {
+                // Assume servername
+                csb.Provider = "MSOLAP";
+                csb.DataSource = dataSourceOrConnectionString;
+            }
+            csb["Initial Catalog"] = databaseName;
+            return csb.ConnectionString;
+        }
     }
 }
