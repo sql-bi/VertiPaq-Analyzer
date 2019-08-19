@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Company>SQLBI</Company>
+    <Authors>Marco Russo</Authors>
+    <Product>Dax.Model VertiPaq Analyzer</Product>
+    <Description>Tabular model object model including statistics from DMV and data distribution for VertiPaq Analyzer and other tools.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/sql-bi/VertiPaq-Analyzer</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer</PackageProjectUrl>
+    <PackageIconUrl>https://www.sqlbi.com/wp-content/uploads/VertipaqAnalyzer-1.svg</PackageIconUrl>
+    <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

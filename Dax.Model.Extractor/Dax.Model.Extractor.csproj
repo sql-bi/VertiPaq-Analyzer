@@ -63,6 +63,7 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Dax.Model.Extractor.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

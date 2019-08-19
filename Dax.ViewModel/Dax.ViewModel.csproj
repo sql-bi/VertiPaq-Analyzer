@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Marco Russo</Authors>
+    <Company>SQLBI</Company>
+    <Product>Dax.ViewModel VertiPaq Analyzer</Product>
+    <Description>ViewModel to display in a VertiPaq Analyzer viewer the Dax.Model data.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer</PackageProjectUrl>
+    <PackageIconUrl>https://www.sqlbi.com/wp-content/uploads/VertipaqAnalyzer-1.svg</PackageIconUrl>
+    <RepositoryUrl>https://github.com/sql-bi/VertiPaq-Analyzer</RepositoryUrl>
+    <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
