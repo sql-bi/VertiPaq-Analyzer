@@ -27,7 +27,9 @@ namespace Dax.Model.Extractor
 
         public void LoadTableStatistics()
         {
-            var tableList = DaxModel.Tables.Select(t => t.TableName.Name).ToList();
+            // only get table stats if the table has more than 1 user created column 
+            // (every table has a RowNumber column so we only want tables with more than 1 column)
+            var tableList = DaxModel.Tables.Where(t => t.Columns.Count > 1).Select(t => t.TableName.Name).ToList();
             var loopTables = tableList.SplitList(50);
             foreach ( var tableSet in loopTables ) {
                 var dax = "EVALUATE UNION(";
