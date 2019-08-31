@@ -219,11 +219,17 @@ namespace Dax.Model.Extractor
             return extractor.DaxModel;
         }
 
-        public static Dax.Model.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true)
+        public static Microsoft.AnalysisServices.Database GetDatabase(string serverName, string databaseName)
         {
             Microsoft.AnalysisServices.Server server = new Microsoft.AnalysisServices.Server();
             server.Connect(serverName);
             Microsoft.AnalysisServices.Database db = server.Databases.FindByName(databaseName);
+            return db;
+        }
+
+        public static Dax.Model.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true)
+        {
+            Microsoft.AnalysisServices.Database db = GetDatabase(serverName, databaseName);
             Microsoft.AnalysisServices.Tabular.Model tomModel = db.Model;
 
             var daxModel = Dax.Model.Extractor.TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>SQLBI</Company>
     <Authors>Marco Russo</Authors>
     <Product>Dax.Model VertiPaq Analyzer</Product>
@@ -12,7 +12,7 @@
     <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer</PackageProjectUrl>
     <PackageIconUrl>https://www.sqlbi.com/wp-content/uploads/VertipaqAnalyzer-1.svg</PackageIconUrl>
     <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
-    <Version>1.0.0</Version>
+    <Version>1.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Dax.Model.Extractor")]
-[assembly: AssemblyDescription("Populate a Dax.Model extracting data from TOM and Analysis Services.")]
+[assembly: AssemblyTitle("Dax.Vpax")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SQLBI")]
-[assembly: AssemblyProduct("Dax.Model.Extractor")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Dax.Vpax")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ed728880-f58a-4198-bb71-d24ac4883236")]
+[assembly: Guid("f57c3cbb-db2c-4e8c-a2b5-81803913e04a")]
 
 // Version information for an assembly consists of the following four values:
 //
