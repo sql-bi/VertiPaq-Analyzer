@@ -7,6 +7,7 @@ using System.Data.OleDb;
 using Newtonsoft.Json;
 using System.IO.Packaging;
 using System.IO;
+using Dax.Vpax.Tools;
 
 // TODO
 // - Import from DMV 1100 (check for missing attributes?)
@@ -24,8 +25,8 @@ namespace TestDaxModel
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
-
-            var model = Dax.Model.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.1");
+            var database = Dax.Model.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
+            var daxModel = Dax.Model.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.1");
 
             //
             // Test serialization of Dax.Model in JSON file
@@ -37,7 +38,7 @@ namespace TestDaxModel
             // 
             // Create VertiPaq Analyzer views
             //
-            Dax.ViewVpaExport.Model export = new Dax.ViewVpaExport.Model(model);
+            Dax.ViewVpaExport.Model viewVpa = new Dax.ViewVpaExport.Model(daxModel);
 
             // Save JSON file
             // ExportJSON(pathOutput, export);
@@ -46,11 +47,19 @@ namespace TestDaxModel
             Console.WriteLine("Saving {0}...", filename);
 
             // Save VPAX file
-            ExportVPAX(filename, model, export);
-
+            // old internal version ExportVPAX(filename, daxModel, export);
+            VpaxTools.ExportVpax(filename, daxModel, viewVpa, database);
             Console.WriteLine("File saved.");
+            ImportExport();
         }
 
+        private static void ImportExport()
+        {
+            string filename = @"c:\temp\AdventureWorks.vpax";
+            string fileout = @"c:\temp\export.vpax";
+            var content = VpaxTools.ImportVpax(filename);
+            VpaxTools.ExportVpax(fileout, content.DaxModel, content.ViewVpa, content.TomDatabase);
+        }
         /// <summary>
         /// Export the Dax.Model in JSON format
         /// </summary>
@@ -88,7 +97,7 @@ namespace TestDaxModel
             System.IO.File.WriteAllText(pathOutput + "export.json", json);
             // Console.WriteLine(json);
         }
-
+        /*
         /// <summary>
         /// Export to VertiPaq Analyzer (VPAX) file
         /// </summary>
@@ -124,7 +133,7 @@ namespace TestDaxModel
                 package.Close();
             }
         }
-
+        */
         /// <summary>
         /// Dump internal structure for permissions
         /// </summary>
