@@ -50,7 +50,7 @@ namespace TestDaxModel
             // old internal version ExportVPAX(filename, daxModel, export);
             VpaxTools.ExportVpax(filename, daxModel, viewVpa, database);
             Console.WriteLine("File saved.");
-            ImportExport();
+            // ImportExport();
         }
 
         private static void ImportExport()
