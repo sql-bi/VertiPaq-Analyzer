@@ -16,12 +16,18 @@ namespace TestDaxModel
     class Program
     {
         static void Main(string[] args)
-        { 
+        {
             //
             // Retrieve DAX model from database connection
             //
-            const string serverName = @"localhost\tab17";
-            const string databaseName = "AdventureWorks";
+            // String connection for Power Pivot
+            // const string serverName = @"http://localhost:9000/xmla";
+            // const string databaseName = "Microsoft_SQLServer_AnalysisServices";
+
+            //            const string serverName = @"localhost\tab17";
+            //          const string databaseName = "AdventureWorks";
+            const string serverName = "localhost:63041";
+            const string databaseName = "4b071c24-b2e6-49b0-a3b6-93610cfe1d0c";
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);

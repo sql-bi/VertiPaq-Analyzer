@@ -563,6 +563,11 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'R$'";
 
         public void PopulateRelationships()
         {
+            // Skip the PopulateRelationships task if the compatibility level is older than TOM
+            if (this.DaxModel.CompatibilityLevel < 1200)
+            {
+                return;
+            }
             const string QUERY_RELATIONSHIPS = @"
 SELECT    
     [ID] AS [RelationshipID],
