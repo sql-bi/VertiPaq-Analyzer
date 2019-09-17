@@ -224,6 +224,8 @@ namespace Dax.Model.Extractor
             Microsoft.AnalysisServices.Server server = new Microsoft.AnalysisServices.Server();
             server.Connect(serverName);
             Microsoft.AnalysisServices.Database db = server.Databases.FindByName(databaseName);
+            // if db is null either it does not exist or we do not have admin rights to it
+            if (db == null) { throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it."); }
             return db;
         }
 
