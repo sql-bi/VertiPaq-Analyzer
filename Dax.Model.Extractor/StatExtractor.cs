@@ -32,9 +32,12 @@ namespace Dax.Model.Extractor
             var tableList = DaxModel.Tables.Where(t => t.Columns.Count > 1).Select(t => t.TableName.Name).ToList();
             var loopTables = tableList.SplitList(50);
             foreach ( var tableSet in loopTables ) {
-                var dax = "EVALUATE UNION(";
+                var dax = "EVALUATE ";
+                //only union if there is more than 1 column in the columnSet
+                if (tableSet.Count > 1) { dax += "UNION("; }
                 dax += string.Join(",", tableSet.Select(tableName => $"\n    ROW(\"Table\", \"{tableName}\", \"Cardinality\", COUNTROWS('{tableName}'))").ToArray());
-                dax += ")";
+                //only close the union call if there is more than 1 column in the columnSet
+                if (tableSet.Count > 1) { dax += ")"; }
 
                 var cmd = new OleDbCommand(dax, Connection);
                 using (var reader = cmd.ExecuteReader()) {
@@ -64,11 +67,14 @@ namespace Dax.Model.Extractor
             var loopColumns = allColumns.SplitList(50); // no more than 9999
             foreach ( var columnSet in loopColumns ) {
                 var idString = 0;
-                var dax = "EVALUATE UNION(";
+                var dax = "EVALUATE ";
+                //only union if there is more than 1 column in the columnSet
+                if (columnSet.Count > 1) { dax += "UNION("; } 
                 dax += string.Join(",", columnSet
                     .Where(c => !c.IsRowNumber )
                     .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{c.Table.TableName.Name}\", \"Column\", \"{idString++:0000}{c.ColumnName.Name}\", \"Cardinality\", DISTINCTCOUNT({Col(c)}))").ToList());
-                dax += ")";
+                //only close the union call if there is more than 1 column in the columnSet
+                if (columnSet.Count > 1) { dax += ")"; } 
 
                 var cmd = new OleDbCommand(dax, Connection);
                 using (var reader = cmd.ExecuteReader()) {
