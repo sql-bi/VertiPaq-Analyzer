@@ -6,9 +6,9 @@ namespace Dax.ViewVpaExport
     public class Table
     {
         [JsonIgnore]
-        private Dax.Model.Table _Table;
+        private Dax.Metadata.Table _Table;
 
-        internal Table(Dax.Model.Table table)
+        internal Table(Dax.Metadata.Table table)
         {
             this._Table = table;
         }

@@ -4,24 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dax.Model
+namespace Dax.Metadata
 {
-    public class DaxNote
+    /// <summary>
+    /// Support future tokenization of names to anonymize a data model
+    /// </summary>
+    public class DaxName
     {
-        public string Note { get; }
+        public string Name { get; }
 
-        public DaxNote(string note)
+        public DaxName( string name )
         {
-            this.Note = note;
+            this.Name = name;
         }
-        private DaxNote() { }
-
-        public static bool operator ==(DaxNote a, DaxNote b)
+        private DaxName() { }
+       
+        public static bool operator == ( DaxName a, DaxName b )
         {
-            return (a?.Note == b?.Note);
+            return (a?.Name == b?.Name);
         }
 
-        public static bool operator !=(DaxNote a, DaxNote b)
+        public static bool operator !=(DaxName a, DaxName b)
         {
             return !(a == b);
         }
@@ -38,8 +41,7 @@ namespace Dax.Model
 
         public override string ToString()
         {
-            return this.Note;
+            return this.Name;
         }
     }
-
 }

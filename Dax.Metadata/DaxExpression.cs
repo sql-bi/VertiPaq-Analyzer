@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dax.Model
+namespace Dax.Metadata
 {
     /// <summary>
     /// Support future tokenization of names to anonymize a data model

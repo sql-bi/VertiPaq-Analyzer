@@ -6,9 +6,9 @@ namespace Dax.ViewModel
 {
     public class VpaUserHierarchy
     {
-        private Dax.Model.UserHierarchy UserHierarchy;
+        private Dax.Metadata.UserHierarchy UserHierarchy;
 
-        internal VpaUserHierarchy(Dax.Model.UserHierarchy userHierarchy)
+        internal VpaUserHierarchy(Dax.Metadata.UserHierarchy userHierarchy)
         {
             this.UserHierarchy = userHierarchy;
         }

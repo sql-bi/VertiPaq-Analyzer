@@ -6,9 +6,9 @@ namespace Dax.ViewModel
 {
     public class VpaPartition
     {
-        private Dax.Model.Partition Partition;
+        private Dax.Metadata.Partition Partition;
 
-        internal VpaPartition(Dax.Model.Partition partition)
+        internal VpaPartition(Dax.Metadata.Partition partition)
         {
             this.Partition = partition;
         }

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
 
-namespace Dax.Model
+namespace Dax.Metadata
 {
     public class Role
     {

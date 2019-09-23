@@ -6,9 +6,9 @@ namespace Dax.ViewModel
 {
     public class VpaMeasure
     {
-        private Dax.Model.Measure Measure;
+        private Dax.Metadata.Measure Measure;
 
-        internal VpaMeasure(Dax.Model.Measure measure)
+        internal VpaMeasure(Dax.Metadata.Measure measure)
         {
             this.Measure = measure;
         }

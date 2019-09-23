@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Dax.Model.Extractor
+namespace Dax.Metadata.Extractor
 {
     public static class Util
     {

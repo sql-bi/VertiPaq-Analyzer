@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Data.OleDb;
 using Tom = Microsoft.AnalysisServices.Tabular;
 
-namespace Dax.Model.Extractor
+namespace Dax.Metadata.Extractor
 {
     public class ExtractorException : Exception
     {
@@ -23,8 +23,8 @@ namespace Dax.Model.Extractor
     {
         protected OleDbConnection Connection { get; private set; }
 
-        public Dax.Model.Model DaxModel { get; private set; }
-        public DmvExtractor(Dax.Model.Model daxModel, OleDbConnection connection, string databaseName, string extractorApp, string extractorVersion)
+        public Dax.Metadata.Model DaxModel { get; private set; }
+        public DmvExtractor(Dax.Metadata.Model daxModel, OleDbConnection connection, string databaseName, string extractorApp, string extractorVersion)
         {
             Connection = connection;
             Connection.Open();
@@ -39,14 +39,18 @@ namespace Dax.Model.Extractor
             // Create a DAX model if it is not provided in the constructor arguments
             // This should be outsider the constructor, but we want to make sure the database name is 
             // validated before using other DMVs
-            DaxModel = daxModel ?? new Dax.Model.Model(tomExtractorAssemblyName.Name, tomExtractorAssemblyName.Version.ToString(), extractorApp, extractorVersion);
+            DaxModel = daxModel ?? new Dax.Metadata.Model(tomExtractorAssemblyName.Name, tomExtractorAssemblyName.Version.ToString(), extractorApp, extractorVersion);
             DaxModel.ModelName = databaseName;
             DaxModel.CompatibilityLevel = compatibilityLevel;
+
+            // Update ExtractionDate
+            DaxModel.ExtractionDate = DateTime.UtcNow;
+
         }
 
-        public static void PopulateFromDmv(Dax.Model.Model daxModel, OleDbConnection connection, string databaseName, string extractorApp, string extractorVersion)
+        public static void PopulateFromDmv(Dax.Metadata.Model daxModel, OleDbConnection connection, string databaseName, string extractorApp, string extractorVersion)
         {
-            Dax.Model.Extractor.DmvExtractor de = new Dax.Model.Extractor.DmvExtractor(daxModel, connection, databaseName, extractorApp, extractorVersion);
+            Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, databaseName, extractorApp, extractorVersion);
             de.PopulateTables();
             de.PopulateColumns();
             de.PopulateUserHierarchies();
@@ -89,7 +93,7 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
             var daxTable = GetDaxTable(tableName);
             var daxColumn = daxTable.Columns.Where(t => t.Dmv1100ColumnId.Equals(columnDmv1100Id)).FirstOrDefault();
             if (daxColumn == null) {
-                daxColumn = new Dax.Model.Column(daxTable);
+                daxColumn = new Dax.Metadata.Column(daxTable);
                 daxColumn.SetDmv1100ColumnId(columnDmv1100Id);
 
                 daxTable.Columns.Add(daxColumn);
@@ -121,9 +125,9 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
         {
             var daxTable = DaxModel.Tables.Where(t => t.TableName.Name.Equals(tableName)).FirstOrDefault();
             if (daxTable == null) {
-                daxTable = new Dax.Model.Table(DaxModel)
+                daxTable = new Dax.Metadata.Table(DaxModel)
                 {
-                    TableName = new Dax.Model.DaxName(tableName)
+                    TableName = new Dax.Metadata.DaxName(tableName)
                 };
 
                 DaxModel.Tables.Add(daxTable);
@@ -155,9 +159,9 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
             var daxTable = GetDaxTable(tableName);
             var daxColumn = daxTable.Columns.Where(t => t.ColumnName.Name.Equals(columnName)).FirstOrDefault();
             if (daxColumn == null) {
-                daxColumn = new Dax.Model.Column(daxTable)
+                daxColumn = new Dax.Metadata.Column(daxTable)
                 {
-                    ColumnName = new Dax.Model.DaxName(columnName),
+                    ColumnName = new Dax.Metadata.DaxName(columnName),
                     IsRowNumber = (columnName == "RowNumber")  // TODO Not a safe technique, but it should work most of the times for DMV 1100
                 };
 
@@ -172,9 +176,9 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
             var daxTable = GetDaxTable(tableName);
             var daxPartition = daxTable.Partitions.Where(p => p.PartitionName.Name.Equals(partitionName)).FirstOrDefault();
             if (daxPartition == null) {
-                daxPartition = new Dax.Model.Partition(daxTable)
+                daxPartition = new Dax.Metadata.Partition(daxTable)
                 {
-                    PartitionName = new Dax.Model.DaxName(partitionName),
+                    PartitionName = new Dax.Metadata.DaxName(partitionName),
                     PartitionNumber = tablePartitionNumber
                 };
 
@@ -190,7 +194,7 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
             var daxPartition = GetDaxPartition(tableName, partitionName, tablePartitionNumber);
             var daxColumnSegment = daxColumn.ColumnSegments.Where(s => s.SegmentNumber == segmentNumber).FirstOrDefault();
             if (daxColumnSegment == null) {
-                daxColumnSegment = new Dax.Model.ColumnSegment(daxColumn, daxPartition)
+                daxColumnSegment = new Dax.Metadata.ColumnSegment(daxColumn, daxPartition)
                 {
                     SegmentNumber = segmentNumber
                 };
@@ -212,9 +216,9 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
                         && h.SegmentNumber == segmentNumber
                 ).FirstOrDefault();
             if (daxColumnHierarchy == null) {
-                daxColumnHierarchy = new Dax.Model.ColumnHierarchy(daxColumn)
+                daxColumnHierarchy = new Dax.Metadata.ColumnHierarchy(daxColumn)
                 {
-                    StructureName = new Dax.Model.DaxName(structureName),
+                    StructureName = new Dax.Metadata.DaxName(structureName),
                     TablePartitionNumber = tablePartitionNumber,
                     SegmentNumber = segmentNumber
                 };
@@ -232,9 +236,9 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
             var daxUserHierarchy =
                 daxTable.UserHierarchies.Where(h => h.HierarchyName.Name == userHierarchyName).FirstOrDefault();
             if (daxUserHierarchy == null) {
-                daxUserHierarchy = new Dax.Model.UserHierarchy(daxTable)
+                daxUserHierarchy = new Dax.Metadata.UserHierarchy(daxTable)
                 {
-                    HierarchyName = new Dax.Model.DaxName(userHierarchyName)
+                    HierarchyName = new Dax.Metadata.DaxName(userHierarchyName)
                 };
             }
 

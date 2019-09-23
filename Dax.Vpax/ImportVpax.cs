@@ -34,10 +34,10 @@ namespace Dax.Vpax
             }
         }
 
-        public Model.Model ImportModel()
+        public Metadata.Model ImportModel()
         {
             string viewVpa = ReadPackageContentAsString(VpaxFormat.DAXMODEL);
-            return JsonConvert.DeserializeObject(viewVpa, typeof(Model.Model)) as Model.Model;
+            return JsonConvert.DeserializeObject(viewVpa, typeof(Metadata.Model)) as Metadata.Model;
         }
 
         /* ViewVpa cannot be imported - it is designed only to be exported to VertiPaq Analyzer in Excel

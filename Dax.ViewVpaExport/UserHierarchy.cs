@@ -7,9 +7,9 @@ namespace Dax.ViewVpaExport
     public class UserHierarchy
     {
         [JsonIgnore]
-        private Dax.Model.UserHierarchy _UserHierarchy;
+        private Dax.Metadata.UserHierarchy _UserHierarchy;
 
-        internal UserHierarchy(Dax.Model.UserHierarchy userHierarchy)
+        internal UserHierarchy(Dax.Metadata.UserHierarchy userHierarchy)
         {
             _UserHierarchy = userHierarchy;
         }

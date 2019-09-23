@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Dax.Model
+namespace Dax.Metadata
 {
     public class CalculationGroup
     {

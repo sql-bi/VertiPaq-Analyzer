@@ -7,9 +7,9 @@ namespace Dax.ViewModel
 {
     public class VpaTablePermission
     {
-        private Dax.Model.TablePermission TablePermission;
+        private Dax.Metadata.TablePermission TablePermission;
 
-        internal VpaTablePermission(Dax.Model.TablePermission tablePermission)
+        internal VpaTablePermission(Dax.Metadata.TablePermission tablePermission)
         {
             this.TablePermission = tablePermission;
         }

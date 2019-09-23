@@ -20,7 +20,7 @@ namespace Dax.Vpax.Tools
         /// <param name="pathOutput"></param>
         /// <param name="viewVpa"></param>
         /// <param name="database"></param>
-        public static void ExportVpax(string path, Dax.Model.Model model, Dax.ViewVpaExport.Model viewVpa = null, Microsoft.AnalysisServices.Database database = null)
+        public static void ExportVpax(string path, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, Microsoft.AnalysisServices.Database database = null)
         {
             using (ExportVpax exportVpax = new ExportVpax(path))
             {
@@ -42,7 +42,7 @@ namespace Dax.Vpax.Tools
 
         public struct VpaxContent
         {
-            public Dax.Model.Model DaxModel;
+            public Dax.Metadata.Model DaxModel;
             public Dax.ViewVpaExport.Model ViewVpa;
             public Microsoft.AnalysisServices.Database TomDatabase;
         }

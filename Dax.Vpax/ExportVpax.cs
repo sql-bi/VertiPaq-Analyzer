@@ -41,7 +41,7 @@ namespace Dax.Vpax
             }
         }
 
-        public void ExportModel(Model.Model model)
+        public void ExportModel(Metadata.Model model)
         {
             Uri uriModel = PackUriHelper.CreatePartUri(new Uri(VpaxFormat.DAXMODEL, UriKind.Relative));
             using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))

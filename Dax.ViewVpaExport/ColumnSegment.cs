@@ -6,9 +6,9 @@ namespace Dax.ViewVpaExport
     public class ColumnSegment
     {
         [JsonIgnore]
-        private Dax.Model.ColumnSegment _ColumnSegment;
+        private Dax.Metadata.ColumnSegment _ColumnSegment;
 
-        internal ColumnSegment(Dax.Model.ColumnSegment columnSegment)
+        internal ColumnSegment(Dax.Metadata.ColumnSegment columnSegment)
         {
             this._ColumnSegment = columnSegment;
         }

@@ -7,8 +7,8 @@ namespace Dax.ViewModel
 {
     public class VpaColumn
     {
-        private Dax.Model.Column Column;
-        internal VpaColumn(Dax.Model.Column column )
+        private Dax.Metadata.Column Column;
+        internal VpaColumn(Dax.Metadata.Column column )
         {
             this.Column = column;
         }

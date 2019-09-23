@@ -7,9 +7,9 @@ namespace Dax.ViewModel
 {
     public class VpaTable
     {
-        private Dax.Model.Table Table;
+        private Dax.Metadata.Table Table;
 
-        internal VpaTable( Model.Table table )
+        internal VpaTable( Metadata.Table table )
         {
             this.Table = table;
         }
@@ -49,7 +49,7 @@ namespace Dax.ViewModel
 
         public int SegmentsNumber {
             get {
-                return this.Table.Columns.First<Model.Column>().ColumnSegments.Count();
+                return this.Table.Columns.First<Metadata.Column>().ColumnSegments.Count();
             }
         }
         public int PartitionsNumber {

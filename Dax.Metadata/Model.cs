@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dax.Model
+namespace Dax.Metadata
 {
     public class Model
     {
@@ -37,6 +37,8 @@ namespace Dax.Model
 
         public string ModelName { get; set; }
         public int CompatibilityLevel { get; set; }
+
+        public DateTime ExtractionDate { get; set; }
 
         public List<Table> Tables { get; }
         public List<Relationship> Relationships { get; }

@@ -6,7 +6,7 @@ namespace Dax.ViewModel
 {
     public class VpaModel
     {
-        public Dax.Model.Model Model { get; private set; }
+        public Dax.Metadata.Model Model { get; private set; }
         public IEnumerable<VpaTable> Tables { get { return from t in this.Model.Tables select new VpaTable( t ); } }
         public IEnumerable<VpaColumn> Columns {
             get {
@@ -28,7 +28,7 @@ namespace Dax.ViewModel
         /*
         public List<VpaRole> Roles { get; }
         */
-        public VpaModel( Dax.Model.Model model )
+        public VpaModel( Dax.Metadata.Model model )
         {
             this.Model = model;
         }

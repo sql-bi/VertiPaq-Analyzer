@@ -12,7 +12,7 @@ namespace Dax.ViewVpaExport
         {
             return string.Format("'{0}'[{1}]", tableName, columnName);
         }
-        internal static string GetFullColumnName(Dax.Model.Column column)
+        internal static string GetFullColumnName(Dax.Metadata.Column column)
         {
             return GetFullColumnName(column.Table.TableName.Name, column.ColumnName.Name);
         }
@@ -23,8 +23,8 @@ namespace Dax.ViewVpaExport
 
         #endregion
         [JsonIgnore]
-        private Dax.Model.Column _Column;
-        internal Column(Dax.Model.Column column)
+        private Dax.Metadata.Column _Column;
+        internal Column(Dax.Metadata.Column column)
         {
             this._Column = column;
         }

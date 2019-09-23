@@ -8,8 +8,8 @@ namespace Dax.ViewVpaExport
     public class Measure
     {
         [JsonIgnore]
-        private Dax.Model.Measure _Measure;
-        internal Measure(Dax.Model.Measure measure)
+        private Dax.Metadata.Measure _Measure;
+        internal Measure(Dax.Metadata.Measure measure)
         {
             this._Measure = measure;
         }

@@ -3,7 +3,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
 
-namespace Dax.Model
+namespace Dax.Metadata
 {
     [JsonObject(IsReference =true)]
     public class Table

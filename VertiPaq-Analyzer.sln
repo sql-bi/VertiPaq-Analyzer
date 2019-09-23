@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Model", "Dax.Model\Dax.Model.csproj", "{47F5166D-B4D7-4530-87C0-A239549B96F1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dax.Model.Extractor", "Dax.Model.Extractor\Dax.Model.Extractor.csproj", "{ED728880-F58A-4198-BB71-D24AC4883236}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.ViewModel", "Dax.ViewModel\Dax.ViewModel.csproj", "{FCFC0033-EA10-4A50-BEFE-EFD02CF6B35C}"
@@ -17,16 +15,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDaxWpf", "TestDaxWpf\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dax.Vpax", "Dax.Vpax\Dax.Vpax.csproj", "{F57C3CBB-DB2C-4E8C-A2B5-81803913E04A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dax.Metadata", "Dax.Metadata\Dax.Metadata.csproj", "{A665075A-AFD6-4902-8CC6-E762C4297DAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{47F5166D-B4D7-4530-87C0-A239549B96F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47F5166D-B4D7-4530-87C0-A239549B96F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47F5166D-B4D7-4530-87C0-A239549B96F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47F5166D-B4D7-4530-87C0-A239549B96F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED728880-F58A-4198-BB71-D24AC4883236}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED728880-F58A-4198-BB71-D24AC4883236}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED728880-F58A-4198-BB71-D24AC4883236}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{F57C3CBB-DB2C-4E8C-A2B5-81803913E04A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F57C3CBB-DB2C-4E8C-A2B5-81803913E04A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F57C3CBB-DB2C-4E8C-A2B5-81803913E04A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A665075A-AFD6-4902-8CC6-E762C4297DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A665075A-AFD6-4902-8CC6-E762C4297DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A665075A-AFD6-4902-8CC6-E762C4297DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A665075A-AFD6-4902-8CC6-E762C4297DAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

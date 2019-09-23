@@ -31,8 +31,8 @@ namespace TestDaxModel
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
-            var database = Dax.Model.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
-            var daxModel = Dax.Model.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.1");
+            var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
+            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.1");
 
             //
             // Test serialization of Dax.Model in JSON file
@@ -71,7 +71,7 @@ namespace TestDaxModel
         /// </summary>
         /// <param name="pathOutput"></param>
         /// <param name="m"></param>
-        private static void ExportModelJSON(string pathOutput, Dax.Model.Model m)
+        private static void ExportModelJSON(string pathOutput, Dax.Metadata.Model m)
         {
             var json = JsonConvert.SerializeObject(
                 m,
@@ -144,7 +144,7 @@ namespace TestDaxModel
         /// Dump internal structure for permissions
         /// </summary>
         /// <param name="m"></param>
-        private static void DumpPermissions(Dax.Model.Model m)
+        private static void DumpPermissions(Dax.Metadata.Model m)
         {
             Console.WriteLine("------------------------");
             foreach (var t in m.Tables)
@@ -161,7 +161,7 @@ namespace TestDaxModel
         /// Dump internal structure for Relationships
         /// </summary>
         /// <param name="m"></param>
-        private static void DumpRelationships(Dax.Model.Model m)
+        private static void DumpRelationships(Dax.Metadata.Model m)
         {
             Console.WriteLine("------------------------");
             foreach (var t in m.Tables)
@@ -195,22 +195,22 @@ namespace TestDaxModel
         /// </summary>
         static void SimpleDump()
         {
-            Dax.Model.Model m = new Dax.Model.Model();
-            Dax.Model.Table tA = new Dax.Model.Table(m)
+            Dax.Metadata.Model m = new Dax.Metadata.Model();
+            Dax.Metadata.Table tA = new Dax.Metadata.Table(m)
             {
-                TableName = new Dax.Model.DaxName("A")
+                TableName = new Dax.Metadata.DaxName("A")
             };
-            Dax.Model.Table tB = new Dax.Model.Table(m)
+            Dax.Metadata.Table tB = new Dax.Metadata.Table(m)
             {
-                TableName = new Dax.Model.DaxName("B")
+                TableName = new Dax.Metadata.DaxName("B")
             };
-            Dax.Model.Column ca1 = new Dax.Model.Column(tA)
+            Dax.Metadata.Column ca1 = new Dax.Metadata.Column(tA)
             {
-                ColumnName = new Dax.Model.DaxName("A_1")
+                ColumnName = new Dax.Metadata.DaxName("A_1")
             };
-            Dax.Model.Column ca2 = new Dax.Model.Column(tA)
+            Dax.Metadata.Column ca2 = new Dax.Metadata.Column(tA)
             {
-                ColumnName = new Dax.Model.DaxName("A_2")
+                ColumnName = new Dax.Metadata.DaxName("A_2")
             };
             tA.Columns.Add(ca1);
             tA.Columns.Add(ca2);

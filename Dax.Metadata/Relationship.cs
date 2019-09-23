@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Dax.Model
+namespace Dax.Metadata
 {
     public class Relationship
     {
-        private Dax.Model.Relationship _Relationship;
+        private Dax.Metadata.Relationship _Relationship;
 
-        internal Relationship(Dax.Model.Relationship relationship)
+        internal Relationship(Dax.Metadata.Relationship relationship)
         {
             this._Relationship = relationship;
         }

@@ -53,23 +53,23 @@ namespace TestDaxWpf
 
         static class TestDaxModelHelper
         {
-            public static Dax.Model.Model GetDaxModel(string serverName, string databaseName, bool readStatisticsFromData = true)
+            public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, bool readStatisticsFromData = true)
             {
                 Microsoft.AnalysisServices.Server server = new Microsoft.AnalysisServices.Server();
                 server.Connect(serverName);
                 Microsoft.AnalysisServices.Database db = server.Databases[databaseName];
                 Microsoft.AnalysisServices.Tabular.Model tomModel = db.Model;
-                var daxModel = Dax.Model.Extractor.TomExtractor.GetDaxModel(tomModel, "TestDaxModel", "0.1");
+                var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(tomModel, "TestDaxModel", "0.1");
 
                 var connectionString = GetConnectionString(serverName, databaseName);
 
                 using (var connection = new OleDbConnection(connectionString)) {
                     // Populate statistics from DMV
-                    Dax.Model.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, databaseName, "TestDaxModel", "0.1");
+                    Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, databaseName, "TestDaxModel", "0.1");
 
                     // Populate statistics by querying the data model
                     if (readStatisticsFromData) {
-                        Dax.Model.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection);
+                        Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection);
                     }
                 }
                 return daxModel;

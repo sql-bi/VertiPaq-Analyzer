@@ -6,9 +6,9 @@ namespace Dax.ViewModel
 {
     public class VpaRelationship
     {
-        private Dax.Model.Relationship Relationship;
+        private Dax.Metadata.Relationship Relationship;
 
-        internal VpaRelationship(Dax.Model.Relationship relationship)
+        internal VpaRelationship(Dax.Metadata.Relationship relationship)
         {
             this.Relationship = relationship;
         }

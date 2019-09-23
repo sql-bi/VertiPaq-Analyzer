@@ -8,8 +8,8 @@ namespace Dax.ViewVpaExport
     public class CalculationItem
         {
         [JsonIgnore]
-        private readonly Dax.Model.CalculationItem _CalculationItem;
-        internal CalculationItem(Dax.Model.CalculationItem calculationItem)
+        private readonly Dax.Metadata.CalculationItem _CalculationItem;
+        internal CalculationItem(Dax.Metadata.CalculationItem calculationItem)
         {
             this._CalculationItem = calculationItem;
         }

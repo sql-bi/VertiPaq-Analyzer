@@ -5,24 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.OleDb;
 
-namespace Dax.Model.Extractor
+namespace Dax.Metadata.Extractor
 {
     public class StatExtractor
     {
-        protected Dax.Model.Model DaxModel { get; private set; }
+        protected Dax.Metadata.Model DaxModel { get; private set; }
         protected OleDbConnection Connection { get; private set; }
 
-        public StatExtractor (Dax.Model.Model daxModel, OleDbConnection connection )
+        public StatExtractor (Dax.Metadata.Model daxModel, OleDbConnection connection )
         {
             this.DaxModel = daxModel;
             this.Connection = connection;
         }
 
-        public static void UpdateStatisticsModel(Dax.Model.Model daxModel, OleDbConnection connection)
+        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, OleDbConnection connection)
         {
             StatExtractor extractor = new StatExtractor(daxModel, connection);
             extractor.LoadTableStatistics();
             extractor.LoadColumnStatistics();
+
+            // Update ExtractionDate
+            extractor.DaxModel.ExtractionDate = DateTime.UtcNow;
         }
 
         public void LoadTableStatistics()
