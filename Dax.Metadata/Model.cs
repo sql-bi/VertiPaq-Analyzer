@@ -35,10 +35,19 @@ namespace Dax.Metadata
         /// </summary>
         public string DaxModelLibVersion { get; }
 
-        public string ModelName { get; set; }
+        public DaxName ServerName { get; set; }
+        public DaxName ModelName { get; set; }
         public int CompatibilityLevel { get; set; }
 
+        /// <summary>
+        /// Date/time in UTC of last extraction from DMV/TOM
+        /// </summary>
         public DateTime ExtractionDate { get; set; }
+
+        /// <summary>
+        /// Date/time in UTC of the last refresh of the data model
+        /// </summary>
+        public DateTime LastDataRefresh { get; set; }
 
         public List<Table> Tables { get; }
         public List<Relationship> Relationships { get; }

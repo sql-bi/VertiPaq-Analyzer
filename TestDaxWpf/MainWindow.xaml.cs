@@ -65,7 +65,7 @@ namespace TestDaxWpf
 
                 using (var connection = new OleDbConnection(connectionString)) {
                     // Populate statistics from DMV
-                    Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, databaseName, "TestDaxModel", "0.1");
+                    Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, "TestDaxModel", "0.1");
 
                     // Populate statistics by querying the data model
                     if (readStatisticsFromData) {

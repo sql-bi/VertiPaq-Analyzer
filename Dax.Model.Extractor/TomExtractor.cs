@@ -243,7 +243,7 @@ namespace Dax.Metadata.Extractor
             using (var connection = new OleDbConnection(connectionString))
             {
                 // Populate statistics from DMV
-                Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, databaseName, applicationName, applicationVersion);
+                Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
 
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData)

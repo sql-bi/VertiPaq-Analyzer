@@ -24,7 +24,7 @@ namespace Dax.Metadata.Extractor
         protected OleDbConnection Connection { get; private set; }
 
         public Dax.Metadata.Model DaxModel { get; private set; }
-        public DmvExtractor(Dax.Metadata.Model daxModel, OleDbConnection connection, string databaseName, string extractorApp, string extractorVersion)
+        public DmvExtractor(Dax.Metadata.Model daxModel, OleDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
             Connection = connection;
             Connection.Open();
@@ -40,7 +40,8 @@ namespace Dax.Metadata.Extractor
             // This should be outsider the constructor, but we want to make sure the database name is 
             // validated before using other DMVs
             DaxModel = daxModel ?? new Dax.Metadata.Model(tomExtractorAssemblyName.Name, tomExtractorAssemblyName.Version.ToString(), extractorApp, extractorVersion);
-            DaxModel.ModelName = databaseName;
+            DaxModel.ServerName = new DaxName(serverName);
+            DaxModel.ModelName = new DaxName(databaseName);
             DaxModel.CompatibilityLevel = compatibilityLevel;
 
             // Update ExtractionDate
@@ -48,11 +49,12 @@ namespace Dax.Metadata.Extractor
 
         }
 
-        public static void PopulateFromDmv(Dax.Metadata.Model daxModel, OleDbConnection connection, string databaseName, string extractorApp, string extractorVersion)
+        public static void PopulateFromDmv(Dax.Metadata.Model daxModel, OleDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
-            Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, databaseName, extractorApp, extractorVersion);
+            Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
             de.PopulateTables();
             de.PopulateColumns();
+            de.PopulateLastDataUpdate();
             de.PopulateUserHierarchies();
             de.PopulateRelationships();
         }
@@ -563,6 +565,24 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'R$'";
             }
 
             return map;
+        }
+
+        public void PopulateLastDataUpdate()
+        {
+            const string QUERY_LASTUPDATE = @"
+SELECT TOP 1 [LAST_DATA_UPDATE]
+FROM $SYSTEM.MDSCHEMA_CUBES
+ORDER BY [LAST_DATA_UPDATE] DESC";
+
+            var cmd = new OleDbCommand(QUERY_LASTUPDATE, Connection);
+            using (var rdr = cmd.ExecuteReader())
+            {
+                if (rdr.Read())
+                {
+                    DateTime lastDataRefresh = (DateTime)rdr.GetFieldValue<DateTime>(0);
+                    DaxModel.LastDataRefresh = lastDataRefresh.ToUniversalTime();
+                }
+            }
         }
 
         public void PopulateRelationships()
