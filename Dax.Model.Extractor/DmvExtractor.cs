@@ -9,6 +9,7 @@ using Tom = Microsoft.AnalysisServices.Tabular;
 
 namespace Dax.Metadata.Extractor
 {
+    
     public class ExtractorException : Exception
     {
         public OleDbConnection Connection { get; private set; }
@@ -21,6 +22,8 @@ namespace Dax.Metadata.Extractor
     }
     public class DmvExtractor
     {
+        public int CommandTimeout { get; set; } = 0;
+
         protected OleDbConnection Connection { get; private set; }
 
         public Dax.Metadata.Model DaxModel { get; private set; }
@@ -66,6 +69,7 @@ SELECT [CATALOG_NAME], [COMPATIBILITY_LEVEL]
 FROM $SYSTEM.DBSCHEMA_CATALOGS";
 
             var cmd = new OleDbCommand(QUERY_CATALOGS, Connection);
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
 
                 while (rdr.Read()) {
@@ -260,6 +264,7 @@ WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'
 ORDER BY DIMENSION_NAME";
 
             var cmd = new OleDbCommand(QUERY_TABLES, Connection);
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -295,6 +300,7 @@ FROM  $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMNS
 WHERE COLUMN_TYPE = 'BASIC_DATA'";
 
             var cmd = new OleDbCommand(QUERY_COLUMNS, Connection);
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -339,6 +345,7 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'H$'
 ORDER BY TABLE_ID";
 
             var cmd = new OleDbCommand(QUERY_COLUMNS_CARDINALITY, Connection);
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -372,6 +379,7 @@ FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
 
             var cmd = new OleDbCommand(QUERY_COLUMNS_SEGMENTS, Connection);
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -414,6 +422,7 @@ FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE LEFT ( TABLE_ID, 2 ) = 'H$'";
 
             var cmd = new OleDbCommand(QUERY_HIERARCHIES, Connection);
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -442,6 +451,7 @@ FROM $SYSTEM.TMSCHEMA_HIERARCHIES";
 
             if (DaxModel.CompatibilityLevel >= 1200) {
                 var cmd = new OleDbCommand(QUERY_USER_HIERARCHIES, Connection);
+                cmd.CommandTimeout = CommandTimeout;
                 using (var rdr = cmd.ExecuteReader()) {
                     while (rdr.Read()) {
                         int userHierarchyId = (int)rdr.GetFieldValue<decimal>(0);
@@ -467,7 +477,7 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'U$'";
 
             var mapUserHierarchyNames = GetUserHierarchiesNames();
             var cmd = new OleDbCommand(QUERY_USER_HIERARCHIES_SIZE, Connection);
-            
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 // Reset size existing hierarchies
                 foreach ( var t in this.DaxModel.Tables) {
@@ -544,6 +554,7 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'R$'";
 
             var map = new Dictionary<TableRelationshipIds, long>();
             var cmd = new OleDbCommand(QUERY_RELATIONSHIPS_SIZE, Connection);
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -575,6 +586,7 @@ FROM $SYSTEM.MDSCHEMA_CUBES
 ORDER BY [LAST_DATA_UPDATE] DESC";
 
             var cmd = new OleDbCommand(QUERY_LASTUPDATE, Connection);
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader())
             {
                 if (rdr.Read())
@@ -611,6 +623,7 @@ FROM $SYSTEM.TMSCHEMA_RELATIONSHIPS";
 
             var mapRelationshipsSize = GetRelationshipsSize();
             var cmd = new OleDbCommand(QUERY_RELATIONSHIPS, Connection);
+            cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     int relationshipDmv1200Id = (int)rdr.GetFieldValue<decimal>(0);

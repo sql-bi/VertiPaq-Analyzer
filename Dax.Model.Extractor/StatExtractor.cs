@@ -11,7 +11,7 @@ namespace Dax.Metadata.Extractor
     {
         protected Dax.Metadata.Model DaxModel { get; private set; }
         protected OleDbConnection Connection { get; private set; }
-
+        protected int CommandTimeout { get; private set; } = 0;
         public StatExtractor (Dax.Metadata.Model daxModel, OleDbConnection connection )
         {
             this.DaxModel = daxModel;
@@ -43,6 +43,7 @@ namespace Dax.Metadata.Extractor
                 if (tableSet.Count > 1) { dax += ")"; }
 
                 var cmd = new OleDbCommand(dax, Connection);
+                cmd.CommandTimeout = CommandTimeout;
                 using (var reader = cmd.ExecuteReader()) {
 
                     while (reader.Read()) {
@@ -80,6 +81,7 @@ namespace Dax.Metadata.Extractor
                 if (columnSet.Count > 1) { dax += ")"; } 
 
                 var cmd = new OleDbCommand(dax, Connection);
+                cmd.CommandTimeout = CommandTimeout;
                 using (var reader = cmd.ExecuteReader()) {
                     while (reader.Read()) {
                         var tableName = reader.GetString(0).Substring(4);
