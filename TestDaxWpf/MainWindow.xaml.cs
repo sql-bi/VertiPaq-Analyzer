@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using System.Data.OleDb;
 using Newtonsoft.Json;
+using Microsoft.AnalysisServices.AdomdClient;
 
 namespace TestDaxWpf
 {
@@ -63,7 +64,7 @@ namespace TestDaxWpf
 
                 var connectionString = GetConnectionString(serverName, databaseName);
 
-                using (var connection = new OleDbConnection(connectionString)) {
+                using (var connection = new AdomdConnection(connectionString)) {
                     // Populate statistics from DMV
                     Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, "TestDaxModel", "0.1");
 
