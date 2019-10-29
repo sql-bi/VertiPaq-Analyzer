@@ -6,15 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.OleDb;
 using Tom = Microsoft.AnalysisServices.Tabular;
+using Microsoft.AnalysisServices.AdomdClient;
 
 namespace Dax.Metadata.Extractor
 {
     
     public class ExtractorException : Exception
     {
-        public OleDbConnection Connection { get; private set; }
+        public AdomdConnection Connection { get; private set; }
         public string DatabaseName { get; private set; }
-        public ExtractorException( OleDbConnection connection, string databaseName )
+        public ExtractorException( AdomdConnection connection, string databaseName )
         {
             Connection = connection;
             DatabaseName = databaseName;
@@ -24,10 +25,10 @@ namespace Dax.Metadata.Extractor
     {
         public int CommandTimeout { get; set; } = 0;
 
-        protected OleDbConnection Connection { get; private set; }
+        protected AdomdConnection Connection { get; private set; }
 
         public Dax.Metadata.Model DaxModel { get; private set; }
-        public DmvExtractor(Dax.Metadata.Model daxModel, OleDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
+        public DmvExtractor(Dax.Metadata.Model daxModel, AdomdConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
             Connection = connection;
             Connection.Open();
@@ -52,7 +53,7 @@ namespace Dax.Metadata.Extractor
 
         }
 
-        public static void PopulateFromDmv(Dax.Metadata.Model daxModel, OleDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
+        public static void PopulateFromDmv(Dax.Metadata.Model daxModel, AdomdConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
             Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
             de.PopulateTables();
@@ -68,7 +69,7 @@ namespace Dax.Metadata.Extractor
 SELECT [CATALOG_NAME], [COMPATIBILITY_LEVEL]
 FROM $SYSTEM.DBSCHEMA_CATALOGS";
 
-            var cmd = new OleDbCommand(QUERY_CATALOGS, Connection);
+            var cmd = new AdomdCommand(QUERY_CATALOGS, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
 
@@ -263,7 +264,7 @@ FROM  $SYSTEM.DISCOVER_STORAGE_TABLES
 WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'
 ORDER BY DIMENSION_NAME";
 
-            var cmd = new OleDbCommand(QUERY_TABLES, Connection);
+            var cmd = new AdomdCommand(QUERY_TABLES, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
@@ -299,7 +300,7 @@ SELECT
 FROM  $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMNS
 WHERE COLUMN_TYPE = 'BASIC_DATA'";
 
-            var cmd = new OleDbCommand(QUERY_COLUMNS, Connection);
+            var cmd = new AdomdCommand(QUERY_COLUMNS, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
@@ -307,7 +308,7 @@ WHERE COLUMN_TYPE = 'BASIC_DATA'";
                     string columnDmv1100Id = rdr.GetString(1);
                     string columnName = rdr.GetString(2);
                     string dataType = rdr.GetString(3);
-                    long dictionarySize = (long)rdr.GetFieldValue<decimal>(4);
+                    long dictionarySize = (long)rdr.GetDecimal(4);
                     long columnEncodingInt = rdr.GetInt64(5);
 
                     Column daxColumn = GetDaxColumn(tableName, columnName);
@@ -344,7 +345,7 @@ FROM $SYSTEM.DISCOVER_STORAGE_TABLES
 WHERE LEFT ( TABLE_ID, 2 ) = 'H$'
 ORDER BY TABLE_ID";
 
-            var cmd = new OleDbCommand(QUERY_COLUMNS_CARDINALITY, Connection);
+            var cmd = new AdomdCommand(QUERY_COLUMNS_CARDINALITY, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
@@ -378,7 +379,7 @@ SELECT
 FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
 
-            var cmd = new OleDbCommand(QUERY_COLUMNS_SEGMENTS, Connection);
+            var cmd = new AdomdCommand(QUERY_COLUMNS_SEGMENTS, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
@@ -388,7 +389,7 @@ WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
                     long segmentNumber = rdr.GetInt64(3);
                     long tablePartitionNumber = rdr.GetInt64(4);
                     long segmentRows = rdr.GetInt64(5);
-                    long usedSize = (long)rdr.GetFieldValue<decimal>(6);
+                    long usedSize = (long)rdr.GetDecimal(6);
                     string compressionType = rdr.GetString(7);
                     long bitsCount = rdr.GetInt64(8);
                     long bookmarkBitsCount = rdr.GetInt64(9);
@@ -421,7 +422,7 @@ SELECT
 FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE LEFT ( TABLE_ID, 2 ) = 'H$'";
 
-            var cmd = new OleDbCommand(QUERY_HIERARCHIES, Connection);
+            var cmd = new AdomdCommand(QUERY_HIERARCHIES, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
@@ -429,7 +430,7 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'H$'";
                     string structureName = rdr.GetString(1);
                     long segmentNumber = rdr.GetInt64(2);
                     long tablePartitionNumber = rdr.GetInt64(3);
-                    long usedSize = (long)rdr.GetFieldValue<decimal>(4);
+                    long usedSize = (long)rdr.GetDecimal(4);
                     string columnHierarchyId = rdr.GetString(5);
                     string columnDmv1100Id = columnHierarchyId.Substring(columnHierarchyId.LastIndexOf('$') + 1);
 
@@ -450,11 +451,11 @@ FROM $SYSTEM.TMSCHEMA_HIERARCHIES";
             var map = new Dictionary<int, string>();
 
             if (DaxModel.CompatibilityLevel >= 1200) {
-                var cmd = new OleDbCommand(QUERY_USER_HIERARCHIES, Connection);
+                var cmd = new AdomdCommand(QUERY_USER_HIERARCHIES, Connection);
                 cmd.CommandTimeout = CommandTimeout;
                 using (var rdr = cmd.ExecuteReader()) {
                     while (rdr.Read()) {
-                        int userHierarchyId = (int)rdr.GetFieldValue<decimal>(0);
+                        int userHierarchyId = (int)rdr.GetDecimal(0);
                         string userHierarchyName = rdr.GetString(1);
                         map.Add(userHierarchyId, userHierarchyName);
                     }
@@ -476,7 +477,7 @@ FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE LEFT ( TABLE_ID, 2 ) = 'U$'";
 
             var mapUserHierarchyNames = GetUserHierarchiesNames();
-            var cmd = new OleDbCommand(QUERY_USER_HIERARCHIES_SIZE, Connection);
+            var cmd = new AdomdCommand(QUERY_USER_HIERARCHIES_SIZE, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 // Reset size existing hierarchies
@@ -490,7 +491,7 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'U$'";
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
                     string structureName = rdr.GetString(1);
-                    long usedSize = (long)rdr.GetFieldValue<decimal>(2);
+                    long usedSize = (long)rdr.GetDecimal(2);
                     string userHierarchyFullId = rdr.GetString(3);
                     string userHierarchyId = userHierarchyFullId.Substring(userHierarchyFullId.LastIndexOf('$') + 1);
 
@@ -553,13 +554,13 @@ FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE LEFT ( TABLE_ID, 2 ) = 'R$'";
 
             var map = new Dictionary<TableRelationshipIds, long>();
-            var cmd = new OleDbCommand(QUERY_RELATIONSHIPS_SIZE, Connection);
+            var cmd = new AdomdCommand(QUERY_RELATIONSHIPS_SIZE, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
                     string relationshipFullId = rdr.GetString(1);
-                    int usedSize = (int)rdr.GetFieldValue<decimal>(2);
+                    int usedSize = (int)rdr.GetDecimal(2);
 
                     var daxTable = GetDaxTable(tableName);
                     var openIdBracket = relationshipFullId.LastIndexOf('(');
@@ -585,13 +586,13 @@ SELECT TOP 1 [LAST_DATA_UPDATE]
 FROM $SYSTEM.MDSCHEMA_CUBES
 ORDER BY [LAST_DATA_UPDATE] DESC";
 
-            var cmd = new OleDbCommand(QUERY_LASTUPDATE, Connection);
+            var cmd = new AdomdCommand(QUERY_LASTUPDATE, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader())
             {
                 if (rdr.Read())
                 {
-                    DateTime lastDataRefresh = (DateTime)rdr.GetFieldValue<DateTime>(0);
+                    DateTime lastDataRefresh = (DateTime)rdr.GetDateTime(0);
                     DaxModel.LastDataRefresh = lastDataRefresh.ToUniversalTime();
                 }
             }
@@ -622,16 +623,16 @@ SELECT
 FROM $SYSTEM.TMSCHEMA_RELATIONSHIPS";
 
             var mapRelationshipsSize = GetRelationshipsSize();
-            var cmd = new OleDbCommand(QUERY_RELATIONSHIPS, Connection);
+            var cmd = new AdomdCommand(QUERY_RELATIONSHIPS, Connection);
             cmd.CommandTimeout = CommandTimeout;
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
-                    int relationshipDmv1200Id = (int)rdr.GetFieldValue<decimal>(0);
-                    int fromTableDmv1200Id = (int)rdr.GetFieldValue<decimal>(1);
-                    int fromColumnDmv1200Id = (int)rdr.GetFieldValue<decimal>(2);
+                    int relationshipDmv1200Id = (int)rdr.GetDecimal(0);
+                    int fromTableDmv1200Id = (int)rdr.GetDecimal(1);
+                    int fromColumnDmv1200Id = (int)rdr.GetDecimal(2);
                     // skip 3 and other columns - not used because other info should come from TOM
-                    int toTableDmv1200Id = (int)rdr.GetFieldValue<decimal>(4);
-                    int toColumnDmv1200Id = (int)rdr.GetFieldValue<decimal>(5);
+                    int toTableDmv1200Id = (int)rdr.GetDecimal(4);
+                    int toColumnDmv1200Id = (int)rdr.GetDecimal(5);
 
                     Column fromColumn = GetDaxColumnDmv1200Id(fromTableDmv1200Id, fromColumnDmv1200Id);
                     Column toColumn = GetDaxColumnDmv1200Id(toTableDmv1200Id, toColumnDmv1200Id);

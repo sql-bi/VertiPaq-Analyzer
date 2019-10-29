@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AnalysisServices.AdomdClient;
+using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Linq;
@@ -240,7 +241,7 @@ namespace Dax.Metadata.Extractor
 
             var connectionString = GetConnectionString(serverName, databaseName);
 
-            using (var connection = new OleDbConnection(connectionString))
+            using (var connection = new AdomdConnection(connectionString))
             {
                 // Populate statistics from DMV
                 Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);

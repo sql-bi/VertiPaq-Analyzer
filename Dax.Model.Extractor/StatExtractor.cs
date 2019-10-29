@@ -4,21 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.OleDb;
+using Microsoft.AnalysisServices.AdomdClient;
 
 namespace Dax.Metadata.Extractor
 {
     public class StatExtractor
     {
         protected Dax.Metadata.Model DaxModel { get; private set; }
-        protected OleDbConnection Connection { get; private set; }
+        protected AdomdConnection Connection { get; private set; }
         protected int CommandTimeout { get; private set; } = 0;
-        public StatExtractor (Dax.Metadata.Model daxModel, OleDbConnection connection )
+        public StatExtractor (Dax.Metadata.Model daxModel, AdomdConnection connection )
         {
             this.DaxModel = daxModel;
             this.Connection = connection;
         }
 
-        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, OleDbConnection connection)
+        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, AdomdConnection connection)
         {
             StatExtractor extractor = new StatExtractor(daxModel, connection);
             extractor.LoadTableStatistics();
@@ -42,7 +43,7 @@ namespace Dax.Metadata.Extractor
                 //only close the union call if there is more than 1 column in the columnSet
                 if (tableSet.Count > 1) { dax += ")"; }
 
-                var cmd = new OleDbCommand(dax, Connection);
+                var cmd = new AdomdCommand(dax, Connection);
                 cmd.CommandTimeout = CommandTimeout;
                 using (var reader = cmd.ExecuteReader()) {
 
@@ -80,7 +81,7 @@ namespace Dax.Metadata.Extractor
                 //only close the union call if there is more than 1 column in the columnSet
                 if (columnSet.Count > 1) { dax += ")"; } 
 
-                var cmd = new OleDbCommand(dax, Connection);
+                var cmd = new AdomdCommand(dax, Connection);
                 cmd.CommandTimeout = CommandTimeout;
                 using (var reader = cmd.ExecuteReader()) {
                     while (reader.Read()) {
