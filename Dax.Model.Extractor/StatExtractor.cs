@@ -39,7 +39,7 @@ namespace Dax.Metadata.Extractor
                 var dax = "EVALUATE ";
                 //only union if there is more than 1 column in the columnSet
                 if (tableSet.Count > 1) { dax += "UNION("; }
-                dax += string.Join(",", tableSet.Select(tableName => $"\n    ROW(\"Table\", \"{tableName}\", \"Cardinality\", COUNTROWS('{tableName}'))").ToArray());
+                dax += string.Join(",", tableSet.Select(tableName => $"\n    ROW(\"Table\", \"{EmbedNameInString(tableName)}\", \"Cardinality\", COUNTROWS('{tableName}'))").ToArray());
                 //only close the union call if there is more than 1 column in the columnSet
                 if (tableSet.Count > 1) { dax += ")"; }
 
@@ -62,7 +62,10 @@ namespace Dax.Metadata.Extractor
         {
             return $"'{column.Table.TableName.Name}'[{column.ColumnName.Name.Replace("]", "]]")}]";
         }
-
+        private static string EmbedNameInString(string originalName)
+        {
+            return originalName.Replace("\"", "\"\"");
+        }
         public void LoadColumnStatistics()
         {
             var allColumns = (from t in DaxModel.Tables
@@ -77,7 +80,7 @@ namespace Dax.Metadata.Extractor
                 if (columnSet.Count > 1) { dax += "UNION("; } 
                 dax += string.Join(",", columnSet
                     .Where(c => !c.IsRowNumber )
-                    .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{c.Table.TableName.Name}\", \"Column\", \"{idString++:0000}{c.ColumnName.Name}\", \"Cardinality\", DISTINCTCOUNT({Col(c)}))").ToList());
+                    .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{EmbedNameInString(c.Table.TableName.Name)}\", \"Column\", \"{idString++:0000}{EmbedNameInString(c.ColumnName.Name)}\", \"Cardinality\", DISTINCTCOUNT({Col(c)}))").ToList());
                 //only close the union call if there is more than 1 column in the columnSet
                 if (columnSet.Count > 1) { dax += ")"; } 
 
