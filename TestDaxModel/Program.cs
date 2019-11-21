@@ -15,6 +15,8 @@ namespace TestDaxModel
 {
     class Program
     {
+
+
         static void Main(string[] args)
         {
             //
@@ -25,8 +27,8 @@ namespace TestDaxModel
             // const string databaseName = "Microsoft_SQLServer_AnalysisServices";
 
             const string serverName = @"localhost\tab17";
-            // const string databaseName = "AdventureWorks";
-            const string databaseName = "Adventure Works 2012 Tabular";
+             const string databaseName = "Adventure Works";
+            //const string databaseName = "Adventure Works 2012 Tabular";
             // const string serverName = "localhost:51774";
             // onst string databaseName = "e7cf7245-b9ef-4a52-b592-308703cee1e0";
             const string pathOutput = @"c:\temp\";
@@ -49,7 +51,8 @@ namespace TestDaxModel
 
             // Save JSON file
             // ExportJSON(pathOutput, export);
-
+            Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
+            Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
             string filename = pathOutput + databaseName + ".vpax";
             Console.WriteLine("Saving {0}...", filename);
 
@@ -58,6 +61,16 @@ namespace TestDaxModel
             VpaxTools.ExportVpax(filename, daxModel, viewVpa, database);
             Console.WriteLine("File saved.");
             // ImportExport();
+
+            Console.WriteLine("=================");
+            Console.WriteLine($"Loading {filename}...");
+            
+            var content = VpaxTools.ImportVpax(filename);
+            var view2 = new Dax.ViewVpaExport.Model(content.DaxModel);
+            Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
+            Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
+            
+
         }
 
         private static void ImportExport()

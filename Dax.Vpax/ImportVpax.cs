@@ -26,7 +26,10 @@ namespace Dax.Vpax
         private string ReadPackageContentAsString(string uriString)
         {
             Uri uriTom = PackUriHelper.CreatePartUri(new Uri(uriString, UriKind.Relative));
-            using (TextReader tw = new StreamReader(this.Package.GetPart(uriTom).GetStream(), Encoding.UTF8))
+            if (!this.Package.PartExists(uriTom)) return null;
+
+            var part = this.Package.GetPart(uriTom);            
+            using (TextReader tw = new StreamReader(part.GetStream(), Encoding.UTF8))
             {
                 string content = tw.ReadToEnd();
                 tw.Close();
@@ -51,6 +54,7 @@ namespace Dax.Vpax
         public Microsoft.AnalysisServices.Database ImportDatabase()
         {
             string modelBim = ReadPackageContentAsString(VpaxFormat.TOMMODEL);
+            if (modelBim == null) return null;
             return Microsoft.AnalysisServices.JsonSerializer.DeserializeDatabase(modelBim);
         }
 
