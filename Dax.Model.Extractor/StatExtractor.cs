@@ -8,6 +8,11 @@ using Microsoft.AnalysisServices.AdomdClient;
 
 namespace Dax.Metadata.Extractor
 {
+    // TODO: We should implement an analysis of the relationships in the model
+    //       On the one side, identify whether there is a blank value - it indicates a referential integrity violation, even though we don't have the view for the table
+    //       On the many side, we should count the number of unique values and the number of rows related to a blank value:
+    //       EVALUATE CALCULATETABLE ( ROW ( "MissingKeys", DISTINCTCOUNT ( Sales[CustomerKey] ), "InvalidRows", COUNTROWS ( Sales ) ), ISBLANK ( Customer[CustomerKey] ) )
+    // 
     public class StatExtractor
     {
         protected Dax.Metadata.Model DaxModel { get; private set; }

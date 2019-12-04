@@ -259,7 +259,8 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
 SELECT 
     DIMENSION_NAME AS TABLE_NAME, 
     TABLE_ID       AS TABLE_ID,
-    ROWS_COUNT     AS ROWS_IN_TABLE
+    ROWS_COUNT     AS ROWS_IN_TABLE,
+    RIVIOLATION_COUNT AS RI_VIOLATION_COUNT
 FROM  $SYSTEM.DISCOVER_STORAGE_TABLES
 WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'
 ORDER BY DIMENSION_NAME";
@@ -271,10 +272,12 @@ ORDER BY DIMENSION_NAME";
                     string tableName = rdr.GetString(0);
                     string tableId = rdr.GetString(1);
                     long rowsCount = rdr.GetInt64(2);
+                    long referentialIntegrityViolationCount = rdr.GetInt64(3);
 
                     Table daxTable = GetDaxTable(tableName);
                     daxTable.SetDmv1100TableId(tableId);
                     daxTable.RowsCount = rowsCount;
+                    daxTable.ReferentialIntegrityViolationCount = referentialIntegrityViolationCount;
                 }
             }
         }
