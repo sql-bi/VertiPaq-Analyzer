@@ -26,16 +26,16 @@ namespace TestDaxModel
             // const string serverName = @"http://localhost:9000/xmla";
             // const string databaseName = "Microsoft_SQLServer_AnalysisServices";
 
-            const string serverName = @"localhost\tab17";
-             const string databaseName = "Adventure Works";
-            //const string databaseName = "Adventure Works 2012 Tabular";
+            const string serverName = @"localhost\tab19";
+            // const string databaseName = "Adventure Works";
+            const string databaseName = "Adventure Works 2012 Tabular";
             // const string serverName = "localhost:51774";
             // onst string databaseName = "e7cf7245-b9ef-4a52-b592-308703cee1e0";
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
             var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
-            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.1");
+            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2");
 
             //
             // Test serialization of Dax.Model in JSON file

@@ -32,6 +32,7 @@ namespace Dax.Metadata
         public bool IsHidden { get; set; }
         public DaxExpression TableExpression { get; set; }
         public long RowsCount { get; set; }
+        public long ReferentialIntegrityViolationCount { get; set; }
         public CalculationGroup CalculationGroup { get; set; }
         public string Description { get; set; }
 

@@ -17,6 +17,7 @@ namespace Dax.ViewVpaExport
 
         public string TableExpression { get { return this._Table.TableExpression?.Expression; } }
         public long RowsCount { get { return this._Table.RowsCount; } }
+        public long ReferentialIntegrityViolationCount { get { return this._Table.ReferentialIntegrityViolationCount; } }
         public bool IsHidden { get { return this._Table.IsHidden; } }
         public string Description { get { return this._Table.Description; } }
 
