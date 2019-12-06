@@ -33,13 +33,13 @@ namespace Dax.Metadata.Extractor
         {
             // only get table stats if the table has more than 1 user created column 
             // (every table has a RowNumber column so we only want tables with more than 1 column)
-            var tableList = DaxModel.Tables.Where(t => t.Columns.Count > 1).Select(t => t.TableName.Name).ToList();
+            var tableList = DaxModel.Tables.Where(t => t.Columns.Count > 1).Select(t => t).ToList();
             var loopTables = tableList.SplitList(50);
             foreach ( var tableSet in loopTables ) {
                 var dax = "EVALUATE ";
                 //only union if there is more than 1 column in the columnSet
                 if (tableSet.Count > 1) { dax += "UNION("; }
-                dax += string.Join(",", tableSet.Select(tableName => $"\n    ROW(\"Table\", \"{EmbedNameInString(tableName)}\", \"Cardinality\", COUNTROWS('{tableName}'))").ToArray());
+                dax += string.Join(",", tableSet.Select(table => $"\n    ROW(\"Table\", \"{EmbedNameInString(table.TableName.Name)}\", \"Cardinality\", COUNTROWS({EscapeTableName(table)}))").ToArray());
                 //only close the union call if there is more than 1 column in the columnSet
                 if (tableSet.Count > 1) { dax += ")"; }
 
@@ -58,9 +58,14 @@ namespace Dax.Metadata.Extractor
             }
         }
 
-        private static string Col(Column column)
+        private static string EscapeTableName(Table table)
         {
-            return $"'{column.Table.TableName.Name}'[{column.ColumnName.Name.Replace("]", "]]")}]";
+            return $"'{table.TableName.Name.Replace("'", "''")}'";
+        }
+
+        private static string EscapeColumnName(Column column)
+        {
+            return $"{EscapeTableName(column.Table)}[{column.ColumnName.Name.Replace("]", "]]")}]";
         }
         private static string EmbedNameInString(string originalName)
         {
@@ -80,7 +85,7 @@ namespace Dax.Metadata.Extractor
                 if (columnSet.Count > 1) { dax += "UNION("; } 
                 dax += string.Join(",", columnSet
                     .Where(c => !c.IsRowNumber )
-                    .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{EmbedNameInString(c.Table.TableName.Name)}\", \"Column\", \"{idString++:0000}{EmbedNameInString(c.ColumnName.Name)}\", \"Cardinality\", DISTINCTCOUNT({Col(c)}))").ToList());
+                    .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{EmbedNameInString(c.Table.TableName.Name)}\", \"Column\", \"{idString++:0000}{EmbedNameInString(c.ColumnName.Name)}\", \"Cardinality\", DISTINCTCOUNT({EscapeColumnName(c)}))").ToList());
                 //only close the union call if there is more than 1 column in the columnSet
                 if (columnSet.Count > 1) { dax += ")"; } 
 
