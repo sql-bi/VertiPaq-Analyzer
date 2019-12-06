@@ -28,7 +28,8 @@ namespace TestDaxModel
 
             const string serverName = @"localhost\tab19";
             // const string databaseName = "Adventure Works";
-            const string databaseName = "Adventure Works 2012 Tabular";
+            // const string databaseName = "Adventure Works 2012 Tabular";
+            const string databaseName = "EnterpriseBI";
             // const string serverName = "localhost:51774";
             // onst string databaseName = "e7cf7245-b9ef-4a52-b592-308703cee1e0";
             const string pathOutput = @"c:\temp\";
@@ -166,7 +167,7 @@ namespace TestDaxModel
                 Console.WriteLine("---Table={0}", t.TableName);
                 foreach (var tp in t.GetTablePermissions())
                 {
-                    Console.WriteLine("Role {0} = {1} ", tp.Role.RoleName.Name, tp.FilterExpression.Expression);
+                    Console.WriteLine("Role {0} = {1} ", tp.Role.RoleName.Name, tp.FilterExpression?.Expression);
                 }
             }
         }

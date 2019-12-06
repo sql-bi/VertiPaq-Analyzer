@@ -16,7 +16,7 @@ namespace Dax.ViewVpaExport
 
         public string RoleName { get { return this._TablePermission.Role.RoleName.Name; } }
         public string TableName { get { return this._TablePermission.Table.TableName.Name; } }
-        public string FilterExpression { get { return this._TablePermission.FilterExpression.Expression; } }
+        public string FilterExpression { get { return this._TablePermission.FilterExpression?.Expression; } }
 
     }
 }

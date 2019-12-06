@@ -44,7 +44,9 @@ namespace Dax.Metadata.Extractor
                 var dax = "EVALUATE ";
                 //only union if there is more than 1 column in the columnSet
                 if (tableSet.Count > 1) { dax += "UNION("; }
-                dax += string.Join(",", tableSet.Select(table => $"\n    ROW(\"Table\", \"{EmbedNameInString(table.TableName.Name)}\", \"Cardinality\", COUNTROWS({EscapeTableName(table)}))").ToArray());
+                dax += string.Join(
+                    ",", 
+                    tableSet.Select(table => $"\n    ROW(\"Table\", \"{EmbedNameInString(table.TableName.Name)}\", \"Cardinality\", COUNTROWS({EscapeTableName(table)}))").ToArray());
                 //only close the union call if there is more than 1 column in the columnSet
                 if (tableSet.Count > 1) { dax += ")"; }
 
