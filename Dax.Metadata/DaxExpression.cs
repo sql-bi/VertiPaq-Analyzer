@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Dax.Metadata.JsonConverters;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,11 +11,12 @@ namespace Dax.Metadata
     /// <summary>
     /// Support future tokenization of names to anonymize a data model
     /// </summary>
+    [JsonConverter(typeof(DaxExpressionJsonConverter))]
     public class DaxExpression
     {
         public string Expression { get; private set; }
         private DaxExpression() { }
-        private DaxExpression ( string expression )
+        public DaxExpression ( string expression )
         {
             this.Expression = expression;
         }
