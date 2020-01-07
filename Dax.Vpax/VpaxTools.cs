@@ -63,5 +63,22 @@ namespace Dax.Vpax.Tools
             }
             return Content;
         }
+
+        /// <summary>
+        /// Import from VertiPaq Analyzer (VPAX) file stream
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static VpaxContent ImportVpax(Stream stream)
+        {
+            VpaxContent Content;
+            using (ImportVpax importVpax = new ImportVpax(stream))
+            {
+                Content.DaxModel = importVpax.ImportModel();
+                Content.ViewVpa = null;
+                Content.TomDatabase = importVpax.ImportDatabase();
+            }
+            return Content;
+        }
     }
 }
