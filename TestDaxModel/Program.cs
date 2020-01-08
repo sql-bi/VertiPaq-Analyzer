@@ -26,12 +26,12 @@ namespace TestDaxModel
             // const string serverName = @"http://localhost:9000/xmla";
             // const string databaseName = "Microsoft_SQLServer_AnalysisServices";
 
-            const string serverName = @"localhost\tab19";
+            // const string serverName = @"localhost\tab19";
             // const string databaseName = "Adventure Works";
             // const string databaseName = "Adventure Works 2012 Tabular";
-            const string databaseName = "EnterpriseBI";
-            // const string serverName = "localhost:51774";
-            // onst string databaseName = "e7cf7245-b9ef-4a52-b592-308703cee1e0";
+            // const string databaseName = "EnterpriseBI";
+            const string serverName = "localhost:53382";
+            const string databaseName = "1d83feec-d09a-4766-980e-757adb5690ea";
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
