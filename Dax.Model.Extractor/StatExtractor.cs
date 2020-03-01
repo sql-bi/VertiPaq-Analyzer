@@ -88,13 +88,14 @@ namespace Dax.Metadata.Extractor
             foreach ( var columnSet in loopColumns ) {
                 var idString = 0;
                 var dax = "EVALUATE ";
+                int validColumns = columnSet.Where(c => !c.IsRowNumber).Count();
                 //only union if there is more than 1 column in the columnSet
-                if (columnSet.Count > 1) { dax += "UNION("; } 
+                if (validColumns > 1) { dax += "UNION("; } 
                 dax += string.Join(",", columnSet
                     .Where(c => !c.IsRowNumber )
                     .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{EmbedNameInString(c.Table.TableName.Name)}\", \"Column\", \"{idString++:0000}{EmbedNameInString(c.ColumnName.Name)}\", \"Cardinality\", DISTINCTCOUNT({EscapeColumnName(c)}))").ToList());
                 //only close the union call if there is more than 1 column in the columnSet
-                if (columnSet.Count > 1) { dax += ")"; } 
+                if (validColumns > 1) { dax += ")"; } 
 
                 var cmd = new AdomdCommand(dax, Connection);
                 cmd.CommandTimeout = CommandTimeout;

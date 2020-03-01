@@ -17,6 +17,10 @@ namespace Dax.Vpax
         {
             this.Package = Package.Open(path, FileMode.Open);
         }
+        public ImportVpax(Stream stream)
+        {
+            this.Package = Package.Open(stream);
+        }
 
         public void Close()
         {
