@@ -9,7 +9,7 @@ namespace Dax.ViewVpaExport
     public class Model
     {
         [JsonIgnore]
-        public Dax.Metadata.Model _Model { get; private set; }
+        private readonly Dax.Metadata.Model _Model;
         public IEnumerable<Table> Tables { get { return from t in this._Model.Tables select new Table(t); } }
         public IEnumerable<Column> Columns {
             get {

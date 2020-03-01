@@ -67,7 +67,7 @@ namespace TestDaxModel
             Console.WriteLine($"Loading {filename}...");
             
             var content = VpaxTools.ImportVpax(filename);
-            var view2 = new Dax.ViewVpaExport.Model(content.DaxModel);
+            // var view2 = new Dax.ViewVpaExport.Model(content.DaxModel);
             Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
             Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
             

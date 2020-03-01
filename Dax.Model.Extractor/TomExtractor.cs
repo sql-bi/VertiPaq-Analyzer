@@ -14,13 +14,12 @@ namespace Dax.Metadata.Extractor
     {
         protected Dax.Metadata.Model DaxModel { get; private set; }
         protected Tom.Model tomModel;
-        private TomExtractor(Tom.Model model) : this(model, null, null) { }
-        private TomExtractor(Tom.Model model, string extractorApp, string extractorVersion)
+        private TomExtractor(Tom.Model model, string extractorApp = null, string extractorVersion = null)
         {
             tomModel = model;
             AssemblyName tomExtractorAssemblyName = this.GetType().Assembly.GetName();
             Version version = tomExtractorAssemblyName.Version;
-            DaxModel = new Dax.Metadata.Model(tomExtractorAssemblyName.Name, tomExtractorAssemblyName.Version.ToString(), extractorApp, extractorVersion);
+            DaxModel = new Dax.Metadata.Model(tomExtractorAssemblyName.Name, version.ToString(), extractorApp, extractorVersion);
             if (tomModel != null) {
                 PopulateModel();
             }

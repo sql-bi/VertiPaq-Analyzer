@@ -6,7 +6,7 @@ namespace Dax.ViewVpaExport
     public class ColumnHierarchy
     {
         [JsonIgnore]
-        private Dax.Metadata.ColumnHierarchy _ColumnHierarchy;
+        private readonly Dax.Metadata.ColumnHierarchy _ColumnHierarchy;
         internal ColumnHierarchy(Dax.Metadata.ColumnHierarchy columnHierarchy)
         {
             _ColumnHierarchy = columnHierarchy;

@@ -23,7 +23,7 @@ namespace Dax.ViewVpaExport
 
         #endregion
         [JsonIgnore]
-        private Dax.Metadata.Column _Column;
+        private readonly Dax.Metadata.Column _Column;
         internal Column(Dax.Metadata.Column column)
         {
             this._Column = column;

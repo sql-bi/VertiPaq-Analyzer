@@ -7,7 +7,7 @@ namespace Dax.ViewModel
 {
     public class VpaTable
     {
-        private Dax.Metadata.Table Table;
+        private readonly Dax.Metadata.Table Table;
 
         internal VpaTable( Metadata.Table table )
         {

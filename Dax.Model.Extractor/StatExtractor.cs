@@ -50,8 +50,9 @@ namespace Dax.Metadata.Extractor
                 //only close the union call if there is more than 1 column in the columnSet
                 if (tableSet.Count > 1) { dax += ")"; }
 
-                var cmd = new AdomdCommand(dax, Connection);
-                cmd.CommandTimeout = CommandTimeout;
+                var cmd = new AdomdCommand(dax, Connection) {
+                    CommandTimeout = CommandTimeout
+                };
                 using (var reader = cmd.ExecuteReader()) {
 
                     while (reader.Read()) {
@@ -95,10 +96,11 @@ namespace Dax.Metadata.Extractor
                     .Where(c => !c.IsRowNumber )
                     .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{EmbedNameInString(c.Table.TableName.Name)}\", \"Column\", \"{idString++:0000}{EmbedNameInString(c.ColumnName.Name)}\", \"Cardinality\", DISTINCTCOUNT({EscapeColumnName(c)}))").ToList());
                 //only close the union call if there is more than 1 column in the columnSet
-                if (validColumns > 1) { dax += ")"; } 
+                if (validColumns > 1) { dax += ")"; }
 
-                var cmd = new AdomdCommand(dax, Connection);
-                cmd.CommandTimeout = CommandTimeout;
+                var cmd = new AdomdCommand(dax, Connection) {
+                    CommandTimeout = CommandTimeout
+                };
                 using (var reader = cmd.ExecuteReader()) {
                     while (reader.Read()) {
                         var tableName = reader.GetString(0).Substring(4);

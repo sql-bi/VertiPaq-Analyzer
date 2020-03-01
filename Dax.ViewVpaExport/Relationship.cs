@@ -7,7 +7,7 @@ namespace Dax.ViewVpaExport
     public class Relationship
     {
         [JsonIgnore]
-        private Dax.Metadata.Relationship _Relationship;
+        private readonly Dax.Metadata.Relationship _Relationship;
 
         internal Relationship(Dax.Metadata.Relationship relationship)
         {

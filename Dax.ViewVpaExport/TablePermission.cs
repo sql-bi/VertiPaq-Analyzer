@@ -7,7 +7,7 @@ namespace Dax.ViewVpaExport
     public class TablePermission
     {
         [JsonIgnore]
-        private Dax.Metadata.TablePermission _TablePermission;
+        private readonly Dax.Metadata.TablePermission _TablePermission;
 
         internal TablePermission(Dax.Metadata.TablePermission tablePermission)
         {

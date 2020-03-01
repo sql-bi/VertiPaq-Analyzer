@@ -9,13 +9,6 @@ namespace Dax.Metadata
 {
     public class Relationship
     {
-        private Dax.Metadata.Relationship _Relationship;
-
-        internal Relationship(Dax.Metadata.Relationship relationship)
-        {
-            this._Relationship = relationship;
-        }
-
         public Column FromColumn { get; }
         public string FromCardinalityType { get; set; }
         public Column ToColumn { get; }
