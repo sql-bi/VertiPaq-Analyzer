@@ -1,0 +1,46 @@
+﻿<Window x:Class="TestWpfPowerBI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestWpfPowerBI.Views"
+        mc:Ignorable="d"
+        Title="VertiPaq Analyzer Browser for Power BI" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="24" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="140" />
+            </Grid.ColumnDefinitions>
+            <!-- Comment GroupChanged to see designer 
+                  GroupChanged="PbiView_GroupChanged" 
+                  DatasetChanged="PbiView_DatasetChanged" 
+            -->
+            <local:PbiMetadataView Grid.Column="0" x:Name="PbiView"
+                  GroupChanged="PbiView_GroupChanged" 
+                  DatasetChanged="PbiView_DatasetChanged" 
+              />
+            <Grid Grid.Column="1" >
+                <Button x:Name="Login" Content="Sign in" HorizontalAlignment="Right" Height="35" Margin="0,10,10,10" VerticalAlignment="Top" Width="120" Click="Login_Click"/>
+                <Button x:Name="Logout" Content="Sign out" HorizontalAlignment="Right" Height="35" Margin="0,55,10,0" VerticalAlignment="Top" Width="120" Click="Logout_Click"/>
+                <Button x:Name="Export" Content="Export VPAX" HorizontalAlignment="Right" Height="35" Margin="0,130,10,0" VerticalAlignment="Top" Width="120" Click="Export_Click"/>
+            </Grid>
+        </Grid>
+        <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+        <local:VertiPaqAnalyzerView Grid.Row="2" x:Name="VpaxView"></local:VertiPaqAnalyzerView>
+        <StatusBar Grid.Row="3">
+            <StatusBarItem>
+                <TextBlock Name="Logging" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
+
+    
+    

@@ -15,7 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDaxWpf", "TestDaxWpf\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dax.Vpax", "Dax.Vpax\Dax.Vpax.csproj", "{F57C3CBB-DB2C-4E8C-A2B5-81803913E04A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dax.Metadata", "Dax.Metadata\Dax.Metadata.csproj", "{A665075A-AFD6-4902-8CC6-E762C4297DAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Metadata", "Dax.Metadata\Dax.Metadata.csproj", "{A665075A-AFD6-4902-8CC6-E762C4297DAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPowerBI", "TestPowerBI\TestPowerBI.csproj", "{41C00525-D3EA-403D-B1BF-4055244F57C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWpfPowerBI", "TestWpfPowerBI\TestWpfPowerBI.csproj", "{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{A665075A-AFD6-4902-8CC6-E762C4297DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A665075A-AFD6-4902-8CC6-E762C4297DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A665075A-AFD6-4902-8CC6-E762C4297DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41C00525-D3EA-403D-B1BF-4055244F57C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41C00525-D3EA-403D-B1BF-4055244F57C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41C00525-D3EA-403D-B1BF-4055244F57C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41C00525-D3EA-403D-B1BF-4055244F57C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

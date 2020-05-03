@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="TestWpfPowerBI.Views.PbiMetadataView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
+             xmlns:conv="clr-namespace:TestWpfPowerBI" 
+             xmlns:vm="clr-namespace:TestWpfPowerBI.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="460" d:DesignWidth="583">
+    <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ListBox ItemsSource="{Binding PbiGroups, UpdateSourceTrigger=PropertyChanged}" x:Name="Groups" Margin="0,0,0,0" SelectionChanged="Groups_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+        <ListBox Grid.Column="2" ItemsSource="{Binding PbiDatasets, UpdateSourceTrigger=PropertyChanged}" x:Name="Datasets" Margin="0,0,0,0" SelectionChanged="Datasets_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

@@ -19,6 +19,37 @@ namespace TestDaxModel
 
         static void Main(string[] args)
         {
+            // GenericTest();
+            TestPbiShared();
+        }
+
+        static void TestPbiShared()
+        {
+            const string dataSource = "pbiazure://api.powerbi.com";
+            const string identityProvider = "https://login.microsoftonline.com/common, https://analysis.windows.net/powerbi/api, 929d0ec0-7a41-4b1e-bc7c-b754a28bddcc;";
+            const string initialCatalog = "cffc2ad9-6ba9-4597-adec-b78af24e8fee";
+            const string databaseName = "sobe_wowvirtualserver-" + initialCatalog;
+            const string integratedSecurity = "ClaimsToken";
+            const string other = "MDX Compatibility= 1; MDX Missing Member Mode= Error; Safety Options= 2; Update Isolation Level= 2; Locale Identifier= 1033;";
+
+            const string serverName = dataSource;
+
+            var connStr = String.Format(
+                "Provider=MSOLAP;Identity Provider={0};Data Source={1};Initial Catalog={2};", // ;MDX Compatibility= 1; MDX Missing Member Mode= Error; Safety Options= 2; Update Isolation Level= 2;";
+                identityProvider,
+                dataSource,
+                initialCatalog
+                );
+
+            var conn = new System.Data.OleDb.OleDbConnection(connStr);
+            //conn.Open();
+            //Console.WriteLine("Connection open");
+
+            Dax.Metadata.Model m = new Dax.Metadata.Model();
+            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+        }
+        static void GenericTest()
+        { 
             //
             // Retrieve DAX model from database connection
             //

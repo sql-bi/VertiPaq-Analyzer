@@ -7,28 +7,51 @@ using System.Threading.Tasks;
 using System.Data.OleDb;
 using Tom = Microsoft.AnalysisServices.Tabular;
 using Microsoft.AnalysisServices.AdomdClient;
+using System.Data;
 
 namespace Dax.Metadata.Extractor
 {
     
     public class ExtractorException : Exception
     {
-        public AdomdConnection Connection { get; private set; }
+        public IDbConnection Connection { get; private set; }
         public string DatabaseName { get; private set; }
-        public ExtractorException( AdomdConnection connection, string databaseName )
+        public ExtractorException( IDbConnection connection, string databaseName )
         {
             Connection = connection;
             DatabaseName = databaseName;
+        }
+        public ExtractorException(IDbConnection connection)
+        {
+            Connection = connection;
         }
     }
     public class DmvExtractor
     {
         public int CommandTimeout { get; set; } = 0;
 
-        protected AdomdConnection Connection { get; private set; }
+        // protected AdomdConnection Connection { get; private set; }
+        protected IDbConnection Connection { get; private set; }
 
         public Dax.Metadata.Model DaxModel { get; private set; }
-        public DmvExtractor(Dax.Metadata.Model daxModel, AdomdConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
+
+        protected IDbCommand CreateCommand(string commandText)
+        {
+            if (Connection is AdomdConnection)
+            {
+                return new AdomdCommand(commandText, Connection as AdomdConnection);
+            }
+            else if (Connection is OleDbConnection)
+            {
+                return new OleDbCommand(commandText, Connection as OleDbConnection);
+            }
+            else
+            {
+                throw new ExtractorException(Connection);
+            }
+        }
+
+        public DmvExtractor(Dax.Metadata.Model daxModel, IDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
             Connection = connection;
             Connection.Open();
@@ -50,10 +73,14 @@ namespace Dax.Metadata.Extractor
 
             // Update ExtractionDate
             DaxModel.ExtractionDate = DateTime.UtcNow;
-
         }
-
+        /*
         public static void PopulateFromDmv(Dax.Metadata.Model daxModel, AdomdConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
+        {
+            PopulateFromDmv(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
+        }
+        */
+        public static void PopulateFromDmv(Dax.Metadata.Model daxModel, IDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
             Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
             de.PopulateTables();
@@ -69,9 +96,9 @@ namespace Dax.Metadata.Extractor
 SELECT [CATALOG_NAME], [COMPATIBILITY_LEVEL]
 FROM $SYSTEM.DBSCHEMA_CATALOGS";
 
-            var cmd = new AdomdCommand(QUERY_CATALOGS, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_CATALOGS);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader()) {
 
                 while (rdr.Read()) {
@@ -266,9 +293,9 @@ FROM  $SYSTEM.DISCOVER_STORAGE_TABLES
 WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'
 ORDER BY DIMENSION_NAME";
 
-            var cmd = new AdomdCommand(QUERY_TABLES, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_TABLES);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -305,9 +332,9 @@ SELECT
 FROM  $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMNS
 WHERE COLUMN_TYPE = 'BASIC_DATA'";
 
-            var cmd = new AdomdCommand(QUERY_COLUMNS, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_COLUMNS);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -351,9 +378,9 @@ FROM $SYSTEM.DISCOVER_STORAGE_TABLES
 WHERE LEFT ( TABLE_ID, 2 ) = 'H$'
 ORDER BY TABLE_ID";
 
-            var cmd = new AdomdCommand(QUERY_COLUMNS_CARDINALITY, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_COLUMNS_CARDINALITY);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -386,9 +413,9 @@ SELECT
 FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
 
-            var cmd = new AdomdCommand(QUERY_COLUMNS_SEGMENTS, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_COLUMNS_SEGMENTS);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -430,9 +457,9 @@ SELECT
 FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE LEFT ( TABLE_ID, 2 ) = 'H$'";
 
-            var cmd = new AdomdCommand(QUERY_HIERARCHIES, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_HIERARCHIES);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -460,9 +487,9 @@ FROM $SYSTEM.TMSCHEMA_HIERARCHIES";
             var map = new Dictionary<int, string>();
 
             if (DaxModel.CompatibilityLevel >= 1200) {
-                var cmd = new AdomdCommand(QUERY_USER_HIERARCHIES, Connection) {
-                    CommandTimeout = CommandTimeout
-                };
+                var cmd = CreateCommand(QUERY_USER_HIERARCHIES);
+                cmd.CommandTimeout = CommandTimeout;
+
                 using (var rdr = cmd.ExecuteReader()) {
                     while (rdr.Read()) {
                         int userHierarchyId = (int)rdr.GetDecimal(0);
@@ -487,9 +514,9 @@ FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE LEFT ( TABLE_ID, 2 ) = 'U$'";
 
             var mapUserHierarchyNames = GetUserHierarchiesNames();
-            var cmd = new AdomdCommand(QUERY_USER_HIERARCHIES_SIZE, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_USER_HIERARCHIES_SIZE);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader()) {
                 // Reset size existing hierarchies
                 foreach ( var t in this.DaxModel.Tables) {
@@ -565,9 +592,9 @@ FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE LEFT ( TABLE_ID, 2 ) = 'R$'";
 
             var map = new Dictionary<TableRelationshipIds, long>();
-            var cmd = new AdomdCommand(QUERY_RELATIONSHIPS_SIZE, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_RELATIONSHIPS_SIZE);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
@@ -598,9 +625,9 @@ SELECT TOP 1 [LAST_DATA_UPDATE]
 FROM $SYSTEM.MDSCHEMA_CUBES
 ORDER BY [LAST_DATA_UPDATE] DESC";
 
-            var cmd = new AdomdCommand(QUERY_LASTUPDATE, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_LASTUPDATE);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader())
             {
                 if (rdr.Read())
@@ -636,9 +663,9 @@ SELECT
 FROM $SYSTEM.TMSCHEMA_RELATIONSHIPS";
 
             var mapRelationshipsSize = GetRelationshipsSize();
-            var cmd = new AdomdCommand(QUERY_RELATIONSHIPS, Connection) {
-                CommandTimeout = CommandTimeout
-            };
+            var cmd = CreateCommand(QUERY_RELATIONSHIPS);
+            cmd.CommandTimeout = CommandTimeout;
+
             using (var rdr = cmd.ExecuteReader()) {
                 while (rdr.Read()) {
                     int relationshipDmv1200Id = (int)rdr.GetDecimal(0);
