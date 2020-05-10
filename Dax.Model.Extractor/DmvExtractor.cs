@@ -74,6 +74,16 @@ namespace Dax.Metadata.Extractor
             // Update ExtractionDate
             DaxModel.ExtractionDate = DateTime.UtcNow;
         }
+
+
+        // ***************************
+        // ***************************
+        //
+        //  TODO - check whether modifying the signature from AdomdConnection to IDbConnection broke compatibility
+        //
+        // ***************************
+        // ***************************
+
         /*
         public static void PopulateFromDmv(Dax.Metadata.Model daxModel, AdomdConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
@@ -85,6 +95,7 @@ namespace Dax.Metadata.Extractor
             Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
             de.PopulateTables();
             de.PopulateColumns();
+            de.PopulateMeasures();
             de.PopulateLastDataUpdate();
             de.PopulateUserHierarchies();
             de.PopulateRelationships();
@@ -275,6 +286,7 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
                 {
                     HierarchyName = new Dax.Metadata.DaxName(userHierarchyName)
                 };
+                daxTable.UserHierarchies.Add ( daxUserHierarchy );
             }
 
             return daxUserHierarchy;
@@ -307,6 +319,60 @@ ORDER BY DIMENSION_NAME";
                     daxTable.SetDmv1100TableId(tableId);
                     daxTable.RowsCount = rowsCount;
                     daxTable.ReferentialIntegrityViolationCount = referentialIntegrityViolationCount;
+                }
+            }
+        }
+
+        public void PopulateMeasures()
+        {
+            const string QUERY_MEASURES = @"
+SELECT 
+    MEASUREGROUP_NAME AS TABLE_NAME,
+    MEASURE_NAME,
+    DATA_TYPE,
+    EXPRESSION,
+    DEFAULT_FORMAT_STRING,
+    MEASURE_IS_VISIBLE,
+    MEASURE_DISPLAY_FOLDER,
+    [DESCRIPTION]
+FROM $SYSTEM.MDSCHEMA_MEASURES
+WHERE MEASURE_NAME <> '__Default measure'
+ORDER BY MEASUREGROUP_NAME";
+
+            var cmd = CreateCommand(QUERY_MEASURES);
+            cmd.CommandTimeout = CommandTimeout;
+
+            using (var rdr = cmd.ExecuteReader())
+            {
+                while (rdr.Read())
+                {
+                    string tableName = rdr.GetString(0);
+                    string measureName = rdr.GetString(1);
+                    int dataType = rdr.GetInt32(2);
+                    string measureExpression = rdr.GetString(3).ToString();
+                    string defaultFormatString = rdr.GetValue(4).ToString();
+                    bool measureVisible = rdr.GetBoolean(5);
+                    string measureDisplayFolder = rdr.GetString(6).ToString();
+                    string measureDescription = rdr.GetString(7).ToString();
+
+                    Table daxTable = GetDaxTable(tableName);
+                    var daxMeasure = daxTable.Measures.Where(m => m.MeasureName.Equals(measureName)).FirstOrDefault();
+                    if (daxMeasure == null)
+                    {
+                        daxMeasure = new Dax.Metadata.Measure()
+                        {
+                            Table = daxTable,
+                            MeasureName = new DaxName(measureName),
+                            // dataType not set?
+                            MeasureExpression = new DaxExpression(measureExpression),
+                            FormatString = defaultFormatString, // TODO - this might change to DaxExpression with dynamic format strings
+                            IsHidden = !measureVisible,
+                            DisplayFolder = measureDisplayFolder, // TODO - DisplayFolder should be a DaxName?
+                            Description = measureDescription
+                        };
+
+                        daxTable.Measures.Add(daxMeasure);
+                    }
                 }
             }
         }
@@ -678,6 +744,12 @@ FROM $SYSTEM.TMSCHEMA_RELATIONSHIPS";
                     Column fromColumn = GetDaxColumnDmv1200Id(fromTableDmv1200Id, fromColumnDmv1200Id);
                     Column toColumn = GetDaxColumnDmv1200Id(toTableDmv1200Id, toColumnDmv1200Id);
                     var relationship = DaxModel.Relationships.Where(r => r.FromColumn == fromColumn && r.ToColumn == toColumn).FirstOrDefault();
+                    if (relationship == null)
+                    {
+                        // Create relationship
+                        relationship = new Relationship(fromColumn, toColumn);
+                        DaxModel.Relationships.Add(relationship);
+                    }
                     if (relationship != null) {
                         relationship.Dmv1200RelationshipId = relationshipDmv1200Id;
 

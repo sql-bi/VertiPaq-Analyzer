@@ -78,20 +78,41 @@ namespace TestWpfPowerBI
                 this.Logout.Visibility = Visibility.Visible;
                 this.Login.Content = result.Account.Username;
                 this.Login.IsEnabled = false;
-                LoadGroups();
+
+                LoadGroups(PreloadDatasets.IsChecked.Value);
                 // LoadDatasets(); // load all datasets from all groups
             }
         }
 
-        private async void LoadGroups()
+        private async void LoadGroups(bool preloadDatasets)
         {
             await Task.Run(() =>
             {
-                PbiMetadataBinding.PbiGroups = new BindableCollection<Group>(
-                    from g in PowerBI_Tools.GetGroups() 
-                    orderby g.Name 
-                    select g
-                );
+                DisplayStatus($"Loading groups...");
+                var groups = 
+                    from g in PowerBI_Tools.GetGroups()
+                    orderby g.Name
+                    select g;
+                if (preloadDatasets)
+                {
+                    foreach (var g in groups)
+                    {
+                        DisplayStatus($"Loading datasets for group {g.Name}...");
+                        g.Datasets = new BindableCollection<Dataset>(
+                            from d in PowerBI_Tools.GetDatasets(g)
+                            orderby d.Name
+                            select d
+                        );
+                    }
+                    groups =
+                        from g in groups
+                        where g.Datasets.Count > 0
+                        orderby g.Name
+                        select g;
+                    DisplayStatus($"Loaded {groups.Count()} groups.", 3000);
+                }
+
+                PbiMetadataBinding.PbiGroups = new BindableCollection<Group>(groups);
             });
         }
 
@@ -123,37 +144,64 @@ namespace TestWpfPowerBI
             if (selectedGroup == null) return;
             Log.Information($"Group:{selectedGroup.Name}");
 
-            DisplayStatus("Loading datasets...");
-            await Task.Run(() =>
+            if (selectedGroup.Datasets == null)
             {
-                PbiMetadataBinding.PbiDatasets = new BindableCollection<Dataset>(
-                    from g in PowerBI_Tools.GetDatasets(selectedGroup)
-                    orderby g.Name
-                    select g
-                );
-            });
-            DisplayStatus();
+                await Task.Run(() =>
+                {
+                    DisplayStatus($"Loading datasets for group {selectedGroup.Name}...");
+                    selectedGroup.Datasets = new BindableCollection<Dataset>(
+                            from d in PowerBI_Tools.GetDatasets(selectedGroup)
+                            orderby d.Name
+                            select d
+                        );
+                    DisplayStatus();
+                });
+            }
+            PbiMetadataBinding.PbiDatasets = selectedGroup.Datasets as BindableCollection<Dataset>;
         }
 
-        private void DisplayStatus( string status = "" )
+        private void DisplayStatus( string status = "", int millisecondsToHide = -1 )
         {
-            Logging.Text = status;
+            this.Dispatcher.Invoke(new System.Action(() =>
+               {
+                   Logging.Text = status;
+
+                   if (millisecondsToHide >= 0)
+                   {
+                       Task.Run(new System.Action(() =>
+                       {
+                           Task.Delay(millisecondsToHide).Wait();
+                           this.Dispatcher.Invoke(new System.Action(() => Logging.Text = ""));
+                       }));
+                   }
+               }));
         }
+
+        private System.Collections.Concurrent.ConcurrentDictionary<Dataset,Dax.ViewModel.VpaModel> CacheVpaModels = 
+            new System.Collections.Concurrent.ConcurrentDictionary<Dataset,Dax.ViewModel.VpaModel>();
+
         private async void PbiView_DatasetChanged(object sender, EventArgs e)
         {
             var selectedDataset = PbiView.SelectedDataset;
             if (selectedDataset == null) return;
             Log.Information($"Dataset:{selectedDataset.Name}");
 
+            Dax.ViewModel.VpaModel newModel = null;
+            if (CacheVpaModels.TryGetValue(selectedDataset, out newModel))
+            {
+                CurrentVpaModel = newModel;
+                return;
+            }
+
             // Loader and show VPAX
             DisplayStatus($"Loading VertiPaq Analyzer from dataset {selectedDataset.Name} ...");
-            Dax.ViewModel.VpaModel newModel = null;
             await Task.Run(() =>
             {
-                newModel = TestPbiShared(selectedDataset.Name, selectedDataset.Id);
+                newModel = GetVpaModel(selectedDataset.Name, selectedDataset.Id);
             });
             if (newModel != null)
             {
+                CacheVpaModels.AddOrUpdate(selectedDataset, newModel, (key, oldValue) => newModel);
                 CurrentVpaModel = newModel;
                 DisplayStatus("");
             }
@@ -163,7 +211,7 @@ namespace TestWpfPowerBI
             }
         }
 
-        private Dax.ViewModel.VpaModel TestPbiShared(string name, string id)
+        private Dax.ViewModel.VpaModel GetVpaModel(string name, string id)
         {
             const string dataSource = "pbiazure://api.powerbi.com";
             const string identityProvider = "https://login.microsoftonline.com/common, https://analysis.windows.net/powerbi/api, 929d0ec0-7a41-4b1e-bc7c-b754a28bddcc;";
@@ -195,8 +243,9 @@ namespace TestWpfPowerBI
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     string filename = saveFileDialog.FileName;
+                    var viewVpa = new Dax.ViewVpaExport.Model(CurrentVpaModel.Model);
                     DisplayStatus($"Saving {filename} ...");
-                    Dax.Vpax.Tools.VpaxTools.ExportVpax(filename, CurrentVpaModel.Model);
+                    Dax.Vpax.Tools.VpaxTools.ExportVpax(filename, CurrentVpaModel.Model, viewVpa);
                     DisplayStatus($"VPAX saved to {filename}");
                 }
             }

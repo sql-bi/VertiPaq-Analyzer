@@ -20,9 +20,22 @@ namespace TestDaxModel
         static void Main(string[] args)
         {
             // GenericTest();
-            TestPbiShared();
+            // TestPbiShared();
+            TestLocalVpaModel();
         }
 
+        static void TestLocalVpaModel()
+        {
+            string databaseName = "Contoso";
+            const string serverName = @".\tab17";
+
+            var connStr = $"Provider=MSOLAP;Data Source={serverName};Initial Catalog={databaseName};";
+            var conn = new System.Data.OleDb.OleDbConnection(connStr);
+
+            Dax.Metadata.Model m = new Dax.Metadata.Model();
+            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            DumpRelationships(m);
+        }
         static void TestPbiShared()
         {
             const string dataSource = "pbiazure://api.powerbi.com";

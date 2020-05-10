@@ -29,7 +29,8 @@
             <Grid Grid.Column="1" >
                 <Button x:Name="Login" Content="Sign in" HorizontalAlignment="Right" Height="35" Margin="0,10,10,10" VerticalAlignment="Top" Width="120" Click="Login_Click"/>
                 <Button x:Name="Logout" Content="Sign out" HorizontalAlignment="Right" Height="35" Margin="0,55,10,0" VerticalAlignment="Top" Width="120" Click="Logout_Click"/>
-                <Button x:Name="Export" Content="Export VPAX" HorizontalAlignment="Right" Height="35" Margin="0,130,10,0" VerticalAlignment="Top" Width="120" Click="Export_Click"/>
+                <Button x:Name="Export" Content="Export VPAX" HorizontalAlignment="Right" Height="35" Margin="0,142,10,0" VerticalAlignment="Top" Width="120" Click="Export_Click"/>
+                <CheckBox x:Name="PreloadDatasets" Content="Preload datasets" HorizontalAlignment="Left" Height="17" Margin="10,108,0,0" VerticalAlignment="Top" Width="120" IsChecked="True"/>
             </Grid>
         </Grid>
         <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />

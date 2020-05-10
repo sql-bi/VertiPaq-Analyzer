@@ -100,10 +100,12 @@ namespace TestWpfPowerBI.ViewModels
             set {
                 _viewModel = value;
                 _groupedColumns = null;
+                _sortedColumns = null;
                 _groupedRelationships = null;
                 SummaryViewModel = new VpaSummaryViewModel(this);
                 NotifyOfPropertyChange(() => ViewModel);
                 NotifyOfPropertyChange(() => GroupedColumns);
+                NotifyOfPropertyChange(() => SortedColumns);
                 NotifyOfPropertyChange(() => GroupedRelationships);
                 NotifyOfPropertyChange(() => TreeviewColumns);
                 NotifyOfPropertyChange(() => TreeviewRelationships);
