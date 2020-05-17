@@ -4,42 +4,65 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestWpfPowerBI.Views"
+        xmlns:model="clr-namespace:TestWpfPowerBI.Model"
         mc:Ignorable="d"
         Title="VertiPaq Analyzer Browser for Power BI" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="5" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="24" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="140" />
             </Grid.ColumnDefinitions>
-            <!-- Comment GroupChanged to see designer 
-                  GroupChanged="PbiView_GroupChanged" 
-                  DatasetChanged="PbiView_DatasetChanged" 
-            -->
-            <local:PbiMetadataView Grid.Column="0" x:Name="PbiView"
+            <ContentControl Grid.Column="0">
+                <local:PbiMetadataTreeView Grid.Column="0" x:Name="PbiTreeView"
+                  GroupChanged="PbiTreeView_GroupChanged" 
+                  DatasetChanged="PbiTreeView_DatasetChanged" 
+                  GroupExpanded="PbiTreeView_GroupExpanded"
+              />
+            </ContentControl>
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+            <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="24" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+
+                <!--  Old layout
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="140" />
+                </Grid.ColumnDefinitions>
+                <local:PbiMetadataView Grid.Column="0" x:Name="PbiView"
                   GroupChanged="PbiView_GroupChanged" 
                   DatasetChanged="PbiView_DatasetChanged" 
               />
-            <Grid Grid.Column="1" >
-                <Button x:Name="Login" Content="Sign in" HorizontalAlignment="Right" Height="35" Margin="0,10,10,10" VerticalAlignment="Top" Width="120" Click="Login_Click"/>
-                <Button x:Name="Logout" Content="Sign out" HorizontalAlignment="Right" Height="35" Margin="0,55,10,0" VerticalAlignment="Top" Width="120" Click="Logout_Click"/>
-                <Button x:Name="Export" Content="Export VPAX" HorizontalAlignment="Right" Height="35" Margin="0,142,10,0" VerticalAlignment="Top" Width="120" Click="Export_Click"/>
-                <CheckBox x:Name="PreloadDatasets" Content="Preload datasets" HorizontalAlignment="Left" Height="17" Margin="10,108,0,0" VerticalAlignment="Top" Width="120" IsChecked="True"/>
+                <Grid Grid.Column="1" >
+                
+            -->
+                    <Button x:Name="Login" Content="Sign in" HorizontalAlignment="Right" Height="35" Margin="290,10,10,10" VerticalAlignment="Top" Width="120" Click="Login_Click"/>
+                    <Button x:Name="Logout" Content="Sign out" HorizontalAlignment="Left" Height="35" Margin="150,10,10,0" VerticalAlignment="Top" Width="120" Click="Logout_Click"/>
+                    <Button x:Name="Export" Content="Export VPAX" HorizontalAlignment="Left" Height="35" Margin="10,10,10,0" VerticalAlignment="Top" Width="120" Click="Export_Click"/>
+                    <CheckBox x:Name="PreloadDatasets" Content="Preload datasets" HorizontalAlignment="Right" Height="17" Margin="290,50,10,0" VerticalAlignment="Top" Width="120" IsChecked="True"/>
+                <!--
+                </Grid>
+                -->
             </Grid>
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+            <local:VertiPaqAnalyzerView Grid.Row="2" x:Name="VpaxView"></local:VertiPaqAnalyzerView>
+            <StatusBar Grid.Row="3">
+                <StatusBarItem>
+                    <TextBlock Name="Logging" />
+                </StatusBarItem>
+            </StatusBar>
         </Grid>
-        <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
-        <local:VertiPaqAnalyzerView Grid.Row="2" x:Name="VpaxView"></local:VertiPaqAnalyzerView>
-        <StatusBar Grid.Row="3">
-            <StatusBarItem>
-                <TextBlock Name="Logging" />
-            </StatusBarItem>
-        </StatusBar>
+        </Grid>
     </Grid>
 </Window>
 

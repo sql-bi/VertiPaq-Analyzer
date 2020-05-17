@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="TestWpfPowerBI.Views.PbiMetadataTreeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
+             xmlns:conv="clr-namespace:TestWpfPowerBI" 
+             xmlns:vm="clr-namespace:TestWpfPowerBI.ViewModels"
+             xmlns:model="clr-namespace:TestWpfPowerBI.Model"
+             xmlns:pbimodel="clr-namespace:Microsoft.PowerBI.Api.Models;assembly=Microsoft.PowerBI.Api"
+             mc:Ignorable="d" 
+             d:DesignHeight="460" d:DesignWidth="583">
+
+    <Control.Template>
+        <ControlTemplate>
+            <Grid >
+                <TreeView x:Name="PbiTreeView" Height="Auto"  ItemsSource="{Binding PbiGroups, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItemChanged="PbiTreeView_SelectedItemChanged"
+                          TreeViewItem.Expanded="PbiTreeView_Expanded"
+                          FocusManager.IsFocusScope="True"
+                          VirtualizingPanel.IsVirtualizing="True"
+                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          Margin="0,0,0,0">
+                    <TreeView.Resources>
+                        <!-- Group Template -->
+                        <HierarchicalDataTemplate DataType="{x:Type model:TreeViewPbiGroup}" ItemsSource="{Binding Children}"> <!-- ItemsSource="{Binding Datasets}"> -->
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock  Text="{Binding Name}" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+
+                        <!-- Dataset Template -->
+                        <HierarchicalDataTemplate DataType="{x:Type model:TreeViewPbiItem}">
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock x:Name="Caption" Text="{Binding Name}" >
+                                </TextBlock>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+
+            </Grid>
+        </ControlTemplate>
+    </Control.Template>
+</UserControl>

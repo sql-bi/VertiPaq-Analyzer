@@ -148,12 +148,17 @@
     <Compile Include="Interfaces\IGlobalOptions.cs" />
     <Compile Include="Interfaces\IToolWindow.cs" />
     <Compile Include="Model\ToolWindowBase.cs" />
+    <Compile Include="Model\TreeViewPbiItems.cs" />
     <Compile Include="PowerBI\Authentication.cs" />
     <Compile Include="PowerBI\MetadataTools.cs" />
     <Compile Include="PowerBI\TokenCacheHelper.cs" />
     <Compile Include="ViewModels\DocumentViewModel.cs" />
+    <Compile Include="ViewModels\PbiMetadataTreeViewModel.cs" />
     <Compile Include="ViewModels\PbiMetadataViewModel.cs" />
     <Compile Include="ViewModels\VertiPaqAnalyzerViewModel.cs" />
+    <Compile Include="Views\PbiMetadataTreeView.xaml.cs">
+      <DependentUpon>PbiMetadataTreeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PbiMetadataView.xaml.cs">
       <DependentUpon>PbiMetadataView.xaml</DependentUpon>
     </Compile>
@@ -175,6 +180,10 @@
     <Page Include="Resources\Styles\ExpanderArrowStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PbiMetadataTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PbiMetadataView.xaml">
       <SubType>Designer</SubType>

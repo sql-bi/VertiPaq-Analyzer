@@ -1,30 +1,29 @@
-﻿using System.ComponentModel.Composition;
-using Caliburn.Micro;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestWpfPowerBI.Model;
-using TestWpfPowerBI.Events;
-using TestWpfPowerBI.Interfaces;
-using Serilog;
 using Microsoft.PowerBI.Api.Models;
+using System.ComponentModel.Composition;
+using TestWpfPowerBI.Model;
+using Caliburn.Micro;
+using Serilog;
 
 namespace TestWpfPowerBI.ViewModels
 {
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [Export]
-    public class PbiMetadataViewModel : ToolWindowBase
-        , IHandle<DocumentConnectionUpdateEvent>
-        , IHandle<UpdateGlobalOptions>
-        , IViewAware
+    public class PbiMetadataTreeViewModel :
+        ToolWindowBase // ToolPaneBaseViewModel
+        // , IHandle<UpdateGlobalOptions>
+        //, IDragSource
+        // , IMetadataPane
     {
         private readonly IEventAggregator _eventAggregator;
         public DocumentViewModel CurrentDocument { get; }
 
         [ImportingConstructor]
-        public PbiMetadataViewModel(IEventAggregator eventAggregator, DocumentViewModel currentDocument)
+        public PbiMetadataTreeViewModel(IEventAggregator eventAggregator, DocumentViewModel currentDocument)
         {
             Log.Debug("{class} {method} {message}", "PbiMetadataViewModel", "ctor", "start");
             _eventAggregator = eventAggregator;
@@ -33,18 +32,20 @@ namespace TestWpfPowerBI.ViewModels
             Log.Debug("{class} {method} {message}", "PbiMetadataViewModel", "ctor", "end");
         }
 
-        private BindableCollection<Group> _pbiGroups;
-        public BindableCollection<Group> PbiGroups {
+
+        private BindableCollection<TreeViewPbiGroup> _pbiGroups;
+        public BindableCollection<TreeViewPbiGroup> PbiGroups {
             get {
                 return _pbiGroups;
             }
             set {
                 _pbiGroups = value;
                 NotifyOfPropertyChange(() => PbiGroups);
-                NotifyOfPropertyChange(() => PbiDatasets);
+                // NotifyOfPropertyChange(() => PbiDatasets);
             }
         }
 
+        /*
         private BindableCollection<Dataset> _pbiDatasets;
         public BindableCollection<Dataset> PbiDatasets {
             get {
@@ -55,19 +56,6 @@ namespace TestWpfPowerBI.ViewModels
                 NotifyOfPropertyChange(() => PbiDatasets);
             }
         }
-
-        public void Handle(DocumentConnectionUpdateEvent message)
-        {
-            // TODO connect VPA data
-            Log.Information("VertiPaq Analyzer Handle DocumentConnectionUpdateEvent call");
-        }
-
-        public void Handle(UpdateGlobalOptions message)
-        {
-            // NotifyOfPropertyChange(() => ShowTraceColumns);
-            Log.Information("VertiPaq Analyzer Handle UpdateGlobalOptions call");
-        }
-
+        */
     }
-
 }
