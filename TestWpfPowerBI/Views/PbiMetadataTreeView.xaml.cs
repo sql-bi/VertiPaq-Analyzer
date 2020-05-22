@@ -29,16 +29,16 @@ namespace TestWpfPowerBI.Views
 
         private void PbiTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue is Group)
+            if (e.NewValue is TreeViewPbiGroup)
             {
-                SelectedGroup = e.NewValue as Group;
+                SelectedGroup = ((TreeViewPbiGroup)e.NewValue).Group as Group;
                 SelectedDataset = null;
                 GroupChanged?.Invoke(this, EventArgs.Empty);
             }
-            else if (e.NewValue is Dataset)
+            else if (e.NewValue is TreeViewPbiDataset)
             {
                 SelectedGroup = null;
-                SelectedDataset = e.NewValue as Dataset;
+                SelectedDataset = ((TreeViewPbiDataset)e.NewValue).Dataset ;
                 DatasetChanged?.Invoke(this, EventArgs.Empty);
             }
         }
