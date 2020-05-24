@@ -209,6 +209,7 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
                 {
                     ColumnName = new Dax.Metadata.DaxName(columnName),
                     IsRowNumber = (columnName == "RowNumber")  // TODO Not a safe technique, but it should work most of the times for DMV 1100
+                                  || columnName.StartsWith("RowNumber-")
                 };
 
                 daxTable.Columns.Add(daxColumn);

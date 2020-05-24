@@ -64,6 +64,25 @@ namespace TestWpfPowerBI.ViewModels
     }
 
 
+    public class PartitionGroupDescription : PropertyGroupDescription
+    {
+        public PartitionGroupDescription(string propertyName) : base(propertyName) { }
+
+        public override bool NamesMatch(object groupName, object itemName)
+        {
+            var groupTable = (VpaTableViewModel)groupName;
+            var itemTable = (VpaTableViewModel)itemName;
+            return base.NamesMatch(groupTable.TableName, itemTable.TableName);
+        }
+        public override object GroupNameFromItem(object item, int level, CultureInfo culture)
+        {
+            var partition = item as VpaPartitionViewModel;
+            return partition.Table;
+        }
+
+    }
+
+
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [Export]
     public class VertiPaqAnalyzerViewModel : ToolWindowBase
@@ -141,6 +160,23 @@ namespace TestWpfPowerBI.ViewModels
                     _groupedRelationships.SortDescriptions.Add(new SortDescription("UsedSize", ListSortDirection.Descending));
                 }
                 return _groupedRelationships;
+            }
+        }
+
+        private ICollectionView _groupedPartitions;
+        public ICollectionView GroupedPartitions {
+            get {
+                if (_groupedPartitions == null)
+                {
+                    var partitions = from t in ViewModel.Tables
+                                     from p in t.Partitions
+                                     select new VpaPartitionViewModel(p, new VpaTableViewModel(t, this), this);
+
+                    _groupedPartitions = CollectionViewSource.GetDefaultView(partitions);
+                    _groupedPartitions.GroupDescriptions.Add(new PartitionGroupDescription("Table"));
+                    _groupedPartitions.SortDescriptions.Add(new SortDescription("RowsCount", ListSortDirection.Descending));
+                }
+                return _groupedPartitions;
             }
         }
 
@@ -317,6 +353,42 @@ namespace TestWpfPowerBI.ViewModels
         public bool IsExpanded { get; set; }
         public long RelationshipMaxToCardinality { get; }
 
+    }
+
+    public class VpaPartitionViewModel : IComparable
+    {
+        private readonly VpaPartition _partition;
+        private readonly VertiPaqAnalyzerViewModel _parentViewModel;
+        public VpaPartitionViewModel(VpaPartition partition, VpaTableViewModel table, VertiPaqAnalyzerViewModel parentViewModel)
+        {
+            _partition = partition;
+            _parentViewModel = parentViewModel;
+            Table = table;
+        }
+
+        public VpaTableViewModel Table { get; }
+        public string PartitionName => _partition.PartitionName;
+
+        public long RowsCount => _partition.RowsCount;
+        public long DataSize => _partition.DataSize;
+        public long PartitionsNumber => 1;
+        public long SegmentsNumber => _partition.SegmentsNumber;
+        
+        public int CompareTo(object obj)
+        {
+            var objPartition = (VpaPartitionViewModel)obj;
+            switch (_parentViewModel.SortColumn)
+            {
+                case "ColumnCardinality":
+                    return RowsCount.CompareTo(objPartition.RowsCount) * _parentViewModel.SortDirection;
+                case "DataSize":
+                    return DataSize.CompareTo(objPartition.DataSize) * _parentViewModel.SortDirection;
+                default:
+                    return PartitionName.CompareTo(objPartition.PartitionName) * _parentViewModel.SortDirection;
+            }
+        }
+
+        public bool IsExpanded { get; set; }
     }
 
     public class VpaSummaryViewModel
