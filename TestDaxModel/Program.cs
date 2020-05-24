@@ -26,8 +26,10 @@ namespace TestDaxModel
 
         static void TestLocalVpaModel()
         {
-            string databaseName = "Contoso";
-            const string serverName = @".\tab17";
+            //string databaseName = "Contoso";
+            //const string serverName = @".\tab17";
+            string databaseName = "CalculationGroups_Currency";
+            const string serverName = @".\tab19";
 
             var connStr = $"Provider=MSOLAP;Data Source={serverName};Initial Catalog={databaseName};";
             var conn = new System.Data.OleDb.OleDbConnection(connStr);

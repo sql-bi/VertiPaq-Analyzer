@@ -351,7 +351,7 @@ ORDER BY MEASUREGROUP_NAME";
                     string measureName = rdr.GetString(1);
                     int dataType = rdr.GetInt32(2);
                     string measureExpression = rdr.GetString(3).ToString();
-                    string defaultFormatString = rdr.GetValue(4).ToString();
+                    string defaultFormatString = rdr.GetValue(4)?.ToString() ?? "";
                     bool measureVisible = rdr.GetBoolean(5);
                     string measureDisplayFolder = rdr.GetString(6).ToString();
                     string measureDescription = rdr.GetString(7).ToString();
