@@ -121,6 +121,7 @@ namespace TestWpfPowerBI.ViewModels
                 _groupedColumns = null;
                 _sortedColumns = null;
                 _groupedRelationships = null;
+                _groupedPartitions = null;
                 SummaryViewModel = new VpaSummaryViewModel(this);
                 NotifyOfPropertyChange(() => ViewModel);
                 NotifyOfPropertyChange(() => GroupedColumns);
@@ -128,6 +129,7 @@ namespace TestWpfPowerBI.ViewModels
                 NotifyOfPropertyChange(() => GroupedRelationships);
                 NotifyOfPropertyChange(() => TreeviewColumns);
                 NotifyOfPropertyChange(() => TreeviewRelationships);
+                NotifyOfPropertyChange(() => GroupedPartitions);
                 NotifyOfPropertyChange(() => SummaryViewModel);
             }
         }
