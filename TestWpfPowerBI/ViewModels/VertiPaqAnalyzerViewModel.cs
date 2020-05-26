@@ -391,6 +391,9 @@ namespace TestWpfPowerBI.ViewModels
         }
 
         public bool IsExpanded { get; set; }
+
+        public double PercentOfTableRows => (Table == null ? 0 : RowsCount / (double)Table.RowsCount);
+        public double PercentOfTableSize => Table == null ? 0 : DataSize / (double)Table.ColumnsDataSize;
     }
 
     public class VpaSummaryViewModel
