@@ -5,33 +5,139 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.OleDb;
 using Microsoft.AnalysisServices.AdomdClient;
+using System.Reflection;
+using System.Data;
 
 namespace Dax.Metadata.Extractor
 {
-    // TODO: We should implement an analysis of the relationships in the model
-    //       On the one side, identify whether there is a blank value - it indicates a referential integrity violation, even though we don't have the view for the table
-    //       On the many side, we should count the number of unique values and the number of rows related to a blank value:
-    //       EVALUATE CALCULATETABLE ( ROW ( "MissingKeys", DISTINCTCOUNT ( Sales[CustomerKey] ), "InvalidRows", COUNTROWS ( Sales ) ), ISBLANK ( Customer[CustomerKey] ) )
-    // 
     public class StatExtractor
     {
         protected Dax.Metadata.Model DaxModel { get; private set; }
-        protected AdomdConnection Connection { get; private set; }
+        protected IDbConnection Connection { get; private set; }
         protected int CommandTimeout { get; private set; } = 0;
-        public StatExtractor (Dax.Metadata.Model daxModel, AdomdConnection connection )
+        public StatExtractor (Dax.Metadata.Model daxModel, IDbConnection connection )
         {
             this.DaxModel = daxModel;
             this.Connection = connection;
         }
 
-        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, AdomdConnection connection)
+        protected IDbCommand CreateCommand(string commandText)
+        {
+            if (Connection is AdomdConnection)
+            {
+                return new AdomdCommand(commandText, Connection as AdomdConnection);
+            }
+            else if (Connection is OleDbConnection)
+            {
+                return new OleDbCommand(commandText, Connection as OleDbConnection);
+            }
+            else
+            {
+                throw new ExtractorException(Connection);
+            }
+        }
+
+        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0)
         {
             StatExtractor extractor = new StatExtractor(daxModel, connection);
             extractor.LoadTableStatistics();
             extractor.LoadColumnStatistics();
+            extractor.LoadRelationshipStatistics(sampleRows);
 
             // Update ExtractionDate
             extractor.DaxModel.ExtractionDate = DateTime.UtcNow;
+        }
+
+        public void LoadRelationshipStatistics(int sampleRows = 0)
+        {
+            // only get relationship stats if the relationship has an ID
+            var relationshipList = DaxModel.Relationships.Where(r => r.Dmv1200RelationshipId != 0).ToList();
+            var loopRelationships = relationshipList.SplitList(10);
+            #region Statistics
+            foreach (var relationshipSet in loopRelationships)
+            {
+                var daxStatistics = "EVALUATE ";
+                //only union if there is more than 1 column in the columnSet
+                if (relationshipSet.Count > 1) { daxStatistics += "UNION("; }
+                daxStatistics += string.Join(
+                    ",",
+                    relationshipSet.Select(rel => $@"
+CALCULATETABLE (
+ROW( 
+    ""RelationshipId"", {rel.Dmv1200RelationshipId},
+    ""MissingKeys"", DISTINCTCOUNT ( {EscapeColumnName(rel.FromColumn)} ),
+    ""InvalidRows"", COUNTROWS({EscapeTableName(rel.FromColumn.Table)})
+),
+ISBLANK( {EscapeColumnName(rel.ToColumn)} ),
+USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToColumn)} )
+)").ToArray());
+                //             ""Column"", ""{EmbedNameInString(rel.FromColumn.ColumnName.Name)}"", 
+
+                //only close the union call if there is more than 1 column in the columnSet
+                if (relationshipSet.Count > 1) { daxStatistics += ")"; }
+
+                var cmdStatistics = CreateCommand(daxStatistics);
+                cmdStatistics.CommandTimeout = CommandTimeout;
+                    
+                using (var reader = cmdStatistics.ExecuteReader())
+                {
+
+                    while (reader.Read())
+                    {
+                        var relationshipId = reader.IsDBNull(0) ? 0 : reader.GetInt64(0);
+                        var missingKeys = reader.IsDBNull(1) ? 0 : reader.GetInt64(1);
+                        var invalidRows = reader.IsDBNull(2) ? 0 : reader.GetInt64(2);
+
+                        var relationship = DaxModel.Relationships.Single(r => r.Dmv1200RelationshipId == relationshipId);
+                        relationship.MissingKeys = missingKeys;
+                        relationship.InvalidRows = invalidRows;
+                    }
+                }
+            }
+            #endregion
+            if (sampleRows > 0)
+            {
+                var loopInvalidRelationships = relationshipList.Where(r => r.InvalidRows > 0).ToList().SplitList(10);
+                #region Details
+                foreach (var relationshipSet in loopInvalidRelationships)
+                {
+                    var daxDetails = "EVALUATE ";
+                    //only union if there is more than 1 column in the columnSet
+                    if (relationshipSet.Count > 1) { daxDetails += "UNION("; }
+                    daxDetails += string.Join(
+                        ",",
+                        relationshipSet.Select(rel => $@"
+CALCULATETABLE ( 
+SELECTCOLUMNS ( 
+    SAMPLE ( {sampleRows}, DISTINCT ( {EscapeColumnName(rel.FromColumn)} ), {EscapeColumnName(rel.FromColumn)}, ASC ), 
+    ""RelationshipId"", {rel.Dmv1200RelationshipId}, 
+    ""MissingValue"", {EscapeColumnName(rel.FromColumn)} 
+),
+ISBLANK( {EscapeColumnName(rel.ToColumn)} ),
+USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToColumn)} )
+)").ToArray());
+
+                    //only close the union call if there is more than 1 column in the columnSet
+                    if (relationshipSet.Count > 1) { daxDetails += ")"; }
+
+                    var cmdDetails = CreateCommand(daxDetails);
+                    cmdDetails.CommandTimeout = CommandTimeout;
+
+                    using (var reader = cmdDetails.ExecuteReader())
+                    {
+
+                        while (reader.Read())
+                        {
+                            var relationshipId = reader.IsDBNull(0) ? 0 : reader.GetInt64(0);
+                            var missingValue = reader.IsDBNull(1) ? "(blank)" : reader.GetValue(1).ToString();
+
+                            var relationship = DaxModel.Relationships.Single(r => r.Dmv1200RelationshipId == relationshipId);
+                            relationship.SampleReferentialIntegrityViolations.Add(missingValue);
+                        }
+                    }
+                }
+            }
+            #endregion
         }
 
         public void LoadTableStatistics()
@@ -50,9 +156,9 @@ namespace Dax.Metadata.Extractor
                 //only close the union call if there is more than 1 column in the columnSet
                 if (tableSet.Count > 1) { dax += ")"; }
 
-                var cmd = new AdomdCommand(dax, Connection) {
-                    CommandTimeout = CommandTimeout
-                };
+                var cmd = CreateCommand(dax);
+                cmd.CommandTimeout = CommandTimeout;
+
                 using (var reader = cmd.ExecuteReader()) {
 
                     while (reader.Read()) {
@@ -98,9 +204,9 @@ namespace Dax.Metadata.Extractor
                 //only close the union call if there is more than 1 column in the columnSet
                 if (validColumns > 1) { dax += ")"; }
 
-                var cmd = new AdomdCommand(dax, Connection) {
-                    CommandTimeout = CommandTimeout
-                };
+                var cmd = CreateCommand(dax);
+                cmd.CommandTimeout = CommandTimeout;
+                
                 using (var reader = cmd.ExecuteReader()) {
                     while (reader.Read()) {
                         var tableName = reader.GetString(0).Substring(4);

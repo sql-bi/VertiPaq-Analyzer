@@ -18,7 +18,7 @@ namespace Dax.ViewModel
         public string RelationshipFromToName {
             get {
                 return string.Format(
-                    "'{0}'[{1}] -> '{2}[{3}]",
+                    "{0}[{1}] ==> {2}[{3}]",
                     this.Relationship.FromColumn.Table.TableName.Name,
                     this.Relationship.FromColumn.ColumnName.Name,
                     this.Relationship.ToColumn.Table.TableName.Name,
@@ -29,5 +29,8 @@ namespace Dax.ViewModel
 
         public long FromColumnCardinality { get { return this.Relationship.FromColumn.ColumnCardinality; } }
         public long ToColumnCardinality { get { return this.Relationship.ToColumn.ColumnCardinality; } }
+        public long MissingKeys { get { return this.Relationship.MissingKeys; } }
+        public long InvalidRows { get { return this.Relationship.InvalidRows; } }
+        public string SampleReferentialIntegrityViolations { get { return string.Join(", ", this.Relationship.SampleReferentialIntegrityViolations); } }
     }
 }

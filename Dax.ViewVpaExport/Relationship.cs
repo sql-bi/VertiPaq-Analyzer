@@ -51,6 +51,7 @@ namespace Dax.ViewVpaExport
         public long UsedSizeFrom { get { return this._Relationship.UsedSizeFrom; } }
         public long UsedSizeTo { get { return this._Relationship.UsedSizeTo; } }
         public long UsedSize { get { return this._Relationship.UsedSize; } }
-
+        public long MissingKeys { get { return this._Relationship.MissingKeys; } }
+        public long InvalidRows { get { return this._Relationship.InvalidRows; } }
     }
 }

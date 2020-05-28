@@ -299,6 +299,7 @@ namespace TestWpfPowerBI
 
             Dax.Metadata.Model m = new Dax.Metadata.Model();
             Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(m, conn, 4);
             return new Dax.ViewModel.VpaModel(m);
         }
 

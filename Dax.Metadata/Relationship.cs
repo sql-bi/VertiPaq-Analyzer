@@ -23,6 +23,17 @@ namespace Dax.Metadata
 
         public long UsedSizeFrom { get; set; }
         public long UsedSizeTo { get; set; }
+        public long MissingKeys { get; set; }
+        public long InvalidRows { get; set; }
+
+        /// <summary>
+        /// The sample of referential integrity violations is not persisted 
+        /// to avoid exposing sensitive data
+        /// The list is available only to the tool that accesses the database online
+        /// </summary>
+        [JsonIgnore]
+        public List<string> SampleReferentialIntegrityViolations { get; set; }
+
         [JsonIgnore]
         public long UsedSize {
             get {
@@ -30,11 +41,13 @@ namespace Dax.Metadata
             }
         }
 
-        public Relationship( Column fromColumn, Column toColumn ) {
+        public Relationship( Column fromColumn, Column toColumn ) : this() {
             FromColumn = fromColumn;
             ToColumn = toColumn;
         }
-        private Relationship() { }
+        private Relationship() {
+            SampleReferentialIntegrityViolations = new List<string>();
+        }
 
         [JsonIgnore]
         public int Dmv1200RelationshipId;

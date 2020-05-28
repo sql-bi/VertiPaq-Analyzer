@@ -231,7 +231,7 @@ namespace Dax.Metadata.Extractor
             return db;
         }
 
-        public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true)
+        public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0)
         {
             Microsoft.AnalysisServices.Database db = GetDatabase(serverName, databaseName);
             Microsoft.AnalysisServices.Tabular.Model tomModel = db.Model;
@@ -248,7 +248,7 @@ namespace Dax.Metadata.Extractor
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData)
                 {
-                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection);
+                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows);
                 }
             }
             return daxModel;

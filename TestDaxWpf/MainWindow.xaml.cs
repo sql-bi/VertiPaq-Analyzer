@@ -70,7 +70,7 @@ namespace TestDaxWpf
 
                     // Populate statistics by querying the data model
                     if (readStatisticsFromData) {
-                        Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection);
+                        Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, 10);
                     }
                 }
                 return daxModel;

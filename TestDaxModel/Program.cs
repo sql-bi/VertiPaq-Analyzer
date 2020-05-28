@@ -28,7 +28,7 @@ namespace TestDaxModel
         {
             //string databaseName = "Contoso";
             //const string serverName = @".\tab17";
-            string databaseName = "CalculationGroups_Currency";
+            string databaseName = "Healthstream"; // "CalculationGroups_Currency";
             const string serverName = @".\tab19";
 
             var connStr = $"Provider=MSOLAP;Data Source={serverName};Initial Catalog={databaseName};";
@@ -36,6 +36,7 @@ namespace TestDaxModel
 
             Dax.Metadata.Model m = new Dax.Metadata.Model();
             Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(m, conn, 10);
             DumpRelationships(m);
         }
         static void TestPbiShared()
@@ -231,21 +232,27 @@ namespace TestDaxModel
                 foreach (var r in t.GetRelationshipsTo())
                 {
                     Console.WriteLine(
-                        "{0}[{1}] ==> {2}[{3}]",
+                        "{0}[{1}] ==> {2}[{3}] MissingKeys={4}, InvalidRows={5}, Violations={6}",
                         r.FromColumn.Table.TableName,
                         r.FromColumn.ColumnName,
                         r.ToColumn.Table.TableName,
-                        r.ToColumn.ColumnName
+                        r.ToColumn.ColumnName,
+                        r.MissingKeys,
+                        r.InvalidRows,
+                        string.Join(",",r.SampleReferentialIntegrityViolations)
                     );
                 }
                 foreach (var r in t.GetRelationshipsFrom())
                 {
                     Console.WriteLine(
-                        "{0}[{1}] ==> {2}[{3}]",
+                        "{0}[{1}] ==> {2}[{3}] MissingKeys={4}, InvalidRows={5}, Violations={6}",
                         r.FromColumn.Table.TableName,
                         r.FromColumn.ColumnName,
                         r.ToColumn.Table.TableName,
-                        r.ToColumn.ColumnName
+                        r.ToColumn.ColumnName,
+                        r.MissingKeys,
+                        r.InvalidRows,
+                        string.Join(",", r.SampleReferentialIntegrityViolations)
                     );
                 }
             }

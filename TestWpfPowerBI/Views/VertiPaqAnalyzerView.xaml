@@ -366,6 +366,9 @@
 
                         <DataGridTextColumn Binding="{Binding FromColumnCardinality, StringFormat=N0}" Header="Max From Cardinality" x:Name="colRelFromCardinality" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
                         <DataGridTextColumn Binding="{Binding ToColumnCardinality, StringFormat=N0}" Header="Max To Cardinality" x:Name="colRelToCardinality" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding MissingKeys, StringFormat=N0}" Header="Missing Keys" x:Name="colMissingKeys" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding InvalidRows, StringFormat=N0}" Header="Invalid Rows" x:Name="colRInvalidRows" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SampleReferentialIntegrityViolations}" Header="Sample Violations" x:Name="colSampleViolations" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
 
                     </DataGrid.Columns>
                 </DataGrid>

@@ -287,6 +287,9 @@ namespace TestWpfPowerBI.ViewModels
         public long UsedSize => _rel.UsedSize;
         public long FromColumnCardinality => _rel.FromColumnCardinality;
         public long ToColumnCardinality => _rel.ToColumnCardinality;
+        public long MissingKeys => _rel.MissingKeys;
+        public long InvalidRows => _rel.InvalidRows;
+        public string SampleReferentialIntegrityViolations => _rel.SampleReferentialIntegrityViolations;
     }
 
     public class VpaTableViewModel : IComparable
