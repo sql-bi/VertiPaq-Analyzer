@@ -45,8 +45,12 @@ namespace TestDaxModel
             const string identityProvider = "https://login.microsoftonline.com/common, https://analysis.windows.net/powerbi/api, 929d0ec0-7a41-4b1e-bc7c-b754a28bddcc;";
             const string initialCatalog = "cffc2ad9-6ba9-4597-adec-b78af24e8fee";
             const string databaseName = "sobe_wowvirtualserver-" + initialCatalog;
+#pragma warning disable CS0219 // The variable 'integratedSecurity' is assigned but its value is never used
             const string integratedSecurity = "ClaimsToken";
+#pragma warning restore CS0219 // The variable 'integratedSecurity' is assigned but its value is never used
+#pragma warning disable CS0219 // The variable 'other' is assigned but its value is never used
             const string other = "MDX Compatibility= 1; MDX Missing Member Mode= Error; Safety Options= 2; Update Isolation Level= 2; Locale Identifier= 1033;";
+#pragma warning restore CS0219 // The variable 'other' is assigned but its value is never used
 
             const string serverName = dataSource;
 
