@@ -357,7 +357,7 @@ ORDER BY MEASUREGROUP_NAME";
                     string measureDescription = rdr.GetString(7).ToString();
 
                     Table daxTable = GetDaxTable(tableName);
-                    var daxMeasure = daxTable.Measures.Where(m => m.MeasureName.Equals(measureName)).FirstOrDefault();
+                    var daxMeasure = daxTable.Measures.Where(m => m.MeasureName.Name == measureName).FirstOrDefault();
                     if (daxMeasure == null)
                     {
                         daxMeasure = new Dax.Metadata.Measure()

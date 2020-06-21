@@ -21,15 +21,53 @@ namespace TestDaxModel
         {
             // GenericTest();
             // TestPbiShared();
-            TestLocalVpaModel();
+            // TestLocalVpaModel();
+            TestExport();
         }
 
+        static void TestExport()
+        {
+            string databaseName = "338e5409-5010-4864-8226-722165625dd5";
+            const string serverName = @"localhost:49851";
+            const string applicationName = "Test";
+            const string applicationVersion = "0.0";
+            bool includeTomModel = false;
+
+            const string path = @"c:\temp\test4.vpax";
+
+            Console.WriteLine("Exporting...");
+
+            //
+            // Get Dax.Model object from the SSAS engine
+            //
+            Dax.Metadata.Model model = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, applicationName, applicationVersion);
+
+            //
+            // Get TOM model from the SSAS engine
+            //
+            Microsoft.AnalysisServices.Database database = includeTomModel ? Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName) : null;
+
+            // 
+            // Create VertiPaq Analyzer views
+            //
+            Dax.ViewVpaExport.Model viewVpa = new Dax.ViewVpaExport.Model(model);
+
+            //
+            // Save VPAX file
+            // 
+            // TODO: export of database should be optional
+            Dax.Vpax.Tools.VpaxTools.ExportVpax(path, model, viewVpa, database);
+
+            Console.WriteLine("Completed");
+        }
         static void TestLocalVpaModel()
         {
             //string databaseName = "Contoso";
             //const string serverName = @".\tab17";
-            string databaseName = "Healthstream"; // "CalculationGroups_Currency";
-            const string serverName = @".\tab19";
+            // string databaseName = "CalculationGroups_Currency";
+            // const string serverName = @".\tab19";
+            string databaseName = "338e5409-5010-4864-8226-722165625dd5";
+            const string serverName = @"localhost:49851";
 
             var connStr = $"Provider=MSOLAP;Data Source={serverName};Initial Catalog={databaseName};";
             var conn = new System.Data.OleDb.OleDbConnection(connStr);
