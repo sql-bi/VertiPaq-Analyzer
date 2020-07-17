@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="PostSharp.Patterns.Threading" Version="6.7.5-preview" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dax.Metadata\Dax.Metadata.csproj" />
   </ItemGroup>
 

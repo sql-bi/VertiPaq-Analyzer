@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="PostSharp.Patterns.Threading" Version="6.7.5-preview" />
   </ItemGroup>
 
   <ItemGroup>
