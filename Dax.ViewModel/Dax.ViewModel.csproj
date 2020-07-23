@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="PostSharp.Patterns.Diagnostics" Version="6.7.5-preview" />
     <PackageReference Include="PostSharp.Patterns.Threading" Version="6.7.5-preview" />
   </ItemGroup>
 

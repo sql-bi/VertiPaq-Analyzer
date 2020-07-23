@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.postsharp.org/1.0/configuration" xmlns:t="clr-namespace:PostSharp.Patterns.Threading;assembly:PostSharp.Patterns.Threading">
+<Project xmlns="http://schemas.postsharp.org/1.0/configuration" xmlns:t="clr-namespace:PostSharp.Patterns.Threading;assembly:PostSharp.Patterns.Threading" xmlns:d="clr-namespace:PostSharp.Patterns.Diagnostics;assembly:PostSharp.Patterns.Diagnostics">
   <Multicast>
     <t:DeadlockDetectionPolicy />
+    <d:Log AttributeTargetTypeAttributes="Private | Internal" AttributeTargetMemberAttributes="Private | Internal" />
   </Multicast>
 </Project>
