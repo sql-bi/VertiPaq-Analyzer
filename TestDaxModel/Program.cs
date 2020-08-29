@@ -27,8 +27,8 @@ namespace TestDaxModel
 
         static void TestExport()
         {
-            string databaseName = "338e5409-5010-4864-8226-722165625dd5";
-            const string serverName = @"localhost:49851";
+            string databaseName = "Microsoft_SQLServer_AnalysisServices";
+            const string serverName = @"http://localhost:9000/xmla";
             const string applicationName = "Test";
             const string applicationVersion = "0.0";
             bool includeTomModel = false;

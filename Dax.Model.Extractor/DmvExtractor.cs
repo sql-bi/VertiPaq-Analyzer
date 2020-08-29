@@ -347,11 +347,11 @@ ORDER BY MEASUREGROUP_NAME";
             {
                 while (rdr.Read())
                 {
-                    string tableName = rdr.GetString(0);
+                    string tableName = (rdr.GetValue(0) as string) ??string.Empty;
                     string measureName = rdr.GetString(1);
                     int dataType = rdr.GetInt32(2);
-                    string measureExpression = rdr.GetString(3).ToString();
-                    string defaultFormatString = rdr.GetValue(4)?.ToString() ?? "";
+                    string measureExpression = rdr.GetValue(3)?.ToString() ?? string.Empty;
+                    string defaultFormatString = rdr.GetValue(4)?.ToString() ?? string.Empty;
                     bool measureVisible = rdr.GetBoolean(5);
                     string measureDisplayFolder = rdr.GetString(6).ToString();
                     string measureDescription = rdr.GetString(7).ToString();
