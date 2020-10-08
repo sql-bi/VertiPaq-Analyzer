@@ -666,7 +666,7 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'R$'";
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
                     string relationshipFullId = rdr.GetString(1);
-                    int usedSize = (int)rdr.GetDecimal(2);
+                    long usedSize = (long)rdr.GetDecimal(2);
 
                     var daxTable = GetDaxTable(tableName);
                     var openIdBracket = relationshipFullId.LastIndexOf('(');
