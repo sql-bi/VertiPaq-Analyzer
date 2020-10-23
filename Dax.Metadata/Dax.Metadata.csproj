@@ -17,8 +17,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Dax.Metadata.1.0.26.nupkg" />
     <None Remove="Dax.Metadata.1.0.27.nupkg" />
-    <None Include="images\VertipaqAnalyzer.png" Pack="true" PackagePath=""/>
+    <None Include="images\VertipaqAnalyzer.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
