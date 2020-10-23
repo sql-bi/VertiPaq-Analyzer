@@ -51,7 +51,9 @@ namespace TestWpfPowerBI
         }
 
         // PbiMetadataViewModel PbiMetadataBinding = null;
+#pragma warning disable IDE0044 // Add readonly modifier
         PbiMetadataTreeViewModel PbiMetadataTreeBinding = null;
+#pragma warning restore IDE0044 // Add readonly modifier
         VertiPaqAnalyzerViewModel VertiPaqAnalyzerBinding = null;
         public Dax.ViewModel.VpaModel CurrentVpaModel {
             get {
@@ -212,7 +214,7 @@ namespace TestWpfPowerBI
                }));
         }
 
-        private System.Collections.Concurrent.ConcurrentDictionary<Dataset,Dax.ViewModel.VpaModel> CacheVpaModels = 
+        private readonly System.Collections.Concurrent.ConcurrentDictionary<Dataset,Dax.ViewModel.VpaModel> CacheVpaModels = 
             new System.Collections.Concurrent.ConcurrentDictionary<Dataset,Dax.ViewModel.VpaModel>();
 
         /*
@@ -254,8 +256,7 @@ namespace TestWpfPowerBI
             if (selectedDataset == null) return;
             Log.Information($"Dataset:{selectedDataset.Name}");
 
-            Dax.ViewModel.VpaModel newModel = null;
-            if (CacheVpaModels.TryGetValue(selectedDataset, out newModel))
+            if (CacheVpaModels.TryGetValue(selectedDataset, out Dax.ViewModel.VpaModel newModel))
             {
                 CurrentVpaModel = newModel;
                 return;
@@ -279,6 +280,7 @@ namespace TestWpfPowerBI
             }
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         private Dax.ViewModel.VpaModel GetVpaModel(string name, string id)
         {
             const string dataSource = "pbiazure://api.powerbi.com";
@@ -307,8 +309,10 @@ namespace TestWpfPowerBI
         {
             if (CurrentVpaModel != null)
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "VPAX file (*.vpax)|*.vpax";
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "VPAX file (*.vpax)|*.vpax"
+                };
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     string filename = saveFileDialog.FileName;

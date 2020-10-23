@@ -631,8 +631,8 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'U$'";
 
             public override bool Equals(Object obj)
             {
-                return (obj is TableRelationshipIds) 
-                    && ((TableRelationshipIds)obj) == this;
+                return (obj is TableRelationshipIds ids) 
+                    && ids == this;
             }
             public override int GetHashCode()
             {

@@ -50,6 +50,9 @@ namespace Dax.Metadata.Extractor
 
         public void LoadRelationshipStatistics(int sampleRows = 0)
         {
+            // Maximum number of invalid keys used for extraction through SAMPLE, use TOPNSKIP or TOPN otherwise
+            const int MAX_KEYS_FOR_SAMPLE = 1000;
+
             // only get relationship stats if the relationship has an ID
             var relationshipList = DaxModel.Relationships.Where(r => r.Dmv1200RelationshipId != 0).ToList();
             var loopRelationships = relationshipList.SplitList(10);
@@ -106,8 +109,8 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
                     if (relationshipSet.Count > 1) { daxDetails += "UNION("; }
                     daxDetails += string.Join(
                         ",",
-                        relationshipSet.Select(rel => $@"
-CALCULATETABLE ( 
+                        relationshipSet.Select(rel => (rel.MissingKeys > sampleRows && rel.MissingKeys <= MAX_KEYS_FOR_SAMPLE) ?
+$@"CALCULATETABLE ( 
 SELECTCOLUMNS ( 
     SAMPLE ( {sampleRows}, DISTINCT ( {EscapeColumnName(rel.FromColumn)} ), {EscapeColumnName(rel.FromColumn)}, ASC ), 
     ""RelationshipId"", {rel.Dmv1200RelationshipId}, 
@@ -115,7 +118,34 @@ SELECTCOLUMNS (
 ),
 ISBLANK( {EscapeColumnName(rel.ToColumn)} ),
 USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToColumn)} )
-)").ToArray());
+)"
+: (DaxModel.CompatibilityLevel >= 1200) ?
+// Use TOPNSKIP to get 10*sampleRows and then use TOPN/DISTINCT to not include too many sample
+// This is required because TOPNSKIP could have duplicated values.
+// TOPNSKIP is required for large cardinality columns to avoid out-of-memory errors
+$@"CALCULATETABLE ( 
+    TOPN ( {sampleRows}, DISTINCT ( SELECTCOLUMNS (
+        TOPNSKIP ( {sampleRows*10}, 0, {EscapeTableName(rel.FromColumn.Table)} ),
+    ""RelationshipId"", {rel.Dmv1200RelationshipId}, 
+    ""MissingValue"", {EscapeColumnName(rel.FromColumn)} 
+))),
+ISBLANK( {EscapeColumnName(rel.ToColumn)} ),
+USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToColumn)} )
+)"
+:
+// Use TOPN with SSAS 2012/2014 and PowerPivot
+$@"CALCULATETABLE ( 
+SELECTCOLUMNS ( 
+    TOPN ( {sampleRows}, DISTINCT ( {EscapeColumnName(rel.FromColumn)} ) ), 
+    ""RelationshipId"", {rel.Dmv1200RelationshipId}, 
+    ""MissingValue"", {EscapeColumnName(rel.FromColumn)} 
+),
+ISBLANK( {EscapeColumnName(rel.ToColumn)} ),
+USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToColumn)} )
+)"
+
+).ToArray());
+
 
                     //only close the union call if there is more than 1 column in the columnSet
                     if (relationshipSet.Count > 1) { daxDetails += ")"; }
