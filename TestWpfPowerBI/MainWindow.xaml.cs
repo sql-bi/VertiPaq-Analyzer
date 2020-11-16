@@ -22,6 +22,7 @@ using Microsoft.PowerBI.Api;
 using Microsoft.PowerBI.Api.Models;
 using TestWpfPowerBI.ViewModels;
 using TestWpfPowerBI.Model;
+using Microsoft.AnalysisServices.AdomdClient;
 
 using Microsoft.Win32;
 using TestWpfPowerBI.Views;
@@ -108,21 +109,23 @@ namespace TestWpfPowerBI
                 {
                     foreach (var g in groups)
                     {
-                        DisplayStatus($"Loading datasets for group {g.Name}...");
-                        g.Group.Datasets = new BindableCollection<Dataset>(
-                            from d in PowerBI_Tools.GetDatasets(g.Group)
-                            orderby d.Name
-                            select d
-                        );
+                        if (g.Group.IsOnDedicatedCapacity.Value == true) { 
+                            DisplayStatus($"Loading datasets for group {g.Name}...");
+                            g.Group.Datasets = new BindableCollection<Dataset>(
+                                from d in PowerBI_Tools.GetDatasets(g.Group)
+                                orderby d.Name
+                                select d
+                            );
+                        }
                     }
                     groups =
                         from g in groups
-                        where g.Group.Datasets.Count > 0
+                        where g.Group.Datasets?.Count > 0
                         orderby g.Name
                         select g;
                     DisplayStatus($"Loaded {groups.Count()} groups.", 3000);
                 }
-
+                
                 // PbiMetadataBinding.PbiGroups = new BindableCollection<Group>(groups);
                 PbiMetadataTreeBinding.PbiGroups = new BindableCollection<TreeViewPbiGroup>(groups);
             });
@@ -176,6 +179,7 @@ namespace TestWpfPowerBI
             PbiMetadataTreeBinding.PbiDatasets = selectedGroup.Datasets as BindableCollection<Dataset>;
         }
         */
+
         private async void PbiTreeView_GroupChanged(object sender, EventArgs e)
         {
             var selectedGroup = PbiTreeView.SelectedGroup;
@@ -256,6 +260,8 @@ namespace TestWpfPowerBI
             if (selectedDataset == null) return;
             Log.Information($"Dataset:{selectedDataset.Name}");
 
+            var selectedGroup = GetDatasetGroup(selectedDataset.Name);
+
             if (CacheVpaModels.TryGetValue(selectedDataset, out Dax.ViewModel.VpaModel newModel))
             {
                 CurrentVpaModel = newModel;
@@ -266,7 +272,7 @@ namespace TestWpfPowerBI
             DisplayStatus($"Loading VertiPaq Analyzer from dataset {selectedDataset.Name} ...");
             await Task.Run(() =>
             {
-                newModel = GetVpaModel(selectedDataset.Name, selectedDataset.Id);
+                newModel = GetVpaModel(selectedGroup.Name, selectedDataset.Name, selectedDataset.Id);
             });
             if (newModel != null)
             {
@@ -280,27 +286,43 @@ namespace TestWpfPowerBI
             }
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
-        private Dax.ViewModel.VpaModel GetVpaModel(string name, string id)
+        private Group GetDatasetGroup( string datasetName )
         {
-            const string dataSource = "pbiazure://api.powerbi.com";
-            const string identityProvider = "https://login.microsoftonline.com/common, https://analysis.windows.net/powerbi/api, 929d0ec0-7a41-4b1e-bc7c-b754a28bddcc;";
-            string initialCatalog = id;
-            string databaseName = "sobe_wowvirtualserver-" + initialCatalog;
+            foreach ( var g in PbiMetadataTreeBinding.PbiGroups)
+            {
+                foreach (var d in g.Group.Datasets)
+                {
+                    if (d.Name == datasetName) 
+                        return g.Group;
+                }
+            }
+            return null;
+        }
 
-            const string serverName = dataSource;
+#pragma warning disable IDE0060 // Remove unused parameter
+        private Dax.ViewModel.VpaModel GetVpaModel(string groupName, string datasetName, string id)
+        {
+            // const string dataSource = "pbiazure://api.powerbi.com";
+            string connectionString = $@"Data Source=powerbi://api.powerbi.com/v1.0/myorg/{groupName};initial catalog={datasetName}";
+            // const string identityProvider = "https://login.microsoftonline.com/common, https://analysis.windows.net/powerbi/api, 929d0ec0-7a41-4b1e-bc7c-b754a28bddcc;";
+            // string initialCatalog = id;
+            // string databaseName = "sobe_wowvirtualserver-" + initialCatalog;
 
-            var connStr = String.Format(
-                "Provider=MSOLAP;Identity Provider={0};Data Source={1};Initial Catalog={2};",
-                identityProvider,
-                dataSource,
-                initialCatalog
-                );
+            // const string serverName = dataSource;
 
-            var conn = new System.Data.OleDb.OleDbConnection(connStr);
+            //var connStr = String.Format(
+            //    "Provider=MSOLAP;Identity Provider={0};Data Source={1};Initial Catalog={2};",
+            //    identityProvider,
+            //    dataSource,
+            //    initialCatalog
+            //    );
 
+            // var conn = new System.Data.OleDb.OleDbConnection(connStr);
+            var conn = new AdomdConnection(connectionString);
             Dax.Metadata.Model m = new Dax.Metadata.Model();
-            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            // NOTE: groupName is the serverName in the arguments
+            //       datasetName is the databaseName in the arguments
+            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, groupName, datasetName, "Test", "0.1");
             Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(m, conn, 4);
             return new Dax.ViewModel.VpaModel(m);
         }
