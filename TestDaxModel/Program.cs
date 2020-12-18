@@ -11,18 +11,19 @@ using Dax.Vpax.Tools;
 
 // TODO
 // - Import from DMV 1100 (check for missing attributes?)
+#pragma warning disable IDE0051 // Remove unused private members
 namespace TestDaxModel
 {
     class Program
     {
 
 
-        static void Main(string[] args)
+        static void Main()
         {
-            // GenericTest();
+            GenericTest();
             // TestPbiShared();
             // TestLocalVpaModel();
-            TestExport();
+            // TestExport();
         }
 
         static void TestExport()
@@ -83,8 +84,8 @@ namespace TestDaxModel
             const string identityProvider = "https://login.microsoftonline.com/common, https://analysis.windows.net/powerbi/api, 929d0ec0-7a41-4b1e-bc7c-b754a28bddcc;";
             const string initialCatalog = "cffc2ad9-6ba9-4597-adec-b78af24e8fee";
             const string databaseName = "sobe_wowvirtualserver-" + initialCatalog;
-            const string integratedSecurity = "ClaimsToken";
-            const string other = "MDX Compatibility= 1; MDX Missing Member Mode= Error; Safety Options= 2; Update Isolation Level= 2; Locale Identifier= 1033;";
+            //const string integratedSecurity = "ClaimsToken";
+            //const string other = "MDX Compatibility= 1; MDX Missing Member Mode= Error; Safety Options= 2; Update Isolation Level= 2; Locale Identifier= 1033;";
 
             const string serverName = dataSource;
 
@@ -103,7 +104,7 @@ namespace TestDaxModel
             Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
         }
         static void GenericTest()
-        { 
+        {
             //
             // Retrieve DAX model from database connection
             //
@@ -115,13 +116,16 @@ namespace TestDaxModel
             // const string databaseName = "Adventure Works";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            const string serverName = "localhost:53382";
-            const string databaseName = "1d83feec-d09a-4766-980e-757adb5690ea";
+            const string serverName = "localhost:59700";
+            const string databaseName = "ea26c45e-2916-4df9-85b1-efed49126482";
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
             var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
-            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2");
+            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10 );
+
+            DumpRelationships(daxModel);
+
 
             //
             // Test serialization of Dax.Model in JSON file
@@ -151,11 +155,10 @@ namespace TestDaxModel
             Console.WriteLine("=================");
             Console.WriteLine($"Loading {filename}...");
             
-            var content = VpaxTools.ImportVpax(filename);
+            // var content = VpaxTools.ImportVpax(filename);
             // var view2 = new Dax.ViewVpaExport.Model(content.DaxModel);
             Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
             Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
-            
 
         }
 
@@ -321,6 +324,7 @@ namespace TestDaxModel
             tA.Columns.Add(ca1);
             tA.Columns.Add(ca2);
             m.Tables.Add(tA);
+            m.Tables.Add(tB);
 
             // Test serialization on JSON file
             var json = JsonConvert.SerializeObject(m, Formatting.Indented, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.All });

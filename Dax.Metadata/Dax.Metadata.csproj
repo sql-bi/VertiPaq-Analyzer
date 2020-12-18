@@ -11,9 +11,16 @@
     <RepositoryUrl>https://github.com/sql-bi/VertiPaq-Analyzer</RepositoryUrl>
     <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer</PackageProjectUrl>
     <PackageIconUrl>https://www.sqlbi.com/wp-content/uploads/VertipaqAnalyzer-1.svg</PackageIconUrl>
+    <PackageIcon>VertipaqAnalyzer.png</PackageIcon>
     <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
-    <Version>1.0.25</Version>
+    <Version>1.0.27</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Dax.Metadata.1.0.26.nupkg" />
+    <None Remove="Dax.Metadata.1.0.27.nupkg" />
+    <None Include="images\VertipaqAnalyzer.png" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

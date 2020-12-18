@@ -8,14 +8,20 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer</PackageProjectUrl>
     <PackageIconUrl>https://www.sqlbi.com/wp-content/uploads/VertipaqAnalyzer-1.svg</PackageIconUrl>
+    <PackageIcon>VertipaqAnalyzer.png</PackageIcon>
     <RepositoryUrl>https://github.com/sql-bi/VertiPaq-Analyzer</RepositoryUrl>
     <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.25</Version>
+    <Version>1.0.27</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Dax.ViewVpaExport.1.0.26.nupkg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <None Include="images\VertipaqAnalyzer.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>

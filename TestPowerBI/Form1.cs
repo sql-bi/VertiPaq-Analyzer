@@ -14,6 +14,7 @@ using Microsoft.PowerBI.Api.Models;
 using Microsoft.Rest;
 using Microsoft.Identity.Client;
 
+#pragma warning disable IDE1006 // Naming Styles
 namespace TestPowerBI
 {
     public partial class mainForm : Form
@@ -56,11 +57,11 @@ namespace TestPowerBI
         //   - for any Work or School accounts, or Microsoft personal account, use common
         //   - for Microsoft Personal account, use consumers
         // Sample MS - private static string ClientId = "4a1aa1d5-c567-49d0-ad0b-cd957a47f842";
-        private static string ClientId = "5bd6853c-3bb4-42eb-bc43-b97ac191224e";  // VertiPaq Analyzer
+        private static readonly string ClientId = "5bd6853c-3bb4-42eb-bc43-b97ac191224e";  // VertiPaq Analyzer
 
-        private static string Tenant = "common";
-        private static string Instance = "https://login.microsoftonline.com/";
-        string ApiUrl = "https://api.powerbi.com";
+        private static readonly string Tenant = "common";
+        private static readonly string Instance = "https://login.microsoftonline.com/";
+        readonly string ApiUrl = "https://api.powerbi.com";
 
         public static IPublicClientApplication PublicClientApp { get; private set; }
 
@@ -68,7 +69,7 @@ namespace TestPowerBI
         const string pbiApi = "https://analysis.windows.net/powerbi/api";
 
         //Set the scope for API call (Group = Workspace)
-        string[] scopes = new string[] { pbiApi + "/Dataset.Read.All", pbiApi + "/Group.Read.All" }; 
+        readonly string[] scopes = new string[] { pbiApi + "/Dataset.Read.All", pbiApi + "/Group.Read.All" }; 
 
         public mainForm()
         {
@@ -77,7 +78,7 @@ namespace TestPowerBI
 
         private async Task<AuthenticationResult> LoginAAD()
         {
-            AuthenticationResult authResult = null;
+            AuthenticationResult authResult;
             var app = PublicClientApp;
             ResultText.Text = string.Empty;
 
@@ -203,8 +204,8 @@ namespace TestPowerBI
             const string identityProvider = "https://login.microsoftonline.com/common, https://analysis.windows.net/powerbi/api, 929d0ec0-7a41-4b1e-bc7c-b754a28bddcc;";
             string initialCatalog = id;
             string databaseName = "sobe_wowvirtualserver-" + initialCatalog;
-            const string integratedSecurity = "ClaimsToken";
-            const string other = "MDX Compatibility= 1; MDX Missing Member Mode= Error; Safety Options= 2; Update Isolation Level= 2; Locale Identifier= 1033;";
+            //const string integratedSecurity = "ClaimsToken";
+            //const string other = "MDX Compatibility= 1; MDX Missing Member Mode= Error; Safety Options= 2; Update Isolation Level= 2; Locale Identifier= 1033;";
 
             const string serverName = dataSource;
 

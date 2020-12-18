@@ -25,10 +25,10 @@ namespace TestWpfPowerBI.PowerBI
         //   - for Microsoft Personal account, use consumers
 
         // TODO : should we change this ClientID for DAX Studio? 
-        private static string ClientId = "5bd6853c-3bb4-42eb-bc43-b97ac191224e";  // VertiPaq Analyzer (registered app on sqlbi.com tenant)
+        private static readonly string ClientId = "5bd6853c-3bb4-42eb-bc43-b97ac191224e";  // VertiPaq Analyzer (registered app on sqlbi.com tenant)
 
-        private static string Tenant = "common";
-        private static string Instance = "https://login.microsoftonline.com/";
+        private static readonly string Tenant = "common";
+        private static readonly string Instance = "https://login.microsoftonline.com/";
 
         static Authentication()
         {
@@ -43,7 +43,7 @@ namespace TestWpfPowerBI.PowerBI
         const string pbiApi = "https://analysis.windows.net/powerbi/api";
 
         //Set the scope for API call (Group = Workspace)
-        private static string[] scopes = new string[] { pbiApi + "/Dataset.Read.All", pbiApi + "/Group.Read.All" };
+        private static readonly string[] scopes = new string[] { pbiApi + "/Dataset.Read.All", pbiApi + "/Group.Read.All" };
 
         /// <summary>
         /// Azure AD sign in
@@ -51,7 +51,7 @@ namespace TestWpfPowerBI.PowerBI
         /// <returns>Authentication result</returns>
         public static async Task<AuthenticationResult> LoginAAD()
         {
-            AuthenticationResult authResult = null;
+            AuthenticationResult authResult;
             var app = PublicClientApp;
             // TODO: clear login state notification ?
 
