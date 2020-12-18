@@ -116,14 +116,14 @@ namespace TestDaxModel
             // const string databaseName = "Adventure Works";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            const string serverName = "localhost:59700";
-            const string databaseName = "ea26c45e-2916-4df9-85b1-efed49126482";
+            const string serverName = "localhost:62762";
+            const string databaseName = "526dbb72-afb9-400b-8a84-144f05aa51b9";
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
             var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
             var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10 );
-
+            
             DumpRelationships(daxModel);
 
 
@@ -138,11 +138,12 @@ namespace TestDaxModel
             // Create VertiPaq Analyzer views
             //
             Dax.ViewVpaExport.Model viewVpa = new Dax.ViewVpaExport.Model(daxModel);
-
+            daxModel.
             // Save JSON file
             // ExportJSON(pathOutput, export);
             Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
             Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
+            Console.WriteLine($"   Relationships Count: {viewVpa.Relationships.Count()}");
             string filename = pathOutput + databaseName + ".vpax";
             Console.WriteLine("Saving {0}...", filename);
 
@@ -155,10 +156,13 @@ namespace TestDaxModel
             Console.WriteLine("=================");
             Console.WriteLine($"Loading {filename}...");
             
-            // var content = VpaxTools.ImportVpax(filename);
+            var content = VpaxTools.ImportVpax(filename);
             // var view2 = new Dax.ViewVpaExport.Model(content.DaxModel);
+            viewVpa = new Dax.ViewVpaExport.Model(content.DaxModel);
+            Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
             Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
             Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
+            Console.WriteLine($"   Relationships Count: {viewVpa.Relationships.Count()}");
 
         }
 
