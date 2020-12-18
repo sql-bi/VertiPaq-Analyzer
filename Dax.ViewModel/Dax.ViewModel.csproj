@@ -13,12 +13,13 @@
     <RepositoryUrl>https://github.com/sql-bi/VertiPaq-Analyzer</RepositoryUrl>
     <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.28</Version>
+    <Version>1.0.29</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Dax.ViewModel.1.0.26.nupkg" />
-    <None Remove="Dax.ViewModel.1.0.27.nupkg" />
+      <None Remove="Dax.ViewModel.1.0.26.nupkg" />
+	  <None Remove="Dax.ViewModel.1.0.27.nupkg" />
+	  <None Remove="Dax.ViewModel.1.0.29.nupkg" />
     <None Include="images\VertipaqAnalyzer.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
