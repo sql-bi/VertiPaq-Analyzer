@@ -109,20 +109,30 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
 
             var cmd = CreateCommand(QUERY_CATALOGS);
             cmd.CommandTimeout = CommandTimeout;
+            var catalogName = string.Empty;
 
             using (var rdr = cmd.ExecuteReader()) {
 
                 while (rdr.Read()) {
-                    var catalogName = rdr.GetString(0);
+                    catalogName = rdr.GetString(0);
                     
-                    if (catalogName.Equals(databaseName, StringComparison.OrdinalIgnoreCase)) {
-                        // Copy validated catalog name in databasename to avoid injection.
-                        databaseName = catalogName;
-                        compatibilityLevel = GetCompatibilityLevel(databaseName);
-                        return true;
+                    if (catalogName.Equals(databaseName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        break;
                     }
                 }
             }
+
+            // need to get the compatibility level outside of the loop to check the database name
+            // so that we are not trying to run 2 queries at the same time on the same connection
+            if (catalogName.Equals(databaseName, StringComparison.OrdinalIgnoreCase))
+            {
+                // Copy validated catalog name in databasename to avoid injection.
+                databaseName = catalogName;
+                compatibilityLevel = GetCompatibilityLevel(databaseName);
+                return true;
+            }
+
             compatibilityLevel = 0;
             // no matches found
             return false;
