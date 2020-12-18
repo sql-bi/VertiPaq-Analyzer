@@ -104,7 +104,7 @@ namespace Dax.Metadata.Extractor
         protected bool CheckDatabaseNameCompatibilityLevel(ref string databaseName, out int compatibilityLevel)
         {
             const string QUERY_CATALOGS = @"
-SELECT [CATALOG_NAME], [COMPATIBILITY_LEVEL]
+SELECT [CATALOG_NAME]
 FROM $SYSTEM.DBSCHEMA_CATALOGS";
 
             var cmd = CreateCommand(QUERY_CATALOGS);
@@ -114,10 +114,11 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
 
                 while (rdr.Read()) {
                     var catalogName = rdr.GetString(0);
-                    compatibilityLevel = rdr.GetInt32(1);
+                    
                     if (catalogName.Equals(databaseName, StringComparison.OrdinalIgnoreCase)) {
                         // Copy validated catalog name in databasename to avoid injection.
                         databaseName = catalogName;
+                        compatibilityLevel = GetCompatibilityLevel(databaseName);
                         return true;
                     }
                 }
@@ -125,6 +126,40 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
             compatibilityLevel = 0;
             // no matches found
             return false;
+        }
+
+        protected int GetCompatibilityLevel(string databaseName)
+        {
+            string QUERY_CATALOGS = $@"
+SELECT [COMPATIBILITY_LEVEL]
+FROM $SYSTEM.DBSCHEMA_CATALOGS
+WHERE [CATALOG_NAME] = '{databaseName}'";
+
+            var cmd = CreateCommand(QUERY_CATALOGS);
+            cmd.CommandTimeout = CommandTimeout;
+            int compatibilityLevel = 0;
+
+            try
+            {
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        compatibilityLevel = rdr.GetInt32(0);
+                        return compatibilityLevel;
+                    }
+                }
+            }
+            catch
+            {
+                // if there was an error getting the COMPATIBILITY_LEVEL column
+                // this is probably an old version of the engine
+                compatibilityLevel = 0;
+            }
+
+            
+            // no matches found
+            return compatibilityLevel;
         }
 
         /// <summary>
