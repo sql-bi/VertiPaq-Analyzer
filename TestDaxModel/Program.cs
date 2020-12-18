@@ -138,7 +138,7 @@ namespace TestDaxModel
             // Create VertiPaq Analyzer views
             //
             Dax.ViewVpaExport.Model viewVpa = new Dax.ViewVpaExport.Model(daxModel);
-            daxModel.
+            
             // Save JSON file
             // ExportJSON(pathOutput, export);
             Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
