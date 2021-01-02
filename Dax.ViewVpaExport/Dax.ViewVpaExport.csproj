@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/sql-bi/VertiPaq-Analyzer</RepositoryUrl>
     <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.30</Version>
+    <Version>1.0.31</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +20,7 @@
 	  <None Remove="Dax.ViewVpaExport.1.0.27.nupkg" />
 	  <None Remove="Dax.ViewVpaExport.1.0.28.nupkg" />
 	  <None Remove="Dax.ViewVpaExport.1.0.29.nupkg" />
+	  <None Remove="Dax.ViewVpaExport.1.0.30.nupkg" />
   </ItemGroup>
 
   <ItemGroup>

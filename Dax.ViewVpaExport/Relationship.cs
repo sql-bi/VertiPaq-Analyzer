@@ -53,5 +53,11 @@ namespace Dax.ViewVpaExport
         public long UsedSize { get { return this._Relationship.UsedSize; } }
         public long MissingKeys { get { return this._Relationship.MissingKeys; } }
         public long InvalidRows { get { return this._Relationship.InvalidRows; } }
+
+        /// <summary>
+        /// The ration between dimension and fact table is meaningful only for 1:M relationships
+        /// </summary>
+        public double OneToManyRatio { get { return (this._Relationship.FromColumn.Table.RowsCount == 0) ? 0 : (double)this._Relationship.ToColumn.ColumnCardinality / (double)this._Relationship.FromColumn.Table.RowsCount; } }
+
     }
 }

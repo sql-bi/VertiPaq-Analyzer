@@ -55,8 +55,7 @@ namespace TestWpfPowerBI
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double dblParam = 0.0;
-            double.TryParse((string)parameter, out dblParam);
+            double.TryParse((string)parameter, out double dblParam);
             return (double)value - (double)dblParam;
         }
 

@@ -34,9 +34,8 @@ namespace TestWpfPowerBI.ViewModels
         }
         public override object GroupNameFromItem(object item, int level, CultureInfo culture)
         {
-            var col = item as VpaColumnViewModel;
-            var rel = item as VpaRelationshipViewModel;
-            return col != null ? col.Table : rel.Table;
+            VpaRelationshipViewModel rel = item as VpaRelationshipViewModel;
+            return item is VpaColumnViewModel col ? col.Table : rel.Table;
         }
 
         public int CompareTo(object obj)
@@ -214,7 +213,7 @@ namespace TestWpfPowerBI.ViewModels
             Log.Information("VertiPaq Analyzer Handle DocumentConnectionUpdateEvent call");
         }
 
-        public void MouseDoubleClick(object sender)//, MouseButtonEventArgs e)
+        public void MouseDoubleClick(object sender )//, MouseButtonEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("clicked!");
         }
@@ -227,7 +226,7 @@ namespace TestWpfPowerBI.ViewModels
 
         public void SortTableColumn(System.Windows.Controls.DataGridSortingEventArgs e)
         {
-            if (SortColumn == e.Column.SortMemberPath) { SortDirection = SortDirection * -1; }
+            if (SortColumn == e.Column.SortMemberPath) { SortDirection *= -1; }
             else { SortDirection = 1; }
             SortColumn = e.Column.SortMemberPath;
         }
@@ -276,7 +275,7 @@ namespace TestWpfPowerBI.ViewModels
 
     public class VpaRelationshipViewModel
     {
-        VpaRelationship _rel;
+        readonly VpaRelationship _rel;
         public VpaRelationshipViewModel(VpaRelationship rel, VpaTableViewModel table)
         {
             Table = table;
@@ -290,6 +289,7 @@ namespace TestWpfPowerBI.ViewModels
         public long MissingKeys => _rel.MissingKeys;
         public long InvalidRows => _rel.InvalidRows;
         public string SampleReferentialIntegrityViolations => _rel.SampleReferentialIntegrityViolations;
+        public double OneToManyRatio => _rel.OneToManyRatio;
     }
 
     public class VpaTableViewModel : IComparable
@@ -308,6 +308,7 @@ namespace TestWpfPowerBI.ViewModels
             {
                 RelationshipMaxFromCardinality = RelationshipsFrom.Max(r => r.FromColumnCardinality);
                 RelationshipMaxToCardinality = RelationshipsFrom.Max(r => r.ToColumnCardinality);
+                RelationshipMaxOneToManyRatio = RelationshipsFrom.Max(r => r.OneToManyRatio);
             }
         }
 
@@ -331,6 +332,7 @@ namespace TestWpfPowerBI.ViewModels
         public IEnumerable<VpaColumnViewModel> Columns { get; }
         public IEnumerable<VpaRelationshipViewModel> RelationshipsFrom { get; }
         public long RelationshipMaxFromCardinality { get; }
+        public double RelationshipMaxOneToManyRatio { get; }
         public long ColumnMaxTotalSize { get; }
         public long ColumnsMaxCardinality { get; }
 
