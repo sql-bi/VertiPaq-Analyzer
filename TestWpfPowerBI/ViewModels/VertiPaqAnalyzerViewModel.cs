@@ -91,7 +91,9 @@ namespace TestWpfPowerBI.ViewModels
     {
 
         private readonly IEventAggregator _eventAggregator;
+#pragma warning disable IDE0052 // Remove unread private members
         private readonly IGlobalOptions _globalOptions;
+#pragma warning restore IDE0052 // Remove unread private members
 
         [ImportingConstructor]
         public VertiPaqAnalyzerViewModel(Dax.ViewModel.VpaModel viewModel, IEventAggregator eventAggregator, DocumentViewModel currentDocument, IGlobalOptions options)
@@ -213,7 +215,9 @@ namespace TestWpfPowerBI.ViewModels
             Log.Information("VertiPaq Analyzer Handle DocumentConnectionUpdateEvent call");
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         public void MouseDoubleClick(object sender )//, MouseButtonEventArgs e)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             System.Diagnostics.Debug.WriteLine("clicked!");
         }

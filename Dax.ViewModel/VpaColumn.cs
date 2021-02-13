@@ -7,7 +7,7 @@ namespace Dax.ViewModel
 {
     public class VpaColumn
     {
-        private Dax.Metadata.Column Column;
+        private readonly Dax.Metadata.Column Column;
         internal VpaColumn(Dax.Metadata.Column column )
         {
             this.Column = column;
@@ -38,6 +38,9 @@ namespace Dax.ViewModel
         public string SortByColumnName { get { return this.Column.SortByColumnName; } }
         public string State { get { return this.Column.State; } }
         public bool IsRowNumber { get { return this.Column.IsRowNumber; } }
+
+        // TODO - complete implementation
+        public bool IsReferenced { get { return true; } }
 
         public long DictionarySize { get { return this.Column.DictionarySize; } }
 

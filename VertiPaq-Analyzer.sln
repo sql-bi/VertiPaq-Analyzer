@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPowerBI", "TestPowerBI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWpfPowerBI", "TestWpfPowerBI\TestWpfPowerBI.csproj", "{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dax.Model.Extractor.NetCore", "Dax.Model.Extractor.NetCore\Dax.Model.Extractor.NetCore.csproj", "{E9C9A46A-87B7-4FC1-ADDA-DC7464A0B1A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dax.Vpax.NetCore", "Dax.Vpax.NetCore\Dax.Vpax.NetCore.csproj", "{DEFCF0C4-B74E-4236-B3FB-742900F238EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9C9A46A-87B7-4FC1-ADDA-DC7464A0B1A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9C9A46A-87B7-4FC1-ADDA-DC7464A0B1A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9C9A46A-87B7-4FC1-ADDA-DC7464A0B1A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9C9A46A-87B7-4FC1-ADDA-DC7464A0B1A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEFCF0C4-B74E-4236-B3FB-742900F238EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEFCF0C4-B74E-4236-B3FB-742900F238EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEFCF0C4-B74E-4236-B3FB-742900F238EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEFCF0C4-B74E-4236-B3FB-742900F238EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
