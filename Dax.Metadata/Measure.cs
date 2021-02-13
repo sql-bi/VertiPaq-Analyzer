@@ -22,6 +22,8 @@ namespace Dax.Metadata
         public DaxExpression KpiTargetExpression { get; set; }
         public string KpiTargetFormatString { get; set; }
         public DaxExpression KpiTrendExpression { get; set; }
-        
+
+        public bool IsReferenced { get; set; }
+
     }
 }

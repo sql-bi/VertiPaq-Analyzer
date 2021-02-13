@@ -33,6 +33,7 @@ namespace Dax.ViewVpaExport
         public string KpiTargetExpression { get { return this._Measure.KpiTargetExpression?.Expression; } }
         public string KpiTargetFormatString { get { return this._Measure.KpiTargetFormatString; } }
         public string KpiTrendExpression { get { return this._Measure.KpiTrendExpression?.Expression; } }
+        public bool IsReferenced { get { return this._Measure.IsReferenced; } }
 
     }
 }

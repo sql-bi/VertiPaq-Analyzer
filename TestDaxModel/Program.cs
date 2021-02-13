@@ -67,8 +67,8 @@ namespace TestDaxModel
             //const string serverName = @".\tab17";
             // string databaseName = "CalculationGroups_Currency";
             // const string serverName = @".\tab19";
-            string databaseName = "338e5409-5010-4864-8226-722165625dd5";
-            const string serverName = @"localhost:49851";
+            string databaseName = "32f0add7-3e4c-4fd7-8e26-3961f25d7c5a";
+            const string serverName = @"localhost:60812";
 
             var connStr = $"Provider=MSOLAP;Data Source={serverName};Initial Catalog={databaseName};";
             var conn = new System.Data.OleDb.OleDbConnection(connStr);
@@ -116,16 +116,17 @@ namespace TestDaxModel
             // const string databaseName = "Adventure Works";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            const string serverName = "localhost:62762";
-            const string databaseName = "526dbb72-afb9-400b-8a84-144f05aa51b9";
+            const string serverName = "localhost:60812";
+            const string databaseName = "32f0add7-3e4c-4fd7-8e26-3961f25d7c5a";
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
             var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
             var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10 );
-            
-            DumpRelationships(daxModel);
 
+            //DumpReferencedColumns(daxModel);
+            //DumpReferencedMeasures(daxModel);
+            // DumpRelationships(daxModel);
 
             //
             // Test serialization of Dax.Model in JSON file
@@ -264,6 +265,31 @@ namespace TestDaxModel
             }
         }
 
+        private static void DumpReferencedColumns(Dax.Metadata.Model model)
+        {
+            Console.WriteLine("------------------------");
+            foreach (var t in model.Tables)
+            {
+                Console.WriteLine($"---Table={t.TableName} [referenced={t.IsReferenced}]");
+                foreach (var c in t.Columns.Where(c=>c.IsReferenced))
+                {
+                    Console.WriteLine(c.ColumnName);
+                }
+            }
+        }
+
+        private static void DumpReferencedMeasures(Dax.Metadata.Model model)
+        {
+            Console.WriteLine("------------------------");
+            foreach (var t in model.Tables)
+            {
+                Console.WriteLine($"---Table={t.TableName} [referenced={t.IsReferenced}]");
+                foreach (var m in t.Measures.Where(m => m.IsReferenced))
+                {
+                    Console.WriteLine(m.MeasureName);
+                }
+            }
+        }
         /// <summary>
         /// Dump internal structure for Relationships
         /// </summary>

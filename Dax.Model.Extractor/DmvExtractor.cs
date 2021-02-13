@@ -99,6 +99,7 @@ namespace Dax.Metadata.Extractor
             de.PopulateLastDataUpdate();
             de.PopulateUserHierarchies();
             de.PopulateRelationships();
+            de.PopulateReferences();
         }
 
         protected bool CheckDatabaseNameCompatibilityLevel(ref string databaseName, out int compatibilityLevel)
@@ -746,6 +747,77 @@ ORDER BY [LAST_DATA_UPDATE] DESC";
                 {
                     DateTime lastDataRefresh = (DateTime)rdr.GetDateTime(0);
                     DaxModel.LastDataRefresh = lastDataRefresh.ToUniversalTime();
+                }
+            }
+        }
+
+        public void PopulateReferences()
+        {
+            // Skip the PopulateRelationships task if the compatibility level is older than TOM
+            if (this.DaxModel.CompatibilityLevel < 1200)
+            {
+                return;
+            }
+
+            const string QUERY_CALC_DEPENDENCY = @"
+SELECT DISTINCT 
+    REFERENCED_OBJECT_TYPE, 
+    REFERENCED_TABLE, 
+    REFERENCED_OBJECT 
+FROM $SYSTEM.DISCOVER_CALC_DEPENDENCY
+";
+            var cmd = CreateCommand(QUERY_CALC_DEPENDENCY);
+            cmd.CommandTimeout = CommandTimeout;
+
+            using (var rdr = cmd.ExecuteReader())
+            {
+                while (rdr.Read())
+                {
+                    string objectType = rdr.GetString(0);
+                    string tableName = rdr.GetString(1);
+                    string objectName = rdr.GetString(2);
+
+                    var table = DaxModel.Tables.Find(t => t.TableName.Name == tableName);
+                    switch (objectType)
+                    {
+                        case "ATTRIBUTE_HIERARCHY":
+                        case "CALC_COLUMN":
+                        case "COLUMN":
+                            // If there is a reference to a column, there is a reference to the table, too
+                            if (table != null)
+                            {
+                                table.IsReferenced = true;
+
+                                var column = table?.Columns.Find(c => c.ColumnName.Name == objectName);
+                                if (column != null) column.IsReferenced = true;
+                            }
+                            break;
+
+                        case "CALC_TABLE":
+                        case "TABLE":
+                            if (table != null) table.IsReferenced = true;
+                            break;
+
+                        case "CALCULATION_ITEM":
+                            // If there is a reference to a calculation item, there is a reference to the table corresponding to the calculation group
+                            if (table != null)
+                            {
+                                table.IsReferenced = true;
+
+                                var calculationItem = table.CalculationGroup?.CalculationItems.Find(ci => ci.ItemName.Name == objectName);
+                                if (calculationItem != null) calculationItem.IsReferenced = true;
+                            }
+                            break;
+
+                        case "MEASURE":
+                            // If there is a reference to a column, the table is not involved (the measure could move to another table)
+                            var measure = table?.Measures.Find(c => c.MeasureName.Name == objectName);
+                            if (measure!= null) measure.IsReferenced = true;
+                            break;
+                        default:
+                            // Unrecognized element, catch here only for debug purposes
+                            break;
+                    }
                 }
             }
         }

@@ -35,6 +35,7 @@ namespace Dax.Metadata
         public long ReferentialIntegrityViolationCount { get; set; }
         public CalculationGroup CalculationGroup { get; set; }
         public string Description { get; set; }
+        public bool IsReferenced { get; set; }
 
         [JsonIgnore]
         public long ColumnsDictionarySize { get {

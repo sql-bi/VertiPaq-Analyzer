@@ -39,6 +39,7 @@ namespace Dax.Metadata
         public string State { get; set; }
         public bool IsRowNumber { get; set; }
         public bool IsCalculationGroupAttribute { get; set; }
+        public bool IsReferenced { get; set; }
 
         public long DictionarySize { get; set; }
 

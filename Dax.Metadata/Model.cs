@@ -73,5 +73,79 @@ namespace Dax.Metadata
             this.ExtractorApp = extractorApp;
             this.ExtractorAppVersion = extractorAppVersion;
         }
+        /*
+        public void PopulateColumnReferences()
+        {
+            var columns = from t in this.Tables
+                          from c in t.Columns
+                          select c;
+
+            // Set IsReferenced of each column in the model
+            // This initial scan set to true/false only
+            foreach ( var c in columns )
+            {
+                c.IsReferenced = (FindReferences(c, true).Count > 0);
+            }
+
+            // Following scan set to TRUE columns that should be FALSE otherwise
+            // We have to run these scans after the previous loop that resets the IsReferenced value
+
+            // Relationship
+            
+            // Order by
+        }
+
+        public List<object> FindReferences( Column column, bool findFirstOnly )
+        {
+            var result = new List<object>();
+
+            // We use the unqualified table name
+            // A more reliable analysis requires a complete DAX parser
+            string columnReferenceName = $"[{column.ColumnName.Name}]";
+
+            // Scan columns 
+            IEnumerable<object> columnExpressions =
+                from t in this.Tables
+                from c in t.Columns
+                where (c.ColumnExpression?.Expression?.Contains(columnReferenceName)).GetValueOrDefault()
+                select c;
+            
+            // Scan measures
+            IEnumerable<object> measureExpressions = 
+                from t in this.Tables
+                from m in t.Measures
+                where (m.MeasureExpression?.Expression?.Contains(columnReferenceName)).GetValueOrDefault()
+                    || (m.DetailRowsExpression?.Expression?.Contains(columnReferenceName)).GetValueOrDefault()
+                    || (m.KpiStatusExpression?.Expression?.Contains(columnReferenceName)).GetValueOrDefault()
+                    || (m.KpiTargetExpression?.Expression?.Contains(columnReferenceName)).GetValueOrDefault()
+                    || (m.KpiTrendExpression?.Expression?.Contains(columnReferenceName)).GetValueOrDefault()
+                select m;
+
+            // Scan calculated tables
+            IEnumerable<object> tableExpressions = 
+                from t in this.Tables
+                where (t.TableExpression?.Expression?.Contains(columnReferenceName)).GetValueOrDefault()
+                select t;
+
+            // Scan calculation groups
+            IEnumerable<object> calculationItemExpressions = 
+                from t in this.Tables
+                where t.CalculationGroup != null
+                from ci in t.CalculationGroup.CalculationItems
+                where (ci.ItemExpression?.Expression?.Contains(columnReferenceName)).GetValueOrDefault()
+                    || (ci.FormatStringDefinition?.Expression?.Contains(columnReferenceName)).GetValueOrDefault()
+                select ci;
+
+            var completeList = columnExpressions.Union(measureExpressions).Union(tableExpressions).Union(calculationItemExpressions);
+
+            foreach (var o in completeList)
+            {
+                if (findFirstOnly && result.Count > 0) break;
+                result.Add(o);
+            }
+
+            return result;
+        }
+        */
     }
 }

@@ -55,6 +55,7 @@ namespace Dax.ViewVpaExport
         public string SortByColumnName { get { return this._Column.SortByColumnName; } }
         public string State { get { return this._Column.State; } }
         public bool IsRowNumber { get { return this._Column.IsRowNumber; } }
+        public bool IsReferenced { get { return this._Column.IsReferenced; } }
 
         public long DictionarySize { get { return this._Column.DictionarySize; } }
 

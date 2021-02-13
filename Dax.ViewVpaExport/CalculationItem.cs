@@ -19,7 +19,7 @@ namespace Dax.ViewVpaExport
         public bool IsHidden {
             get {
                 var column = this._CalculationItem.CalculationGroup.Table.Columns.Find(c => c.IsCalculationGroupAttribute == true);
-                return (column != null) ? column.IsHidden : false;
+                return (column != null) && column.IsHidden;
             }
         }
         public int Precedence { get { return this._CalculationItem.CalculationGroup.Precedence; } }
@@ -30,5 +30,7 @@ namespace Dax.ViewVpaExport
         public string FormatStringDefinition { get { return this._CalculationItem.FormatStringDefinition?.Expression; } }
         public string FormatStringState { get { return this._CalculationItem.FormatStringState; } }
         public string FormatStringErrorMessage { get { return this._CalculationItem.FormatStringErrorMessage; } }
+        public bool IsReferenced { get { return this._CalculationItem.IsReferenced; } }
+
     }
 }

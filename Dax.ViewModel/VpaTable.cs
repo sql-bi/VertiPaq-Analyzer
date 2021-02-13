@@ -39,6 +39,7 @@ namespace Dax.ViewModel
         public long TableSize { get { return this.Table.TableSize; } }
         public long RelationshipsSize { get { return this.Table.RelationshipsSize; } }
         public long UserHierarchiesSize { get { return this.Table.UserHierarchiesSize; } }
+        public bool IsReferenced { get { return this.Table.IsReferenced; } }
 
         public double PercentageDatabase {
             get {

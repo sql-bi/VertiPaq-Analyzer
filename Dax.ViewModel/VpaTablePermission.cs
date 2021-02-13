@@ -7,7 +7,9 @@ namespace Dax.ViewModel
 {
     public class VpaTablePermission
     {
-        private Dax.Metadata.TablePermission TablePermission;
+#pragma warning disable IDE0052 // Remove unread private members
+        private readonly Dax.Metadata.TablePermission TablePermission;
+#pragma warning restore IDE0052 // Remove unread private members
 
         internal VpaTablePermission(Dax.Metadata.TablePermission tablePermission)
         {
