@@ -774,8 +774,8 @@ FROM $SYSTEM.DISCOVER_CALC_DEPENDENCY
                 while (rdr.Read())
                 {
                     string objectType = rdr.GetString(0);
-                    string tableName = rdr.GetString(1);
-                    string objectName = rdr.GetString(2);
+                    string tableName = rdr.IsDBNull(1)?string.Empty : rdr.GetString(1);
+                    string objectName = rdr.IsDBNull(2)?string.Empty : rdr.GetString(2);
 
                     var table = DaxModel.Tables.Find(t => t.TableName.Name == tableName);
                     switch (objectType)

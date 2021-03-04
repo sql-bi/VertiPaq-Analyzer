@@ -116,8 +116,12 @@ namespace TestDaxModel
             // const string databaseName = "Adventure Works";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            const string serverName = "localhost:60812";
-            const string databaseName = "32f0add7-3e4c-4fd7-8e26-3961f25d7c5a";
+            //const string serverName = "localhost:60812";
+            //const string databaseName = "32f0add7-3e4c-4fd7-8e26-3961f25d7c5a";
+
+            const string serverName = @"localhost\tab17";
+            const string databaseName = "Adventure Works";
+
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
