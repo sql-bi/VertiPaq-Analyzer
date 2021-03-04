@@ -13,7 +13,7 @@
     <PackageIconUrl>https://www.sqlbi.com/wp-content/uploads/VertipaqAnalyzer-1.svg</PackageIconUrl>
     <PackageIcon>VertipaqAnalyzer.png</PackageIcon>
     <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
-    <Version>1.0.33</Version>
+    <Version>1.0.34</Version>
   </PropertyGroup>
 
   <ItemGroup>
