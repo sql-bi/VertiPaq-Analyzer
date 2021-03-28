@@ -38,6 +38,10 @@ namespace Dax.Metadata.Extractor
                 AddRole(role);
             }
 
+            // Compatibility Level and Mode
+            DaxModel.CompatibilityLevel = tomModel.Database.CompatibilityLevel;
+            DaxModel.CompatibilityMode = tomModel.Database.CompatibilityMode.ToString();
+
             // Update ExtractionDate
             DaxModel.ExtractionDate = DateTime.UtcNow;
         }

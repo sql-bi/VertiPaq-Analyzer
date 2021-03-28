@@ -57,7 +57,8 @@ namespace Dax.Metadata.Extractor
             Connection.Open();
 
             // Validate databaseName
-            if (!CheckDatabaseNameCompatibilityLevel(ref databaseName, out int compatibilityLevel)) {
+            var compatibilityLevel = DaxModel.CompatibilityLevel; // assume the default obtained by TOM if any, or unknown/0 otherwise
+            if (!CheckDatabaseNameCompatibilityLevel(ref databaseName, ref compatibilityLevel)) {
                 throw new ExtractorException(connection, databaseName);
             }
 
@@ -102,7 +103,7 @@ namespace Dax.Metadata.Extractor
             de.PopulateReferences();
         }
 
-        protected bool CheckDatabaseNameCompatibilityLevel(ref string databaseName, out int compatibilityLevel)
+        protected bool CheckDatabaseNameCompatibilityLevel(ref string databaseName, ref int compatibilityLevel)
         {
             const string QUERY_CATALOGS = @"
 SELECT [CATALOG_NAME]
@@ -134,7 +135,6 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
                 return true;
             }
 
-            compatibilityLevel = 0;
             // no matches found
             return false;
         }

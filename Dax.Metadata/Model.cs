@@ -37,7 +37,16 @@ namespace Dax.Metadata
 
         public DaxName ServerName { get; set; }
         public DaxName ModelName { get; set; }
+
+        /// <summary>
+        /// Same compatibility level of TOM database
+        /// </summary>
         public int CompatibilityLevel { get; set; }
+
+        /// <summary>
+        /// Same compatibility mode of TOM database
+        /// </summary>
+        public string CompatibilityMode { get; set; }
 
         /// <summary>
         /// Date/time in UTC of last extraction from DMV/TOM
@@ -59,7 +68,7 @@ namespace Dax.Metadata
             this.Roles = new List<Role>();
 
             // TODO - how to support versioning?
-            Version daxModelVersion = new Version(1, 0);
+            Version daxModelVersion = new Version(1, 1);
             this.DaxModelVersion = daxModelVersion.ToString();
             AssemblyName modelAssemblyName = this.GetType().Assembly.GetName();
             this.DaxModelLib = modelAssemblyName.Name;

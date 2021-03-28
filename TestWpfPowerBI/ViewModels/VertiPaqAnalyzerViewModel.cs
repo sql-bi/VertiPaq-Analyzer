@@ -413,6 +413,7 @@ namespace TestWpfPowerBI.ViewModels
             TableCount = parent.ViewModel.Tables.Count();
             ColumnCount = parent.ViewModel.Columns.Count();
             CompatibilityLevel = parent.ViewModel.Model.CompatibilityLevel;
+            CompatibilityMode = parent.ViewModel.Model.CompatibilityMode;
             TotalSize = parent.ViewModel.Tables.Sum(t => t.TableSize);
             DataSource = parent.ViewModel.Model.ServerName?.Name ?? "<Unknown>";
             ModelName = parent.ViewModel.Model.ModelName.Name;
@@ -424,6 +425,7 @@ namespace TestWpfPowerBI.ViewModels
         public int TableCount { get; }
         public int ColumnCount { get; }
         public int CompatibilityLevel { get; }
+        public string CompatibilityMode { get; }
         public long TotalSize { get; }
         public string FormattedTotalSize {
             get {
