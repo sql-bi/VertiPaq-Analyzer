@@ -119,15 +119,15 @@ namespace TestDaxModel
             //const string serverName = "localhost:60812";
             //const string databaseName = "32f0add7-3e4c-4fd7-8e26-3961f25d7c5a";
 
-            const string serverName = @"localhost\tab17";
-            const string databaseName = "Adventure Works";
+            const string serverName = @"localhost\tab19";
+            const string databaseName = "repro";
 
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
             var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
             var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10 );
-
+            Console.WriteLine(database.CompatibilityMode);
             //DumpReferencedColumns(daxModel);
             //DumpReferencedMeasures(daxModel);
             // DumpRelationships(daxModel);

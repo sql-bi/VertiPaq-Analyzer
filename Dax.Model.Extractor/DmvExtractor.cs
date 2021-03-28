@@ -57,7 +57,7 @@ namespace Dax.Metadata.Extractor
             Connection.Open();
 
             // Validate databaseName
-            var compatibilityLevel = DaxModel.CompatibilityLevel; // assume the default obtained by TOM if any, or unknown/0 otherwise
+            var compatibilityLevel = daxModel.CompatibilityLevel; // assume the default obtained by TOM if any, or unknown/0 otherwise
             if (!CheckDatabaseNameCompatibilityLevel(ref databaseName, ref compatibilityLevel)) {
                 throw new ExtractorException(connection, databaseName);
             }
