@@ -8,6 +8,7 @@ using System.Data.OleDb;
 using Tom = Microsoft.AnalysisServices.Tabular;
 using Microsoft.AnalysisServices.AdomdClient;
 using System.Data;
+using System.Diagnostics;
 
 namespace Dax.Metadata.Extractor
 {
@@ -766,59 +767,71 @@ SELECT DISTINCT
     REFERENCED_OBJECT 
 FROM $SYSTEM.DISCOVER_CALC_DEPENDENCY
 ";
-            var cmd = CreateCommand(QUERY_CALC_DEPENDENCY);
-            cmd.CommandTimeout = CommandTimeout;
 
-            using (var rdr = cmd.ExecuteReader())
+            // There are bugs in the M engine reporting this possible error:
+            // M Engine error: 'Microsoft.Data.Mashup; <pii>Token Literal expected. Start position: (4, 1). End position (4, 2).</pii>'.
+            // We ignore this step if we find this type of error
+            try
             {
-                while (rdr.Read())
+                var cmd = CreateCommand(QUERY_CALC_DEPENDENCY);
+                cmd.CommandTimeout = CommandTimeout;
+
+                using (var rdr = cmd.ExecuteReader())
                 {
-                    string objectType = rdr.GetString(0);
-                    string tableName = rdr.IsDBNull(1)?string.Empty : rdr.GetString(1);
-                    string objectName = rdr.IsDBNull(2)?string.Empty : rdr.GetString(2);
-
-                    var table = DaxModel.Tables.Find(t => t.TableName.Name == tableName);
-                    switch (objectType)
+                    while (rdr.Read())
                     {
-                        case "ATTRIBUTE_HIERARCHY":
-                        case "CALC_COLUMN":
-                        case "COLUMN":
-                            // If there is a reference to a column, there is a reference to the table, too
-                            if (table != null)
-                            {
-                                table.IsReferenced = true;
+                        string objectType = rdr.GetString(0);
+                        string tableName = rdr.IsDBNull(1) ? string.Empty : rdr.GetString(1);
+                        string objectName = rdr.IsDBNull(2) ? string.Empty : rdr.GetString(2);
 
-                                var column = table?.Columns.Find(c => c.ColumnName.Name == objectName);
-                                if (column != null) column.IsReferenced = true;
-                            }
-                            break;
+                        var table = DaxModel.Tables.Find(t => t.TableName.Name == tableName);
+                        switch (objectType)
+                        {
+                            case "ATTRIBUTE_HIERARCHY":
+                            case "CALC_COLUMN":
+                            case "COLUMN":
+                                // If there is a reference to a column, there is a reference to the table, too
+                                if (table != null)
+                                {
+                                    table.IsReferenced = true;
 
-                        case "CALC_TABLE":
-                        case "TABLE":
-                            if (table != null) table.IsReferenced = true;
-                            break;
+                                    var column = table?.Columns.Find(c => c.ColumnName.Name == objectName);
+                                    if (column != null) column.IsReferenced = true;
+                                }
+                                break;
 
-                        case "CALCULATION_ITEM":
-                            // If there is a reference to a calculation item, there is a reference to the table corresponding to the calculation group
-                            if (table != null)
-                            {
-                                table.IsReferenced = true;
+                            case "CALC_TABLE":
+                            case "TABLE":
+                                if (table != null) table.IsReferenced = true;
+                                break;
 
-                                var calculationItem = table.CalculationGroup?.CalculationItems.Find(ci => ci.ItemName.Name == objectName);
-                                if (calculationItem != null) calculationItem.IsReferenced = true;
-                            }
-                            break;
+                            case "CALCULATION_ITEM":
+                                // If there is a reference to a calculation item, there is a reference to the table corresponding to the calculation group
+                                if (table != null)
+                                {
+                                    table.IsReferenced = true;
 
-                        case "MEASURE":
-                            // If there is a reference to a column, the table is not involved (the measure could move to another table)
-                            var measure = table?.Measures.Find(c => c.MeasureName.Name == objectName);
-                            if (measure!= null) measure.IsReferenced = true;
-                            break;
-                        default:
-                            // Unrecognized element, catch here only for debug purposes
-                            break;
+                                    var calculationItem = table.CalculationGroup?.CalculationItems.Find(ci => ci.ItemName.Name == objectName);
+                                    if (calculationItem != null) calculationItem.IsReferenced = true;
+                                }
+                                break;
+
+                            case "MEASURE":
+                                // If there is a reference to a column, the table is not involved (the measure could move to another table)
+                                var measure = table?.Measures.Find(c => c.MeasureName.Name == objectName);
+                                if (measure != null) measure.IsReferenced = true;
+                                break;
+                            default:
+                                // Unrecognized element, catch here only for debug purposes
+                                break;
+                        }
                     }
                 }
+            }
+            catch (AdomdErrorResponseException ex)
+            {
+                // We ignore errors accessing this DMV
+                Debug.WriteLine($"Ignored error in DISCOVER_CALC_DEPENDENCY: {ex.Message}");
             }
         }
 
