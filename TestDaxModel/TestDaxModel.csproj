@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AnalysisServices.retail.amd64">
-      <Version>19.14.0</Version>
+      <Version>19.22.5</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>

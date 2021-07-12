@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/sql-bi/VertiPaq-Analyzer</RepositoryUrl>
     <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.0-beta3</Version>
+    <Version>1.1.0-beta4</Version>
   </PropertyGroup>
 
   <ItemGroup>
