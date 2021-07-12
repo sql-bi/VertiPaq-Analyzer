@@ -747,7 +747,7 @@ ORDER BY [LAST_DATA_UPDATE] DESC";
                 if (rdr.Read())
                 {
                     DateTime lastDataRefresh = (DateTime)rdr.GetDateTime(0);
-                    DaxModel.LastDataRefresh = lastDataRefresh.ToUniversalTime();
+                    DaxModel.LastDataRefresh = DateTime.SpecifyKind(lastDataRefresh, DateTimeKind.Utc);
                 }
             }
         }

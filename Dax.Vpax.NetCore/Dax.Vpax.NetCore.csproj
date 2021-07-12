@@ -13,7 +13,7 @@
     <PackageIconUrl>https://www.sqlbi.com/wp-content/uploads/VertipaqAnalyzer-1.svg</PackageIconUrl>
     <PackageIcon>VertipaqAnalyzer.png</PackageIcon>
     <PackageTags>Dax, VertiPaq Analyzer</PackageTags>
-    <Version>1.0.35</Version>
+    <Version>1.0.36</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AnalysisServices.NetCore.retail.amd64" Version="19.16.3" />
+    <PackageReference Include="Microsoft.AnalysisServices.NetCore.retail.amd64" Version="19.22.5" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
