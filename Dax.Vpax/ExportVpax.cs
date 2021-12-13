@@ -11,9 +11,15 @@ namespace Dax.Vpax
     internal class ExportVpax : IDisposable
     {
         public Package Package { get; private set; }
+
         public ExportVpax(string path) 
         {
             this.Package = Package.Open(path, FileMode.Create);
+        }
+
+        public ExportVpax(Stream stream)
+        {
+            this.Package = Package.Open(stream, FileMode.Create, FileAccess.ReadWrite);
         }
 
         public void Close()

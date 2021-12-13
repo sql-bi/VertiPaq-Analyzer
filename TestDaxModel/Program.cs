@@ -20,10 +20,57 @@ namespace TestDaxModel
 
         static void Main()
         {
-            GenericTest();
-            // TestPbiShared();
-            // TestLocalVpaModel();
-            // TestExport();
+            //GenericTest();
+            //TestPbiShared();
+            //TestLocalVpaModel();
+            TestExport();
+            TestExportStream();
+        }
+
+        static void TestExportStream()
+        {
+            string databaseName = "Microsoft_SQLServer_AnalysisServices";
+            const string serverName = @"http://localhost:9000/xmla";
+            const string applicationName = "Test";
+            const string applicationVersion = "0.0";
+            bool includeTomModel = false;
+
+            const string path = @"c:\temp\test5.vpax";
+
+            Console.WriteLine("Exporting...");
+
+            //
+            // Get Dax.Model object from the SSAS engine
+            //
+            Dax.Metadata.Model model = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, applicationName, applicationVersion);
+
+            //
+            // Get TOM model from the SSAS engine
+            //
+            Microsoft.AnalysisServices.Database database = includeTomModel ? Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName) : null;
+
+            // 
+            // Create VertiPaq Analyzer views
+            //
+            Dax.ViewVpaExport.Model viewVpa = new Dax.ViewVpaExport.Model(model);
+
+            //
+            // Save VPAX file
+            // 
+
+            using (var stream = File.Open(path, FileMode.Create, FileAccess.ReadWrite))
+            {
+                Dax.Vpax.Tools.VpaxTools.ExportVpax(stream, model, viewVpa, database);
+            }
+
+            using (var fileStream = File.OpenWrite(path))
+            using (var memoryStream = new MemoryStream())
+            {
+                Dax.Vpax.Tools.VpaxTools.ExportVpax(memoryStream, model, viewVpa, database);
+                memoryStream.CopyTo(fileStream);
+            }
+
+            Console.WriteLine("Completed");
         }
 
         static void TestExport()

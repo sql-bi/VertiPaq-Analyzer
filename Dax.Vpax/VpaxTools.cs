@@ -14,30 +14,44 @@ namespace Dax.Vpax.Tools
     public static class VpaxTools
     {
         /// <summary>
+        /// Export to VertiPaq Analyzer (VPAX) stream
+        /// </summary>
+        public static void ExportVpax(Stream stream, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, Microsoft.AnalysisServices.Database database = null)
+        {
+            using (ExportVpax exportVpax = new ExportVpax(stream))
+            {
+                InternalExportVpax(exportVpax, model, viewVpa, database);
+            }
+
+            stream.Position = 0L;
+        }
+
+        /// <summary>
         /// Export to VertiPaq Analyzer (VPAX) file
         /// </summary>
-        /// <param name="databaseName"></param>
-        /// <param name="pathOutput"></param>
-        /// <param name="viewVpa"></param>
-        /// <param name="database"></param>
         public static void ExportVpax(string path, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, Microsoft.AnalysisServices.Database database = null)
         {
             using (ExportVpax exportVpax = new ExportVpax(path))
             {
-                if (model != null)
-                {
-                    exportVpax.ExportModel(model);
-                }
-                if (viewVpa != null)
-                {
-                    exportVpax.ExportViewVpa(viewVpa);
-                }
-                if (database != null)
-                {
-                    exportVpax.ExportDatabase(database);
-                }
-                exportVpax.Close();
+                InternalExportVpax(exportVpax, model, viewVpa, database);
             }
+        }
+
+        internal static void InternalExportVpax(ExportVpax exportVpax, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, Microsoft.AnalysisServices.Database database = null)
+        {
+            if (model != null)
+            {
+                exportVpax.ExportModel(model);
+            }
+            if (viewVpa != null)
+            {
+                exportVpax.ExportViewVpa(viewVpa);
+            }
+            if (database != null)
+            {
+                exportVpax.ExportDatabase(database);
+            }
+            exportVpax.Close();
         }
 
         public struct VpaxContent
