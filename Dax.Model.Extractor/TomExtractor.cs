@@ -42,6 +42,11 @@ namespace Dax.Metadata.Extractor
             DaxModel.CompatibilityLevel = tomModel.Database.CompatibilityLevel;
             DaxModel.CompatibilityMode = tomModel.Database.CompatibilityMode.ToString();
 
+            // Database version and last update and process date and time
+            DaxModel.LastProcessed = tomModel.Database.LastProcessed;
+            DaxModel.LastUpdate = tomModel.Database.LastUpdate;
+            DaxModel.Version = tomModel.Database.Version;
+
             // Update ExtractionDate
             DaxModel.ExtractionDate = DateTime.UtcNow;
         }

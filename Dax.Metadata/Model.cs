@@ -58,6 +58,21 @@ namespace Dax.Metadata
         /// </summary>
         public DateTime LastDataRefresh { get; set; }
 
+        /// <summary>
+        /// Same last processed of TOM database
+        /// </summary>
+        public DateTime LastProcessed { get; set; }
+
+        /// <summary>
+        /// Same last update of TOM database
+        /// </summary>
+        public DateTime LastUpdate { get; set; }
+
+        /// <summary>
+        /// Same version of TOM database
+        /// </summary>
+        public long Version { get; set; }
+
         public List<Table> Tables { get; }
         public List<Relationship> Relationships { get; }
         public List<Role> Roles { get; }
