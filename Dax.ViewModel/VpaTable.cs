@@ -54,6 +54,59 @@ namespace Dax.ViewModel
                 return this.Table.Columns.First<Metadata.Column>().ColumnSegments.Count();
             }
         }
+
+        public int SegmentsTotalNumber
+        {
+            get
+            {
+                return this.Table.Columns.Sum<Metadata.Column>( c => c.ColumnSegments.Count() );
+            }
+        }
+
+        public int? SegmentsPageable
+        {
+            get
+            {
+                return this.Table.Columns.Sum<Metadata.Column>( 
+                    c => (c.ColumnSegments.Count(s => s.IsPageable.HasValue == true) > 0) ?
+                        c.ColumnSegments.Count(s => s.IsPageable == true) :
+                        (int?)null
+                );
+            }
+        }
+
+        public int? SegmentsResident
+        {
+            get
+            {
+                return this.Table.Columns.Sum<Metadata.Column>( 
+                    c => (c.ColumnSegments.Count(s => s.IsResident.HasValue == true) > 0) ?
+                        c.ColumnSegments.Count(s => s.IsResident == true) :
+                        (int?)null
+                );
+            }
+        }
+
+        public double? SegmentsAverageTemperature
+        {
+            get
+            {
+                return this.Table.Columns.Average<Metadata.Column>(
+                    c => c.ColumnSegments.Average(s => s.Temperature ) 
+                );
+            }
+        }
+
+        public DateTime? SegmentsLastAccessed
+        {
+            get
+            {
+                var q = from c in this.Table.Columns select c.ColumnSegments.Max(s => s.LastAccessed);
+                return q.Max();
+            }
+        }
+
+
         public int PartitionsNumber {
             get {
                 return this.Table.Partitions.Count();

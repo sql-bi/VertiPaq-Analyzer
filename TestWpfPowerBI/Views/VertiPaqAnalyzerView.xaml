@@ -144,9 +144,14 @@
                                                             <TextBlock Text="{Binding Name.RelationshipSize,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colRelationships}" />
                                                             <TextBlock Text="" Style="{StaticResource NumBlockBoldStyle}"  Width="{Binding ActualWidth, ElementName=colPercentageTable}" />
                                                             <TextBlock Text="{Binding Name.PercentageDatabase,StringFormat=P2}" Style="{StaticResource NumBlockBoldStyle}"  Width="{Binding ActualWidth, ElementName=colPercentageDB}" />
-                                                            <TextBlock Text="{Binding Name.SegmentsNumber,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colSegmentsNumber}" />
-                                                            <TextBlock Text="{Binding Name.PartitionsNumber,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colColumnsNumber}" />
                                                             <TextBlock Text="{Binding Name.ColumnsNumber,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colPartitionsNumber}" />
+                                                            <TextBlock Text="{Binding Name.PartitionsNumber,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colColumnsNumber}" />
+                                                            <TextBlock Text="{Binding Name.SegmentsTotalNumber,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colSegmentsNumber}" />
+
+                                                            <TextBlock Text="{Binding Name.SegmentsPageable,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colSegmentsPageableNumber}" />
+                                                            <TextBlock Text="{Binding Name.SegmentsResident,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colSegmentsResidentNumber}" />
+                                                            <TextBlock Text="{Binding Name.SegmentsAverageTemperature,StringFormat=N2}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colSegmentsAverageTemperature}" />
+                                                            <TextBlock Text="{Binding Name.SegmentsLastAccessed,StringFormat='{}{0:yy.MM.dd HH:mm:ss}'}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colSegmentsLastAccessed}" />
                                                         </StackPanel>
 
                                                     </Expander.Header>
@@ -225,9 +230,13 @@
 
                         <DataGridTextColumn Binding="{Binding PercentageTable, StringFormat=P}" Header="% Table" x:Name="colPercentageTable" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
                         <DataGridTextColumn Binding="{Binding PercentageDatabase, StringFormat=P}" Header="% DB" x:Name="colPercentageDB" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
-                        <DataGridTextColumn Binding="{Binding SegmentsNumber, StringFormat=N0}"  Header="Segments" x:Name="colSegmentsNumber" ElementStyle="{StaticResource NumTextBlockStyle}"/>
-                        <DataGridTextColumn Binding="{Binding PartitionsNumber, StringFormat=N0}" Header="Partitions" x:Name="colPartitionsNumber" ElementStyle="{StaticResource NumTextBlockStyle}"/>
                         <DataGridTextColumn Binding="{Binding ColumnsNumber}" Header="Columns" x:Name="colColumnsNumber"  ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding PartitionsNumber, StringFormat=N0}" Header="Partitions" x:Name="colPartitionsNumber" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsNumber, StringFormat=N0}"  Header="Segments" x:Name="colSegmentsNumber" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsPageable, StringFormat=N0}" Header="Pageable" x:Name="colSegmentsPageableNumber" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsResident, StringFormat=N0}" Header="Resident" x:Name="colSegmentsResidentNumber" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsAverageTemperature, StringFormat=N2}" Header="Temperature" x:Name="colSegmentsAverageTemperature" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsLastAccessed, StringFormat='{}{0:yy.MM.dd HH:mm:ss}'}" Header="Last accessed" x:Name="colSegmentsLastAccessed" ElementStyle="{StaticResource NumTextBlockStyle}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
@@ -279,8 +288,12 @@
                         <DataGridTextColumn Binding="{Binding PercentageDatabase, StringFormat=P}" Header="% DB"  HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
                         <DataGridTextColumn Binding="{Binding Encoding}" Header="Encoding"/>
                         <DataGridTextColumn Binding="{Binding TypeName}" Header="Data Type" />
-                        <DataGridTextColumn Binding="{Binding SegmentsNumber, StringFormat=N0}"  Header="Segments" ElementStyle="{StaticResource NumTextBlockStyle}"/>
                         <DataGridTextColumn Binding="{Binding PartitionsNumber, StringFormat=N0}" Header="Partitions" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsNumber, StringFormat=N0}"  Header="Segments" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsPageable, StringFormat=N0}" Header="Pageable" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsResident, StringFormat=N0}" Header="Resident" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsAverageTemperature, StringFormat=N2}" Header="Temperature" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsLastAccessed, StringFormat='{}{0:yy.MM.dd HH:mm:ss}'}" Header="Last accessed" ElementStyle="{StaticResource NumTextBlockStyle}"/>
 
                     </DataGrid.Columns>
                 </DataGrid>
@@ -407,7 +420,14 @@
                                                             <TextBlock Text="{Binding Name.RowsCount, StringFormat=N0}" Width="{Binding ActualWidth, ElementName=colRowsCount}" Style="{StaticResource NumBlockBoldStyle}"/>
                                                             <TextBlock Text="{Binding Name.ColumnsDataSize, StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colDataSize}"/>
                                                             <TextBlock Text="{Binding Name.PartitionsNumber,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colPartitions}" />
-                                                            <TextBlock Text="{Binding Name.SegmentsNumber,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colSegments}" />
+                                                            <TextBlock Text="{Binding Name.SegmentsNumber,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colPartSegments}" />
+
+                                                            <TextBlock Text="{Binding Name.SegmentsTotalNumber,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colPartTotalSegments}" />
+                                                            <TextBlock Text="{Binding Name.SegmentsPageable,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colPartSegmentsPageableNumber}" />
+                                                            <TextBlock Text="{Binding Name.SegmentsResident,StringFormat=N0}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colPartSegmentsResidentNumber}" />
+                                                            <TextBlock Text="{Binding Name.SegmentsAverageTemperature,StringFormat=N2}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colPartSegmentsAverageTemperature}" />
+                                                            <TextBlock Text="{Binding Name.SegmentsLastAccessed,StringFormat='{}{0:yy.MM.dd HH:mm:ss}'}" Style="{StaticResource NumBlockBoldStyle}" Width="{Binding ActualWidth, ElementName=colPartSegmentsLastAccessed}" />
+
                                                         </StackPanel>
 
                                                     </Expander.Header>
@@ -472,7 +492,12 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Binding="{Binding PartitionsNumber, StringFormat=N0}" Header="Partitions" x:Name="colPartitions" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
-                        <DataGridTextColumn Binding="{Binding SegmentsNumber, StringFormat=N0}" Header="Segments" x:Name="colSegments" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsNumber, StringFormat=N0}" Header="Segments" x:Name="colPartSegments" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsTotalNumber, StringFormat=N0}" Header="Tot. Seg." x:Name="colPartTotalSegments" HeaderStyle="{StaticResource RightHeader}" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsPageable, StringFormat=N0}" Header="Pageable" x:Name="colPartSegmentsPageableNumber" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsResident, StringFormat=N0}" Header="Resident" x:Name="colPartSegmentsResidentNumber" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsAverageTemperature, StringFormat=N2}" Header="Temperature" x:Name="colPartSegmentsAverageTemperature" ElementStyle="{StaticResource NumTextBlockStyle}"/>
+                        <DataGridTextColumn Binding="{Binding SegmentsLastAccessed, StringFormat='{}{0:yy.MM.dd HH:mm:ss}'}" Header="Last accessed" x:Name="colPartSegmentsLastAccessed" ElementStyle="{StaticResource NumTextBlockStyle}"/>
 
                     </DataGrid.Columns>
                 </DataGrid>

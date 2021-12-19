@@ -31,7 +31,12 @@ namespace Dax.ViewVpaExport
         public string CompressionType { get { return this._ColumnSegment.CompressionType; } }
         public long BitsCount { get { return this._ColumnSegment.BitsCount; } }
         public long BookmarkBitsCount { get { return this._ColumnSegment.BookmarkBitsCount; } }
-        public string VertipaqState { get { return this._ColumnSegment.VertipaqState; }
-}
+        public string VertipaqState { get { return this._ColumnSegment.VertipaqState; } }
+
+        public bool? IsPageable { get { return this._ColumnSegment.IsPageable; } }
+        public bool? IsResident { get { return this._ColumnSegment.IsResident; } }
+        public double? Temperature { get { return this._ColumnSegment.Temperature; } }
+        public DateTime? LastAccessed { get { return this._ColumnSegment.LastAccessed; } }
+
     }
 }

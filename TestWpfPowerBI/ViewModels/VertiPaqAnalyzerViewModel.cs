@@ -269,6 +269,10 @@ namespace TestWpfPowerBI.ViewModels
         public double PercentageTable => _col.PercentageTable;
         public long SegmentsNumber => _col.SegmentsNumber;
         public long PartitionsNumber => _col.PartitionsNumber;
+        public int? SegmentsPageable => _col.SegmentsPageable;
+        public int? SegmentsResident => _col.SegmentsResident;
+        public double? SegmentsAverageTemperature => _col.SegmentsAverageTemperature * 1000;
+        public DateTime? SegmentsLastAccessed => _col.SegmentsLastAccessed;
         public long ColumnsNumber => 1;
         //public long MaxColumnCardinality { get; set; }
         public long MaxColumnTotalSize { get; set; }
@@ -331,6 +335,12 @@ namespace TestWpfPowerBI.ViewModels
         public long RowsCount => _table.RowsCount;
         public long SegmentsNumber => _table.SegmentsNumber;
         public long PartitionsNumber => _table.PartitionsNumber;
+        public long SegmentsTotalNumber => _table.SegmentsTotalNumber;
+        public int? SegmentsPageable => _table.SegmentsPageable;
+        public int? SegmentsResident => _table.SegmentsResident;
+        public double? SegmentsAverageTemperature => _table.SegmentsAverageTemperature * 1000;
+        public DateTime? SegmentsLastAccessed => _table.SegmentsLastAccessed;
+
         public long ReferentialIntegrityViolationCount => _table.ReferentialIntegrityViolationCount;
 
         public IEnumerable<VpaColumnViewModel> Columns { get; }
@@ -384,7 +394,12 @@ namespace TestWpfPowerBI.ViewModels
         public long DataSize => _partition.DataSize;
         public long PartitionsNumber => 1;
         public long SegmentsNumber => _partition.SegmentsNumber;
-        
+        public long SegmentsTotalNumber => _partition.SegmentsTotalNumber;
+        public int? SegmentsPageable => _partition.SegmentsPageable;
+        public int? SegmentsResident => _partition.SegmentsResident;
+        public double? SegmentsAverageTemperature => _partition.SegmentsAverageTemperature * 1000;
+        public DateTime? SegmentsLastAccessed => _partition.SegmentsLastAccessed;
+
         public int CompareTo(object obj)
         {
             var objPartition = (VpaPartitionViewModel)obj;

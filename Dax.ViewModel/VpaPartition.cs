@@ -19,5 +19,57 @@ namespace Dax.ViewModel
         public long RowsCount => this.Partition.Table.Columns.Max(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Sum(cs => cs.SegmentRows));
         public long DataSize => this.Partition.Table.Columns.Sum(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Sum(cs => cs.UsedSize));
         public long SegmentsNumber => this.Partition.Table.Columns.Max(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count());
+
+        public int SegmentsTotalNumber
+        {
+            get
+            {
+                return this.Partition.Table.Columns.Sum<Metadata.Column>(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count());
+            }
+        }
+
+        public int? SegmentsPageable
+        {
+            get
+            {
+                return this.Partition.Table.Columns.Sum<Metadata.Column>(
+                    c => (c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count(s => s.IsPageable.HasValue == true) > 0) ?
+                        c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count(s => s.IsPageable == true) :
+                        (int?)null
+                );
+            }
+        }
+
+        public int? SegmentsResident
+        {
+            get
+            {
+                return this.Partition.Table.Columns.Sum<Metadata.Column>(
+                    c => (c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count(s => s.IsResident.HasValue == true) > 0) ?
+                        c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count(s => s.IsResident == true) :
+                        (int?)null
+                );
+            }
+        }
+
+        public double? SegmentsAverageTemperature
+        {
+            get
+            {
+                return this.Partition.Table.Columns.Average<Metadata.Column>(
+                    c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Average(s => s.Temperature)
+                );
+            }
+        }
+
+        public DateTime? SegmentsLastAccessed
+        {
+            get
+            {
+                var q = from c in this.Partition.Table.Columns select c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Max(s => s.LastAccessed);
+                return q.Max();
+            }
+        }
+
     }
 }

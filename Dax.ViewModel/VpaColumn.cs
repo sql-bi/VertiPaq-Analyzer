@@ -91,7 +91,43 @@ namespace Dax.ViewModel
                 return this.Column.Table.Partitions.Count();
             }
         }
-        
+
+        public int? SegmentsPageable
+        {
+            get
+            {
+                return (this.Column.ColumnSegments.Count(s => s.IsPageable.HasValue == true) > 0) ?
+                    this.Column.ColumnSegments.Count(s => s.IsPageable == true) :
+                    (int?)null;
+            }
+        }
+
+        public int? SegmentsResident
+        {
+            get
+            {
+                return (this.Column.ColumnSegments.Count(s => s.IsResident.HasValue == true) > 0) ?
+                    this.Column.ColumnSegments.Count(s => s.IsResident == true) :
+                    (int?)null;
+
+            }
+        }
+
+        public double? SegmentsAverageTemperature
+        {
+            get
+            {
+                return this.Column.ColumnSegments.Average(s => s.Temperature );
+            }
+        }
+
+        public DateTime? SegmentsLastAccessed
+        {
+            get
+            {
+                return this.Column.ColumnSegments.Max(s => s.LastAccessed );
+            }
+        }
 
         // TODO ??
         // public IEnumerable<ColumnHierarchy> ColumnHierarchies { get; }

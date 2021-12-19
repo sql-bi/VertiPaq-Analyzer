@@ -22,7 +22,7 @@ namespace Dax.Metadata
         public DaxExpression FormatStringDefinition { get; set; }
         public string FormatStringState { get; set; }
         public string FormatStringErrorMessage { get; set; }
-
+        
         public bool IsReferenced { get; set; }
 
     }

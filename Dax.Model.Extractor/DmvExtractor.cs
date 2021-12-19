@@ -511,7 +511,7 @@ ORDER BY TABLE_ID";
 
         protected void PopulateColumnsSegments()
         {
-            const string QUERY_COLUMNS_SEGMENTS = @"
+            const string QUERY_COLUMNS_SEGMENTS_BASE = @"
 SELECT 
     DIMENSION_NAME AS TABLE_NAME, 
     PARTITION_NAME, 
@@ -523,15 +523,27 @@ SELECT
     COMPRESSION_TYPE,
     BITS_COUNT,
     BOOKMARK_BITS_COUNT,
-    VERTIPAQ_STATE
+    VERTIPAQ_STATE {0}
 FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
 WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
 
+            const string QUERY_COLUMNS_SEGMENTS_EXTENDED = @"
+    , ISPAGEABLE
+    , ISRESIDENT
+    , TEMPERATURE
+    , LAST_ACCESSED
+";
+
+            bool hasExtendedInfo = CheckExtendedColumnsSegmentInfo();
+
+            string QUERY_COLUMNS_SEGMENTS = string.Format(QUERY_COLUMNS_SEGMENTS_BASE, hasExtendedInfo ? QUERY_COLUMNS_SEGMENTS_EXTENDED : "");
             var cmd = CreateCommand(QUERY_COLUMNS_SEGMENTS);
             cmd.CommandTimeout = CommandTimeout;
 
-            using (var rdr = cmd.ExecuteReader()) {
-                while (rdr.Read()) {
+            using (var rdr = cmd.ExecuteReader())
+            {
+                while (rdr.Read())
+                {
                     string tableName = rdr.GetString(0);
                     string partitionName = rdr.GetString(1);
                     string columnDmv1100Id = rdr.GetString(2);
@@ -544,6 +556,19 @@ WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
                     long bookmarkBitsCount = rdr.GetInt64(9);
                     string vertipaqState = rdr.GetString(10);
 
+                    bool? isPageable = null;
+                    bool? isResident = null;
+                    double? temperature = null;
+                    DateTime? lastAccessed = null;
+
+                    if (hasExtendedInfo)
+                    {
+                        if (!rdr.IsDBNull(11)) isPageable = rdr.GetBoolean(11);
+                        if (!rdr.IsDBNull(12)) isResident = rdr.GetBoolean(12);
+                        if (!rdr.IsDBNull(13)) temperature = rdr.GetDouble(13);
+                        if (!rdr.IsDBNull(14)) lastAccessed = rdr.GetDateTime(14);
+                    }
+
                     // Column daxColumn = GetDaxColumnDmv1100Id(tableName, columnDmv1100Id);
                     ColumnSegment daxColumnSegment = GetDaxColumnSegment(tableName, partitionName, columnDmv1100Id, segmentNumber, tablePartitionNumber);
                     daxColumnSegment.BitsCount = bitsCount;
@@ -552,11 +577,45 @@ WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
                     daxColumnSegment.SegmentRows = segmentRows;
                     daxColumnSegment.UsedSize = usedSize;
                     daxColumnSegment.VertipaqState = vertipaqState;
+                    daxColumnSegment.IsPageable = isPageable;
+                    daxColumnSegment.IsResident = isResident; 
+                    daxColumnSegment.Temperature = temperature;
+                    daxColumnSegment.LastAccessed = lastAccessed;
                 }
             }
 
         }
 
+        private bool CheckExtendedColumnsSegmentInfo()
+        {
+            // Retrieve all the columns to evaluate whether extended info is available
+            const string QUERY_COLUMNS_PEEK_VERSION = @"
+SELECT TOP 1 *
+FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
+";
+
+            bool hasExtendedInfo = false;
+            var cmdPeek = CreateCommand(QUERY_COLUMNS_PEEK_VERSION);
+            cmdPeek.CommandTimeout = CommandTimeout;
+            using (var rdr = cmdPeek.ExecuteReader())
+            {
+                if (rdr.Read())
+                {
+                    string[] extendedColumns = { "ISPAGEABLE", "ISRESIDENT", "TEMPERATURE", "LAST_ACCESSED" };
+                    int foundColumns = 0;
+                    for (int i = rdr.FieldCount - 1; i >= 0; i--)
+                    {
+                        if (Array.Find(extendedColumns, columnName => columnName == rdr.GetName(i).ToUpper()) != null)
+                        {
+                            foundColumns++;
+                        };
+                    }
+                    hasExtendedInfo = (foundColumns == extendedColumns.Length);
+                }
+            }
+
+            return hasExtendedInfo;
+        }
 
         protected void PopulateColumnsHierarchies()
         {

@@ -25,5 +25,10 @@ namespace Dax.Metadata
         public long BitsCount { get; set; }
         public long BookmarkBitsCount { get; set; }
         public string VertipaqState { get; set; }
+
+        public bool? IsPageable { get; set; }
+        public bool? IsResident { get; set; }
+        public double? Temperature { get; set; }
+        public DateTime? LastAccessed { get; set; }
     }
 }
