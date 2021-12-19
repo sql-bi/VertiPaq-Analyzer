@@ -104,6 +104,9 @@ namespace Dax.Metadata.Extractor
             {
                 TableName = new Dax.Metadata.DaxName(table.Name),
                 IsHidden = table.IsHidden,
+                IsPrivate = table.IsPrivate,
+                IsLocalDateTable = (table.Annotations.FirstOrDefault(a => a.Name == "__PBI_LocalDateTable" && a.Value == "true") != null),
+                IsTemplateDateTable = (table.Annotations.FirstOrDefault(a => a.Name == "__PBI_TemplateDateTable" && a.Value == "true") != null),
                 TableExpression = Dax.Metadata.DaxExpression.GetExpression(isCalculatedTable ? partitionSource.Expression : null),
                 TableType = isCalculatedTable ? Table.TableSourceType.CalculatedTable.ToString() :
                        (isCalculationGroup ? Table.TableSourceType.CalculationGroup.ToString() : null),

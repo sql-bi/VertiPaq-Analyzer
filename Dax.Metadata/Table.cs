@@ -30,6 +30,9 @@ namespace Dax.Metadata
         public DaxName TableName { get; set; }
         public string TableType { get; set; }
         public bool IsHidden { get; set; }
+        public bool IsPrivate { get; set; }
+        public bool IsLocalDateTable { get; set; }
+        public bool IsTemplateDateTable { get; set; }
         public DaxExpression TableExpression { get; set; }
         public long RowsCount { get; set; }
         public long ReferentialIntegrityViolationCount { get; set; }
