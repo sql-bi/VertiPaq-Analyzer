@@ -153,7 +153,8 @@ namespace Dax.Metadata.Extractor
                 State = tomCalcItem.State.ToString(),
                 ErrorMessage = tomCalcItem.ErrorMessage,
                 FormatStringState = tomCalcItem.FormatStringDefinition?.State.ToString(),
-                FormatStringErrorMessage = tomCalcItem.FormatStringDefinition?.ErrorMessage
+                FormatStringErrorMessage = tomCalcItem.FormatStringDefinition?.ErrorMessage,
+                Description = new Dax.Metadata.DaxNote(tomCalcItem.Description)
             };
             calcGroup.CalculationItems.Add(calcItem);
         }

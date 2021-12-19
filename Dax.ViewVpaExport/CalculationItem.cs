@@ -31,6 +31,7 @@ namespace Dax.ViewVpaExport
         public string FormatStringState { get { return this._CalculationItem.FormatStringState; } }
         public string FormatStringErrorMessage { get { return this._CalculationItem.FormatStringErrorMessage; } }
         public bool IsReferenced { get { return this._CalculationItem.IsReferenced; } }
+        public string Description { get { return this._CalculationItem.Description?.Note; } }
 
     }
 }
