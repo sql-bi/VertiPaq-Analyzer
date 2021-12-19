@@ -96,6 +96,7 @@ namespace Dax.Metadata.Extractor
         {
             Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
             de.PopulateTables();
+            de.PopulatePartitions();
             de.PopulateColumns();
             de.PopulateMeasures();
             de.PopulateLastDataUpdate();
@@ -265,15 +266,14 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
             return daxColumn;
         }
 
-        private Partition GetDaxPartition(string tableName, string partitionName, long tablePartitionNumber)
+        private Partition GetDaxPartition(string tableName, string partitionName)
         {
             var daxTable = GetDaxTable(tableName);
             var daxPartition = daxTable.Partitions.Where(p => p.PartitionName.Name.Equals(partitionName)).FirstOrDefault();
             if (daxPartition == null) {
                 daxPartition = new Dax.Metadata.Partition(daxTable)
                 {
-                    PartitionName = new Dax.Metadata.DaxName(partitionName),
-                    PartitionNumber = tablePartitionNumber
+                    PartitionName = new Dax.Metadata.DaxName(partitionName)
                 };
 
                 daxTable.Partitions.Add(daxPartition);
@@ -285,7 +285,8 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         private ColumnSegment GetDaxColumnSegment(string tableName, string partitionName, string columnDmv1100Id, long segmentNumber, long tablePartitionNumber)
         {
             var daxColumn = GetDaxColumnDmv1100Id(tableName, columnDmv1100Id);
-            var daxPartition = GetDaxPartition(tableName, partitionName, tablePartitionNumber);
+            var daxPartition = GetDaxPartition(tableName, partitionName);
+            daxPartition.PartitionNumber = tablePartitionNumber;
             var daxColumnSegment = daxColumn.ColumnSegments.Where(s => s.SegmentNumber == segmentNumber).FirstOrDefault();
             if (daxColumnSegment == null) {
                 daxColumnSegment = new Dax.Metadata.ColumnSegment(daxColumn, daxPartition)
@@ -420,6 +421,85 @@ ORDER BY MEASUREGROUP_NAME";
                         };
 
                         daxTable.Measures.Add(daxMeasure);
+                    }
+                }
+            }
+        }
+
+        private Dictionary<long, string> GetTableIds()
+        {
+            const string QUERY_TABLE_IDS = @"
+SELECT[ID], [Name]
+FROM $SYSTEM.TMSCHEMA_TABLES";
+
+            var map = new Dictionary<long, string>();
+
+            // Skip the PopulateRelationships task if the compatibility level is older than TOM
+            if (DaxModel.CompatibilityLevel >= 1200)
+            {
+                var cmd = CreateCommand(QUERY_TABLE_IDS);
+                cmd.CommandTimeout = CommandTimeout;
+
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        long tableId = (long)rdr.GetDecimal(0);
+                        string tableName = rdr.GetString(1);
+                        map.Add(tableId, tableName);
+                    }
+                }
+            }
+
+            return map;
+        }
+
+        public void PopulatePartitions()
+        {
+            // Skip the PopulateRelationships task if the compatibility level is older than TOM
+            if (this.DaxModel.CompatibilityLevel < 1200)
+            {
+                return;
+            }
+
+            const string QUERY_PARTITIONS = @"
+SELECT 
+    [ID] AS PARTITION_ID,
+    [TableID] AS TABLE_ID,
+    [Name] AS PARTITION_NAME,
+    [Description] AS PARTITION_DESCRIPTION,
+    [State] AS PARTITION_STATE,
+    [Type] AS PARTITION_TYPE,
+    [RefreshedTime] AS REFRESHED_TIME
+FROM $SYSTEM.TMSCHEMA_PARTITIONS
+ORDER BY [TableID]";
+
+            var mapTableIds = GetTableIds();
+
+            var cmd = CreateCommand(QUERY_PARTITIONS);
+            cmd.CommandTimeout = CommandTimeout;
+
+            using (var rdr = cmd.ExecuteReader())
+            {
+                while (rdr.Read())
+                {
+                    long partitionId = (long)rdr.GetDecimal(0);
+                    long tableId = (long)rdr.GetDecimal(1);
+                    string partitionName = rdr.GetString(2);
+                    string description = !rdr.IsDBNull(3) ? rdr.GetString(3) : null;
+                    long state = (long)rdr.GetDecimal(4);
+                    long type = (long)rdr.GetDecimal(5);
+                    DateTime? refreshedTime = !rdr.IsDBNull(6) ? rdr.GetDateTime(6) : (DateTime?) null;
+
+                    string tableName;
+                    if (mapTableIds.TryGetValue(tableId, out tableName))
+                    {
+                        Table daxTable = GetDaxTable(tableName);
+                        var daxPartition = GetDaxPartition(tableName, partitionName);
+                        daxPartition.Description = !string.IsNullOrEmpty(description) ? new Dax.Metadata.DaxNote(description) : null;
+                        daxPartition.State = (Partition.PartitionState)state;
+                        daxPartition.Type = (Partition.PartitionType)type;
+                        daxPartition.RefreshedTime = refreshedTime;
                     }
                 }
             }
@@ -659,6 +739,7 @@ FROM $SYSTEM.TMSCHEMA_HIERARCHIES";
 
             var map = new Dictionary<int, string>();
 
+            // Skip the PopulateRelationships task if the compatibility level is older than TOM
             if (DaxModel.CompatibilityLevel >= 1200) {
                 var cmd = CreateCommand(QUERY_USER_HIERARCHIES);
                 cmd.CommandTimeout = CommandTimeout;

@@ -15,28 +15,32 @@ namespace Dax.ViewVpaExport
 
         private ColumnSegment() { }
 
-        public string ColumnName { get { return this._ColumnSegment.Column.ColumnName.Name; } }
-        public string TableName { get { return this._ColumnSegment.Column.Table.TableName.Name; } }
+        public string ColumnName => this._ColumnSegment.Column.ColumnName.Name; 
+        public string TableName => this._ColumnSegment.Column.Table.TableName.Name; 
         public string FullColumnName {
             get {
                 return Column.GetFullColumnName(this._ColumnSegment.Column);
             }
         }
-        public string PartitionName { get { return this._ColumnSegment.Partition.PartitionName.ToString(); } }
+        public string PartitionName => this._ColumnSegment.Partition.PartitionName.ToString();
+        public string PartitionState => this._ColumnSegment.Partition.State?.ToString();
+        public string PartitionType => this._ColumnSegment.Partition.Type?.ToString();
+        public DateTime? RefreshedTime => this._ColumnSegment.Partition.RefreshedTime;
 
-        public long SegmentNumber { get { return this._ColumnSegment.SegmentNumber; } }
-        public long TablePartitionNumber { get { return this._ColumnSegment.Partition.PartitionNumber; } }
-        public long SegmentRows { get { return this._ColumnSegment.SegmentRows; } }
-        public long UsedSize { get { return this._ColumnSegment.UsedSize; } }
-        public string CompressionType { get { return this._ColumnSegment.CompressionType; } }
-        public long BitsCount { get { return this._ColumnSegment.BitsCount; } }
-        public long BookmarkBitsCount { get { return this._ColumnSegment.BookmarkBitsCount; } }
-        public string VertipaqState { get { return this._ColumnSegment.VertipaqState; } }
 
-        public bool? IsPageable { get { return this._ColumnSegment.IsPageable; } }
-        public bool? IsResident { get { return this._ColumnSegment.IsResident; } }
-        public double? Temperature { get { return this._ColumnSegment.Temperature; } }
-        public DateTime? LastAccessed { get { return this._ColumnSegment.LastAccessed; } }
+        public long SegmentNumber => this._ColumnSegment.SegmentNumber;
+        public long TablePartitionNumber => this._ColumnSegment.Partition.PartitionNumber;
+        public long SegmentRows => this._ColumnSegment.SegmentRows;
+        public long UsedSize => this._ColumnSegment.UsedSize;
+        public string CompressionType => this._ColumnSegment.CompressionType;
+        public long BitsCount => this._ColumnSegment.BitsCount;
+        public long BookmarkBitsCount => this._ColumnSegment.BookmarkBitsCount;
+        public string VertipaqState => this._ColumnSegment.VertipaqState;
+
+        public bool? IsPageable => this._ColumnSegment.IsPageable;
+        public bool? IsResident => this._ColumnSegment.IsResident;
+        public double? Temperature => this._ColumnSegment.Temperature;
+        public DateTime? LastAccessed => this._ColumnSegment.LastAccessed;
 
     }
 }
