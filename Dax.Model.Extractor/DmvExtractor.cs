@@ -708,7 +708,8 @@ SELECT
     USED_SIZE,
     TABLE_ID AS COLUMN_HIERARCHY_ID
 FROM $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS
-WHERE LEFT ( TABLE_ID, 2 ) = 'H$'";
+WHERE LEFT ( TABLE_ID, 2 ) = 'H$'
+  AND SEGMENT_NUMBER = 0";
 
             var cmd = CreateCommand(QUERY_HIERARCHIES);
             cmd.CommandTimeout = CommandTimeout;

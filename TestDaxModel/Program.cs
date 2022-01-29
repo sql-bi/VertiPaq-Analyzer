@@ -159,12 +159,12 @@ namespace TestDaxModel
             // const string serverName = @"http://localhost:9000/xmla";
             // const string databaseName = "Microsoft_SQLServer_AnalysisServices";
 
-            //const string serverName = @"localhost\tab19";
-            //const string databaseName = "CalculationGroups_Currency";
+            const string serverName = @"localhost\tab19";
+            const string databaseName = "Adventure Works Internet Sales";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            const string serverName = "localhost:51948";
-            const string databaseName = "e444a82b-ee82-46b2-9982-15605c037a51";
+            //const string serverName = "localhost:51948";
+            //const string databaseName = "e444a82b-ee82-46b2-9982-15605c037a51";
 
             //const string serverName = @"localhost\ctp22";
             //const string databaseName = "Contoso Base";
