@@ -39,6 +39,13 @@ namespace Dax.Metadata
         public CalculationGroup CalculationGroup { get; set; }
         public string Description { get; set; }
         public bool IsReferenced { get; set; }
+        /// <summary>
+        /// Returns true if the table is marked as auto-date/time table or is a valid user-defined date/time table, otherwise it returns false
+        /// </summary>
+        /// <remarks>
+        /// If the value is null, it means that the model does not contain this information (e.g. the vpax file was extracted with an earlier version of this library that did not support this property)
+        /// </remarks>
+        public bool? IsDateTable { get; set; }
 
         [JsonIgnore]
         public long ColumnsDictionarySize { get {
