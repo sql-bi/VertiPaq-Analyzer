@@ -112,9 +112,35 @@ namespace Dax.Metadata.Extractor
                        (isCalculationGroup ? Table.TableSourceType.CalculationGroup.ToString() : null),
                 Description = table.Description
             };
+
+            daxTable.IsDateTable = table.DataCategory == Microsoft.AnalysisServices.DimensionType.Time.ToString();
+            if (daxTable.IsDateTable == false)
+            {
+                daxTable.IsDateTable = table.Columns.SingleOrDefault((c) => c.IsKey && c.DataType == Tom.DataType.DateTime) != null;
+                if (daxTable.IsDateTable == false)
+                {
+                    daxTable.IsDateTable = table.Model.Relationships.OfType<Tom.SingleColumnRelationship>().Any((r) =>
+                    {
+                        return r.IsActive &&
+                        (
+                            (
+                                r.ToTable == table &&
+                                r.ToColumn.DataType == Tom.DataType.DateTime &&
+                                r.ToCardinality == Tom.RelationshipEndCardinality.One
+                            )
+                            ||
+                            (
+                                r.FromTable == table &&
+                                r.FromColumn.DataType == Tom.DataType.DateTime &&
+                                r.FromCardinality == Tom.RelationshipEndCardinality.One
+                            )
+                        );
+                    });
+                }
+            }
+
             foreach (var column in table.Columns) {
                 AddColumn(daxTable, column);
-
             }
             foreach (var measure in table.Measures) {
                 AddMeasure(daxTable, measure);

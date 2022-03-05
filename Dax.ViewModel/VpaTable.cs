@@ -40,6 +40,7 @@ namespace Dax.ViewModel
         public long RelationshipsSize { get { return this.Table.RelationshipsSize; } }
         public long UserHierarchiesSize { get { return this.Table.UserHierarchiesSize; } }
         public bool IsReferenced { get { return this.Table.IsReferenced; } }
+        public bool? IsDateTable { get { return this.Table.IsDateTable; } }
 
         public double PercentageDatabase {
             get {
