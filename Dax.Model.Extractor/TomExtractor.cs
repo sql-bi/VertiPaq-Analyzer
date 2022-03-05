@@ -114,21 +114,27 @@ namespace Dax.Metadata.Extractor
             };
 
             daxTable.IsDateTable = table.DataCategory == Microsoft.AnalysisServices.DimensionType.Time.ToString();
-            if (daxTable.IsDateTable == false && string.IsNullOrEmpty(table.DataCategory))
+            if (daxTable.IsDateTable == false)
             {
-                // TODO: Commented out, not sure about this
-                // daxTable.IsDateTable = table.Columns.SingleOrDefault((c) => c.IsKey && c.DataType == Tom.DataType.DateTime) != null;
-
+                daxTable.IsDateTable = table.Columns.SingleOrDefault((c) => c.IsKey && c.DataType == Tom.DataType.DateTime) != null;
                 if (daxTable.IsDateTable == false)
                 {
                     daxTable.IsDateTable = table.Model.Relationships.OfType<Tom.SingleColumnRelationship>().Any((r) =>
                     {
-                        return
-                            r.IsActive &&
-                            r.ToTable == table &&
-                            r.ToColumn.DataType == Tom.DataType.DateTime &&
-                            r.ToCardinality == Tom.RelationshipEndCardinality.One &&
-                            r.FromCardinality == Tom.RelationshipEndCardinality.Many;
+                        return r.IsActive &&
+                        (
+                            (
+                                r.ToTable == table &&
+                                r.ToColumn.DataType == Tom.DataType.DateTime &&
+                                r.ToCardinality == Tom.RelationshipEndCardinality.One
+                            )
+                            ||
+                            (
+                                r.FromTable == table &&
+                                r.FromColumn.DataType == Tom.DataType.DateTime &&
+                                r.FromCardinality == Tom.RelationshipEndCardinality.One
+                            )
+                        );
                     });
                 }
             }
