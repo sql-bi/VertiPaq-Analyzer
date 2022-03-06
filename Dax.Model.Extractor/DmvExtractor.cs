@@ -114,7 +114,7 @@ FROM $SYSTEM.DBSCHEMA_CATALOGS";
             var cmd = CreateCommand(QUERY_CATALOGS);
             cmd.CommandTimeout = CommandTimeout;
             var catalogName = string.Empty;
-
+            
             using (var rdr = cmd.ExecuteReader()) {
 
                 while (rdr.Read()) {
@@ -483,7 +483,7 @@ ORDER BY [TableID]";
             {
                 while (rdr.Read())
                 {
-                    long partitionId = (long)rdr.GetDecimal(0);
+                    // long partitionId = (long)rdr.GetDecimal(0);
                     long tableId = (long)rdr.GetDecimal(1);
                     string partitionName = rdr.GetString(2);
                     string description = !rdr.IsDBNull(3) ? rdr.GetString(3) : null;
@@ -491,10 +491,9 @@ ORDER BY [TableID]";
                     long type = (long)rdr.GetDecimal(5);
                     DateTime? refreshedTime = !rdr.IsDBNull(6) ? rdr.GetDateTime(6) : (DateTime?) null;
 
-                    string tableName;
-                    if (mapTableIds.TryGetValue(tableId, out tableName))
+                    if (mapTableIds.TryGetValue(tableId, out string tableName))
                     {
-                        Table daxTable = GetDaxTable(tableName);
+                        // Table daxTable = GetDaxTable(tableName);
                         var daxPartition = GetDaxPartition(tableName, partitionName);
                         daxPartition.Description = !string.IsNullOrEmpty(description) ? new Dax.Metadata.DaxNote(description) : null;
                         daxPartition.State = (Partition.PartitionState)state;

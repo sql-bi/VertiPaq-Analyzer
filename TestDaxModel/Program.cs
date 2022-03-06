@@ -21,6 +21,7 @@ namespace TestDaxModel
         {
             GenericTest();
 
+            //TestPbiShared_2022();
             //TestPbiShared();
             //TestLocalVpaModel();
             //TestExport();
@@ -146,6 +147,20 @@ namespace TestDaxModel
             var conn = new System.Data.OleDb.OleDbConnection(connStr);
             //conn.Open();
             //Console.WriteLine("Connection open");
+
+            Dax.Metadata.Model m = new Dax.Metadata.Model();
+            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+        }
+        static void TestPbiShared_2022()
+        {
+            const string dataSource = "powerbi://api.powerbi.com/v1.0/myorg/Azure";
+            const string databaseName = "BookSales Azure";
+
+            const string serverName = dataSource;
+
+            var connStr = $"Data Source={dataSource};Catalog={databaseName};";
+            var conn = new Microsoft.AnalysisServices.AdomdClient.AdomdConnection(connStr);
+            conn.Open();
 
             Dax.Metadata.Model m = new Dax.Metadata.Model();
             Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
