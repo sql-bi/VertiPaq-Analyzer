@@ -185,7 +185,7 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         private Column GetDaxColumnDmv1100Id(string tableName, string columnDmv1100Id)
         {
             var daxTable = GetDaxTable(tableName);
-            var daxColumn = daxTable.Columns.Where(t => t.Dmv1100ColumnId.Equals(columnDmv1100Id)).FirstOrDefault();
+            var daxColumn = daxTable.Columns.Where(t => t.Dmv1100ColumnId?.Equals(columnDmv1100Id) == true).FirstOrDefault();
             if (daxColumn == null) {
                 daxColumn = new Dax.Metadata.Column(daxTable);
                 daxColumn.SetDmv1100ColumnId(columnDmv1100Id);
