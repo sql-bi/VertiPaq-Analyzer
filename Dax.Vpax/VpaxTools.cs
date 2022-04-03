@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 using System.IO;
 using System.IO.Packaging;
 using Newtonsoft.Json;
-using Microsoft.AnalysisServices.Tabular;
+using TOM = Microsoft.AnalysisServices.Tabular;
 
 namespace Dax.Vpax.Tools
 {
-
     public static class VpaxTools
     {
         /// <summary>
         /// Export to VertiPaq Analyzer (VPAX) stream
         /// </summary>
-        public static void ExportVpax(Stream stream, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, Microsoft.AnalysisServices.Database database = null)
+        public static void ExportVpax(Stream stream, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, TOM.Database database = null)
         {
             using (ExportVpax exportVpax = new ExportVpax(stream))
             {
@@ -29,7 +28,7 @@ namespace Dax.Vpax.Tools
         /// <summary>
         /// Export to VertiPaq Analyzer (VPAX) file
         /// </summary>
-        public static void ExportVpax(string path, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, Microsoft.AnalysisServices.Database database = null)
+        public static void ExportVpax(string path, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, TOM.Database database = null)
         {
             using (ExportVpax exportVpax = new ExportVpax(path))
             {
@@ -37,7 +36,7 @@ namespace Dax.Vpax.Tools
             }
         }
 
-        internal static void InternalExportVpax(ExportVpax exportVpax, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, Microsoft.AnalysisServices.Database database = null)
+        internal static void InternalExportVpax(ExportVpax exportVpax, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, TOM.Database database = null)
         {
             if (model != null)
             {
@@ -58,7 +57,7 @@ namespace Dax.Vpax.Tools
         {
             public Dax.Metadata.Model DaxModel;
             public Dax.ViewVpaExport.Model ViewVpa;
-            public Microsoft.AnalysisServices.Database TomDatabase;
+            public TOM.Database TomDatabase;
         }
 
         /// <summary>
