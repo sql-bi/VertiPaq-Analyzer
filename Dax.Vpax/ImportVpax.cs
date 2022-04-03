@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.IO.Packaging;
 using Newtonsoft.Json;
-using Microsoft.AnalysisServices.Tabular;
+using TOM = Microsoft.AnalysisServices.Tabular;
 
 
 namespace Dax.Vpax
@@ -55,11 +55,11 @@ namespace Dax.Vpax
         }
         */
 
-        public Microsoft.AnalysisServices.Database ImportDatabase()
+        public TOM.Database ImportDatabase()
         {
             string modelBim = ReadPackageContentAsString(VpaxFormat.TOMMODEL);
             if (modelBim == null) return null;
-            return Microsoft.AnalysisServices.JsonSerializer.DeserializeDatabase(modelBim);
+            return TOM.JsonSerializer.DeserializeDatabase(modelBim);
         }
 
         #region IDisposable Support

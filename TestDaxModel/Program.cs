@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.IO.Packaging;
 using System.IO;
 using Dax.Vpax.Tools;
+using TOM = Microsoft.AnalysisServices.Tabular;
 
 // TODO
 // - Import from DMV 1100 (check for missing attributes?)
@@ -48,7 +49,7 @@ namespace TestDaxModel
             //
             // Get TOM model from the SSAS engine
             //
-            Microsoft.AnalysisServices.Database database = includeTomModel ? Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName) : null;
+            TOM.Database database = includeTomModel ? Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName) : null;
 
             // 
             // Create VertiPaq Analyzer views
@@ -94,7 +95,7 @@ namespace TestDaxModel
             //
             // Get TOM model from the SSAS engine
             //
-            Microsoft.AnalysisServices.Database database = includeTomModel ? Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName) : null;
+            TOM.Database database = includeTomModel ? Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName) : null;
 
             // 
             // Create VertiPaq Analyzer views

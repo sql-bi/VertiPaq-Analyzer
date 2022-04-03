@@ -260,11 +260,11 @@ namespace Dax.Metadata.Extractor
             return extractor.DaxModel;
         }
 
-        public static Microsoft.AnalysisServices.Database GetDatabase(string serverName, string databaseName)
+        public static Tom.Database GetDatabase(string serverName, string databaseName)
         {
-            Microsoft.AnalysisServices.Server server = new Microsoft.AnalysisServices.Server();
+            Tom.Server server = new Tom.Server();
             server.Connect(serverName);
-            Microsoft.AnalysisServices.Database db = server.Databases.FindByName(databaseName);
+            Tom.Database db = server.Databases.FindByName(databaseName);
             // if db is null either it does not exist or we do not have admin rights to it
             if (db == null) { throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it."); }
             return db;
@@ -272,8 +272,8 @@ namespace Dax.Metadata.Extractor
 
         public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0)
         {
-            Microsoft.AnalysisServices.Database db = GetDatabase(serverName, databaseName);
-            Microsoft.AnalysisServices.Tabular.Model tomModel = db.Model;
+            Tom.Database db = GetDatabase(serverName, databaseName);
+            Tom.Model tomModel = db.Model;
 
             var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
 

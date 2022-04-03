@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.IO.Packaging;
 using Newtonsoft.Json;
-using Microsoft.AnalysisServices.Tabular;
+using TOM = Microsoft.AnalysisServices.Tabular;
 
 namespace Dax.Vpax
 {
@@ -27,12 +27,12 @@ namespace Dax.Vpax
             this.Package.Close();
         }
 
-        public void ExportDatabase(Microsoft.AnalysisServices.Database database)
+        public void ExportDatabase(TOM.Database database)
         {
             Uri uriTom = PackUriHelper.CreatePartUri(new Uri(VpaxFormat.TOMMODEL, UriKind.Relative));
             using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriTom, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
             {
-                tw.Write(Microsoft.AnalysisServices.JsonSerializer.SerializeDatabase(database));
+                tw.Write(TOM.JsonSerializer.SerializeDatabase(database));
                 tw.Close();
             }
         }
