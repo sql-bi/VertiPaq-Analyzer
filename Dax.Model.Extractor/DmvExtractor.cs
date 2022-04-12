@@ -374,6 +374,16 @@ ORDER BY DIMENSION_NAME";
 
         public void PopulateMeasures()
         {
+            const string QUERY_KPIS = @"
+SELECT 
+    MEASUREGROUP_NAME AS TABLE_NAME,
+    KPI_NAME,
+    KPI_VALUE AS KPI_MEASURE_UNIQUE_NAME,
+    KPI_GOAL AS KPI_GOAL_UNIQUE_NAME,
+    KPI_STATUS AS KPI_STATUS_UNIQUE_NAME,
+    KPI_TREND AS KPI_TREND_UNIQUE_NAME
+FROM $SYSTEM.MDSCHEMA_KPIS
+ORDER BY MEASUREGROUP_NAME";
             const string QUERY_MEASURES = @"
 SELECT 
     MEASUREGROUP_NAME AS TABLE_NAME,
@@ -383,44 +393,78 @@ SELECT
     DEFAULT_FORMAT_STRING,
     MEASURE_IS_VISIBLE,
     MEASURE_DISPLAY_FOLDER,
+    MEASURE_UNIQUE_NAME,
     [DESCRIPTION]
 FROM $SYSTEM.MDSCHEMA_MEASURES
 WHERE MEASURE_NAME <> '__Default measure'
 ORDER BY MEASUREGROUP_NAME";
 
-            var cmd = CreateCommand(QUERY_MEASURES);
-            cmd.CommandTimeout = CommandTimeout;
+            List<string> kpiInternalMeasures = new List<string>();
+            ReadKpis();
+            ProcessMeasures();
 
-            using (var rdr = cmd.ExecuteReader())
+            void ReadKpis()
             {
-                while (rdr.Read())
+                var cmd = CreateCommand(QUERY_KPIS);
+                cmd.CommandTimeout = CommandTimeout;
+
+                using (var rdr = cmd.ExecuteReader())
                 {
-                    string tableName = (rdr.GetValue(0) as string) ??string.Empty;
-                    string measureName = rdr.GetString(1);
-                    int dataType = rdr.GetInt32(2);
-                    string measureExpression = rdr.GetValue(3)?.ToString() ?? string.Empty;
-                    string defaultFormatString = rdr.GetValue(4)?.ToString() ?? string.Empty;
-                    bool measureVisible = rdr.GetBoolean(5);
-                    string measureDisplayFolder = rdr.GetString(6).ToString();
-                    string measureDescription = rdr.GetString(7).ToString();
-
-                    Table daxTable = GetDaxTable(tableName);
-                    var daxMeasure = daxTable.Measures.Where(m => m.MeasureName.Name == measureName).FirstOrDefault();
-                    if (daxMeasure == null)
+                    while (rdr.Read())
                     {
-                        daxMeasure = new Dax.Metadata.Measure()
-                        {
-                            Table = daxTable,
-                            MeasureName = new DaxName(measureName),
-                            // dataType not set?
-                            MeasureExpression = new DaxExpression(measureExpression),
-                            FormatString = defaultFormatString, // TODO - this might change to DaxExpression with dynamic format strings
-                            IsHidden = !measureVisible,
-                            DisplayFolder = measureDisplayFolder, // TODO - DisplayFolder should be a DaxName?
-                            Description = measureDescription
-                        };
+                        string tableName = rdr.GetString(0) ?? string.Empty;
+                        string kpiName = rdr.GetString(1) ?? string.Empty;
+                        string kpiValue = rdr.GetString(2) ?? string.Empty;
+                        string kpiGoal = rdr.GetString(3) ?? string.Empty;
+                        string kpiStatus = rdr.GetString(4) ?? string.Empty;
+                        string kpiTrend = rdr.GetString(5) ?? string.Empty;
 
-                        daxTable.Measures.Add(daxMeasure);
+                        if (!string.IsNullOrEmpty(kpiGoal)) kpiInternalMeasures.Add(kpiGoal);
+                        if (!string.IsNullOrEmpty(kpiStatus)) kpiInternalMeasures.Add(kpiStatus);
+                        if (!string.IsNullOrEmpty(kpiTrend)) kpiInternalMeasures.Add(kpiTrend);
+                    }
+                }
+            }
+
+            void ProcessMeasures()
+            {
+                var cmd = CreateCommand(QUERY_MEASURES);
+                cmd.CommandTimeout = CommandTimeout;
+
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        string tableName = (rdr.GetValue(0) as string) ?? string.Empty;
+                        string measureName = rdr.GetString(1);
+                        int dataType = rdr.GetInt32(2);
+                        string measureExpression = rdr.GetValue(3)?.ToString() ?? string.Empty;
+                        string defaultFormatString = rdr.GetValue(4)?.ToString() ?? string.Empty;
+                        bool measureVisible = rdr.GetBoolean(5);
+                        string measureDisplayFolder = rdr.GetString(6);
+                        string measureUniqueName = rdr.GetString(7) ?? string.Empty;
+                        string measureDescription = rdr.GetString(8);
+
+                        Table daxTable = GetDaxTable(tableName);
+                        var daxMeasure = daxTable.Measures.Where(m => m.MeasureName.Name == measureName).FirstOrDefault();
+                        if (daxMeasure == null && 
+                                // Does not add hidden measures created for KPIs
+                                (string.IsNullOrEmpty(measureUniqueName) || !kpiInternalMeasures.Contains(measureUniqueName)) )
+                        {
+                            daxMeasure = new Dax.Metadata.Measure()
+                            {
+                                Table = daxTable,
+                                MeasureName = new DaxName(measureName),
+                                // dataType not set?
+                                MeasureExpression = new DaxExpression(measureExpression),
+                                FormatString = defaultFormatString, // TODO - this might change to DaxExpression with dynamic format strings
+                                IsHidden = !measureVisible,
+                                DisplayFolder = measureDisplayFolder, // TODO - DisplayFolder should be a DaxName?
+                                Description = measureDescription
+                            };
+
+                            daxTable.Measures.Add(daxMeasure);
+                        }
                     }
                 }
             }
@@ -487,8 +531,8 @@ ORDER BY [TableID]";
                     long tableId = (long)rdr.GetDecimal(1);
                     string partitionName = rdr.GetString(2);
                     string description = !rdr.IsDBNull(3) ? rdr.GetString(3) : null;
-                    long state = (long)rdr.GetDecimal(4);
-                    long type = (long)rdr.GetDecimal(5);
+                    long state = rdr.GetInt64(4);
+                    long type = rdr.GetInt64(5);
                     DateTime? refreshedTime = !rdr.IsDBNull(6) ? rdr.GetDateTime(6) : (DateTime?) null;
 
                     if (mapTableIds.TryGetValue(tableId, out string tableName))

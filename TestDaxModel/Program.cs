@@ -116,8 +116,8 @@ namespace TestDaxModel
             //const string serverName = @".\tab17";
             // string databaseName = "CalculationGroups_Currency";
             // const string serverName = @".\tab19";
-            string databaseName = "32f0add7-3e4c-4fd7-8e26-3961f25d7c5a";
-            const string serverName = @"localhost:60812";
+            string databaseName = "3ac62bef-b3ba-491b-886e-ad11eaccfede";
+            const string serverName = @"localhost:53899";
 
             var connStr = $"Provider=MSOLAP;Data Source={serverName};Initial Catalog={databaseName};";
             var conn = new System.Data.OleDb.OleDbConnection(connStr);
