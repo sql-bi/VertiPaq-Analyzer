@@ -22,7 +22,7 @@ namespace Dax.ViewVpaExport
         public long UsedSize { get { return this._UserHierarchy.UsedSize; } }
         public string Levels {
             get {
-                return String.Join(", ", _UserHierarchy.Levels.Select(c => c.ColumnName.Name).ToArray());
+                return string.Join(", ", _UserHierarchy.Levels.Select(c => c.ColumnName.Name).ToArray());
             }
         }
 

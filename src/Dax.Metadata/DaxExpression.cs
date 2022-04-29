@@ -22,7 +22,7 @@ namespace Dax.Metadata
         }
         static public DaxExpression GetExpression( string expression )
         {
-            if (String.IsNullOrEmpty(expression)) {
+            if (string.IsNullOrEmpty(expression)) {
                 return null;
             }
             else {

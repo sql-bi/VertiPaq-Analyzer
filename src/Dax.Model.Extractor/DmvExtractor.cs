@@ -860,7 +860,7 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'U$'";
             public int TableId;
             public int RelationshipId;
 
-            public override bool Equals(Object obj)
+            public override bool Equals(object obj)
             {
                 return (obj is TableRelationshipIds ids) 
                     && ids == this;
