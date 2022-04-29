@@ -17,11 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <None Remove="*.nupkg" />
-    <None Include="images\VertipaqAnalyzer.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Dax.Metadata\Dax.Metadata.csproj" />
   </ItemGroup>
 
