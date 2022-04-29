@@ -26,7 +26,7 @@
     <Description>Tabular model object model including statistics from DMV and data distribution for VertiPaq Analyzer and other tools</Description>
     <!--Summary>...</Summary-->
     <PackageId>Dax.Metadata</PackageId>
-    <PackageTags>VPAX;DAX;VERTIPAQ;VertiPaq Analyzer</PackageTags>
+    <PackageTags>VPAX;DAX;VERTIPAQ;ANALYZER</PackageTags>
     <PackageIcon>package-icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
