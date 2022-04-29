@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp3.1;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -25,7 +25,7 @@
     <Product>VertiPaq Analyzer</Product>
     <Description>ViewModel to display in a VertiPaq Analyzer viewer the Dax.Model data</Description>
     <!--Summary>...</Summary-->
-    <PackageId>Dax.Vpax</PackageId>
+    <PackageId>Dax.ViewModel</PackageId>
     <PackageTags>VPAX;DAX;VERTIPAQ;ANALYZER</PackageTags>
     <PackageIcon>package-icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -50,6 +50,10 @@
     <ProjectReference Include="..\Dax.Metadata\Dax.Metadata.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <DefineConstants>$(AdditionalConstants)</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
@@ -57,12 +61,11 @@
     </PackageReference>
   </ItemGroup>
 
-  <PropertyGroup>
-    <DefineConstants>$(AdditionalConstants)</DefineConstants>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+    <AssemblyTitle>Dax.ViewModel .NET Framework 4.6.1</AssemblyTitle>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <AssemblyTitle>Dax.ViewModel .NET Standard 2.0</AssemblyTitle>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <AssemblyTitle>Dax.ViewModel .NET Core 3.1</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <AssemblyTitle>Dax.ViewModel .NET 6.0</AssemblyTitle>
