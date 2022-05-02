@@ -40,8 +40,7 @@ namespace Dax.Vpax.Tests
                 ServerName = new Metadata.DaxName("server"),
                 ModelName = new Metadata.DaxName("model")
             };
-            var bimJson = File.ReadAllText(ContosoBimPath);
-            var expectedDatabase = TOM.JsonSerializer.DeserializeDatabase(bimJson);
+            var expectedDatabase = TOM.JsonSerializer.DeserializeDatabase(File.ReadAllText(ContosoBimPath));
 
             VpaxTools.ExportVpax(vpaxPath, vpaxModel, viewVpa: null, expectedDatabase);
 
@@ -60,8 +59,7 @@ namespace Dax.Vpax.Tests
                 ServerName = new Metadata.DaxName("server"),
                 ModelName = new Metadata.DaxName("model")
             };
-            var bimJson = File.ReadAllText(ContosoBimPath);
-            var expectedDatabase = TOM.JsonSerializer.DeserializeDatabase(bimJson);
+            var expectedDatabase = TOM.JsonSerializer.DeserializeDatabase(File.ReadAllText(ContosoBimPath));
 
             VpaxTools.ExportVpax(vpaxStream, vpaxModel, viewVpa: null, expectedDatabase);
 
