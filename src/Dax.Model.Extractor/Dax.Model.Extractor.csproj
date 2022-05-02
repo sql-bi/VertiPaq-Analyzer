@@ -13,11 +13,6 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <VersionSuffix>dev</VersionSuffix>
 
-    <!-- 
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>1.2.4</Version>
-    -->
-
     <Title>Dax.Model.Extractor</Title>
     <Company>SQLBI</Company>
     <!--Copyright>Copyright ©</Copyright-->
