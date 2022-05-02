@@ -25,7 +25,7 @@ jobs:
       - name: .NET info
         run: dotnet --info
       - name: .NET restore
-        run: dotnet restore ./src
+        run: dotnet restore ./src/VertiPaq-Analyzer.sln
       - name: .NET build
         run: dotnet build ./src/VertiPaq-Analyzer.sln --configuration ${{ env.CONFIGURATION }} --no-restore
       - name: .NET test
