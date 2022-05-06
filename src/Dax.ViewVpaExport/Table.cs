@@ -23,7 +23,7 @@ namespace Dax.ViewVpaExport
         public bool IsLocalDateTable => this._Table.IsLocalDateTable;
         public bool IsTemplateDateTable => this._Table.IsTemplateDateTable;
 
-        public string Description { get { return this._Table.Description; } }
+        public string Description { get { return this._Table.Description.ToString(); } }
 
         public long ColumnsSize { get { return this._Table.ColumnsTotalSize; } }
 

@@ -10,17 +10,23 @@ namespace Dax.Metadata.JsonConverters
         {
             if (reader.TokenType == JsonToken.Null) return null;
 
-            // if the object has been serialized as a string the following will work
-            string expression = reader.Value?.ToString();
+            /* For future implementation
+             * if DaxName is implemented with encryption/tokenization, then we might use
+             * something similar to the following code
+             */
+            //string name;
+            //if (reader.Value is JObject) {
+            //    JObject jo = JObject.Load(reader);
+            //    name = (string)jo["Expression"];
+            //}
+            //else {
+            //    // if the object has been serialized as a string the following will work
+            //    name = reader.Value.ToString();
+            //}
+            //return new DaxExpression(name);
 
-            // otherwise we need to pull out the "Expression" property
-            if (expression == null)
-            {
-                JObject jo = JObject.Load(reader);
-                expression = (string)jo["Expression"];
-            }
-
-            return new DaxExpression(expression);
+            string name = reader.Value.ToString();
+            return new DaxExpression(name);
         }
 
 

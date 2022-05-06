@@ -12,7 +12,14 @@ namespace Dax.Metadata
     [JsonConverter(typeof(DaxNameJsonConverter))]
     public class DaxName
     {
+        public readonly static DaxName Empty = new(string.Empty);
+
         public string Name { get; }
+
+        public static DaxName FromString( string name )
+        {
+            return string.IsNullOrEmpty(name) ? DaxName.Empty : new DaxName( name );
+        }
 
         public DaxName( string name )
         {

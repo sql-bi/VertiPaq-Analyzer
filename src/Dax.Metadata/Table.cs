@@ -37,7 +37,7 @@ namespace Dax.Metadata
         public long RowsCount { get; set; }
         public long ReferentialIntegrityViolationCount { get; set; }
         public CalculationGroup CalculationGroup { get; set; }
-        public string Description { get; set; }
+        public DaxNote Description { get; set; }
         public bool IsReferenced { get; set; }
         /// <summary>
         /// Returns true if the table is marked as auto-date/time table or is a valid user-defined date/time table, otherwise it returns false

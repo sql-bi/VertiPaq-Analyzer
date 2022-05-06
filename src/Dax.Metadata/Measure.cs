@@ -11,8 +11,8 @@ namespace Dax.Metadata
         public Table Table { get; set; }
         public DaxName MeasureName { get; set; }
         public DaxExpression MeasureExpression { get; set; }
-        public string DisplayFolder { get; set; }
-        public string Description { get; set; }
+        public DaxNote DisplayFolder { get; set; } 
+        public DaxNote Description { get; set; }
 
         public bool IsHidden { get; set; }
         public string DataType { get; set; }

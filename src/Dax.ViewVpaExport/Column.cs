@@ -52,7 +52,7 @@ namespace Dax.ViewVpaExport
         public bool IsNullable { get { return this._Column.IsNullable; } }
         public bool IsUnique { get { return this._Column.IsUnique; } }
         public bool KeepUniqueRows { get { return this._Column.KeepUniqueRows; } }
-        public string SortByColumnName { get { return this._Column.SortByColumnName; } }
+        public string SortByColumnName { get { return this._Column.SortByColumnName.ToString(); } }
         public string State { get { return this._Column.State; } }
         public bool IsRowNumber { get { return this._Column.IsRowNumber; } }
         public bool IsReferenced { get { return this._Column.IsReferenced; } }

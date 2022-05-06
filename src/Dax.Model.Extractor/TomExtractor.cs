@@ -17,7 +17,7 @@ namespace Dax.Metadata.Extractor
         private TomExtractor(Tom.Model model, string extractorApp = null, string extractorVersion = null)
         {
             tomModel = model;
-            AssemblyName tomExtractorAssemblyName = this.GetType().Assembly.GetName();
+            AssemblyName tomExtractorAssemblyName = GetType().Assembly.GetName();
             Version version = tomExtractorAssemblyName.Version;
             DaxModel = new Dax.Metadata.Model(tomExtractorAssemblyName.Name, version.ToString(), extractorApp, extractorVersion);
             if (tomModel != null) {
@@ -27,7 +27,7 @@ namespace Dax.Metadata.Extractor
         
         private void PopulateModel()
         {
-            foreach (var table in tomModel.Tables) {
+            foreach (Tom.Table table in tomModel.Tables) {
                 AddTable(table);
             }
            
@@ -53,13 +53,13 @@ namespace Dax.Metadata.Extractor
 
         private void AddRole( Tom.ModelRole role )
         {
-            Dax.Metadata.Role daxRole = new Role(DaxModel)
+            Dax.Metadata.Role daxRole = new(DaxModel)
             {
                 RoleName = new DaxName(role.Name)
             };
-            foreach ( var tablePermission in role.TablePermissions ) {
+            foreach (Tom.TablePermission tablePermission in role.TablePermissions ) {
                 Dax.Metadata.Table table = DaxModel.Tables.SingleOrDefault(t => t.TableName.Name == tablePermission.Table.Name);
-                Dax.Metadata.TablePermission daxTablePermission = new TablePermission(daxRole)
+                Dax.Metadata.TablePermission daxTablePermission = new(daxRole)
                 {
                     Table = table,
                     FilterExpression = DaxExpression.GetExpression(tablePermission.FilterExpression)
@@ -77,7 +77,7 @@ namespace Dax.Metadata.Extractor
             Dax.Metadata.Column fromColumn = fromTable.Columns.SingleOrDefault(t => t.ColumnName.Name == relationship.FromColumn.Name);
             Dax.Metadata.Table toTable = DaxModel.Tables.SingleOrDefault(t => t.TableName.Name == relationship.ToTable.Name);
             Dax.Metadata.Column toColumn = toTable.Columns.SingleOrDefault(t => t.ColumnName.Name == relationship.ToColumn.Name);
-            Dax.Metadata.Relationship daxRelationship = new Dax.Metadata.Relationship (fromColumn, toColumn )
+            Dax.Metadata.Relationship daxRelationship = new(fromColumn, toColumn )
             {
                 FromCardinalityType = relationship.FromCardinality.ToString(),
                 ToCardinalityType = relationship.ToCardinality.ToString(),
@@ -94,13 +94,13 @@ namespace Dax.Metadata.Extractor
 
         private void AddTable(Tom.Table table)
         {
-            var partitions = table.Partitions;
+            Tom.PartitionCollection partitions = table.Partitions;
             Tom.PartitionSourceType tableType = (partitions?.Count > 0) ? (partitions[0].SourceType) : Tom.PartitionSourceType.None;
             bool isCalculatedTable = (tableType == Tom.PartitionSourceType.Calculated);
             bool isCalculationGroup = (tableType == Tom.PartitionSourceType.CalculationGroup);
-            var partitionSource = (isCalculatedTable) ? partitions[0].Source as Tom.CalculatedPartitionSource : null;
+            Tom.CalculatedPartitionSource partitionSource = (isCalculatedTable) ? partitions[0].Source as Tom.CalculatedPartitionSource : null;
 
-            Dax.Metadata.Table daxTable = new Dax.Metadata.Table(DaxModel)
+            Dax.Metadata.Table daxTable = new(DaxModel)
             {
                 TableName = new Dax.Metadata.DaxName(table.Name),
                 IsHidden = table.IsHidden,
@@ -110,10 +110,9 @@ namespace Dax.Metadata.Extractor
                 TableExpression = Dax.Metadata.DaxExpression.GetExpression(isCalculatedTable ? partitionSource.Expression : null),
                 TableType = isCalculatedTable ? Table.TableSourceType.CalculatedTable.ToString() :
                        (isCalculationGroup ? Table.TableSourceType.CalculationGroup.ToString() : null),
-                Description = table.Description
+                Description = DaxNote.FromString(table.Description),
+                IsDateTable = (table.DataCategory == Microsoft.AnalysisServices.DimensionType.Time.ToString())
             };
-
-            daxTable.IsDateTable = table.DataCategory == Microsoft.AnalysisServices.DimensionType.Time.ToString();
             if (daxTable.IsDateTable == false)
             {
                 daxTable.IsDateTable = table.Columns.SingleOrDefault((c) => c.IsKey && c.DataType == Tom.DataType.DateTime) != null;
@@ -139,29 +138,29 @@ namespace Dax.Metadata.Extractor
                 }
             }
 
-            foreach (var column in table.Columns) {
+            foreach (Tom.Column column in table.Columns) {
                 AddColumn(daxTable, column);
             }
-            foreach (var measure in table.Measures) {
+            foreach (Tom.Measure measure in table.Measures) {
                 AddMeasure(daxTable, measure);
             }
-            foreach (var hierarchy in table.Hierarchies) {
+            foreach (Tom.Hierarchy hierarchy in table.Hierarchies) {
                 AddUserHierarchy(daxTable, hierarchy);
             }
 
             // Add calculation groups and calculation items
             if (table.CalculationGroup != null) {
-                var calcGroup = new CalculationGroup(daxTable)
+                CalculationGroup calcGroup = new(daxTable)
                 {
                     Precedence = table.CalculationGroup.Precedence
                 };
-                foreach ( var calcItem in table.CalculationGroup.CalculationItems) {
+                foreach (Tom.CalculationItem calcItem in table.CalculationGroup.CalculationItems) {
                     AddCalculationItem(calcGroup, calcItem);
                 }
                 daxTable.CalculationGroup = calcGroup;
 
                 // Set the first column of the table that is not a RowNumber as a calculation group attribute
-                foreach (var column in daxTable.Columns) {
+                foreach (Column column in daxTable.Columns) {
                     if (!column.IsRowNumber) {
                         column.IsCalculationGroupAttribute = true;
                         break;
@@ -174,7 +173,7 @@ namespace Dax.Metadata.Extractor
         }
         public void AddCalculationItem(CalculationGroup calcGroup, Tom.CalculationItem tomCalcItem)
         {
-            Dax.Metadata.CalculationItem calcItem = new CalculationItem(calcGroup)
+            Dax.Metadata.CalculationItem calcItem = new(calcGroup)
             {
                 ItemExpression = DaxExpression.GetExpression(tomCalcItem.Expression),
                 FormatStringDefinition = DaxExpression.GetExpression(tomCalcItem.FormatStringDefinition?.Expression),
@@ -189,13 +188,13 @@ namespace Dax.Metadata.Extractor
         }
         public void AddUserHierarchy( Table daxTable, Tom.Hierarchy hierarchy )
         {
-            Dax.Metadata.UserHierarchy daxUserHierarchy = new Dax.Metadata.UserHierarchy ( daxTable )
+            Dax.Metadata.UserHierarchy daxUserHierarchy = new( daxTable )
             {
                 HierarchyName = new Dax.Metadata.DaxName(hierarchy.Name),
                 IsHidden = hierarchy.IsHidden,
             };
             // Create the hierarchy from the top to the bottom level 
-            foreach ( var level in hierarchy.Levels.OrderBy( t => t.Ordinal ) ) 
+            foreach (Tom.Level level in hierarchy.Levels.OrderBy( t => t.Ordinal ) ) 
             {
                 Dax.Metadata.Column levelColumn = daxTable.Columns.Find(t => t.ColumnName.Name == level.Column.Name);
                 daxUserHierarchy.Levels.Add(levelColumn);
@@ -204,13 +203,13 @@ namespace Dax.Metadata.Extractor
         }
         private void AddMeasure(Table daxTable, Tom.Measure measure)
         {
-            Dax.Metadata.Measure daxMeasure = new Dax.Metadata.Measure
+            Dax.Metadata.Measure daxMeasure = new()
             {
                 Table = daxTable,
                 MeasureName = new Dax.Metadata.DaxName(measure.Name),
                 MeasureExpression = Dax.Metadata.DaxExpression.GetExpression(measure?.Expression),
-                DisplayFolder = measure.DisplayFolder,
-                Description = measure.Description,
+                DisplayFolder = DaxNote.FromString(measure.DisplayFolder),
+                Description = DaxNote.FromString(measure.Description),
                 IsHidden = measure.IsHidden,
                 DataType = measure.DataType.ToString(),
                 DetailRowsExpression = Dax.Metadata.DaxExpression.GetExpression(measure.DetailRowsDefinition?.Expression),
@@ -244,7 +243,7 @@ namespace Dax.Metadata.Extractor
                 IsNullable = column.IsNullable,
                 IsUnique = column.IsUnique,
                 KeepUniqueRows = column.KeepUniqueRows,
-                SortByColumnName = column.SortByColumn?.Name,
+                SortByColumnName = DaxName.FromString(column.SortByColumn?.Name),
                 IsRowNumber = (column.Type == Tom.ColumnType.RowNumber),
                 State = column.State.ToString(),
                 ColumnType = column.Type.ToString(),
@@ -256,18 +255,17 @@ namespace Dax.Metadata.Extractor
         }
         public static Dax.Metadata.Model GetDaxModel(Tom.Model model, string extractorApp, string extractorVersion)
         {
-            TomExtractor extractor = new TomExtractor(model, extractorApp, extractorVersion);
+            TomExtractor extractor = new(model, extractorApp, extractorVersion);
             return extractor.DaxModel;
         }
 
         public static Tom.Database GetDatabase(string serverName, string databaseName)
         {
-            Tom.Server server = new Tom.Server();
+            Tom.Server server = new();
             server.Connect(serverName);
             Tom.Database db = server.Databases.FindByName(databaseName);
             // if db is null either it does not exist or we do not have admin rights to it
-            if (db == null) { throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it."); }
-            return db;
+            return db ?? throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it.");
         }
 
         public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0)
@@ -275,11 +273,11 @@ namespace Dax.Metadata.Extractor
             Tom.Database db = GetDatabase(serverName, databaseName);
             Tom.Model tomModel = db.Model;
 
-            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
+            Model daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
 
-            var connectionString = GetConnectionString(serverName, databaseName);
+            string connectionString = GetConnectionString(serverName, databaseName);
 
-            using (var connection = new AdomdConnection(connectionString))
+            using (AdomdConnection connection = new(connectionString))
             {
                 // Populate statistics from DMV
                 Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
@@ -295,7 +293,7 @@ namespace Dax.Metadata.Extractor
 
         private static string GetConnectionString(string dataSourceOrConnectionString, string databaseName)
         {
-            var csb = new OleDbConnectionStringBuilder();
+            OleDbConnectionStringBuilder csb = new();
             try
             {
                 csb.ConnectionString = dataSourceOrConnectionString;

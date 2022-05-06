@@ -35,7 +35,7 @@ namespace Dax.ViewModel
         public bool IsNullable { get { return this.Column.IsNullable; } }
         public bool IsUnique { get { return this.Column.IsUnique; } }
         public bool KeepUniqueRows { get { return this.Column.KeepUniqueRows; } }
-        public string SortByColumnName { get { return this.Column.SortByColumnName; } }
+        public string SortByColumnName { get { return this.Column.SortByColumnName.ToString(); } }
         public string State { get { return this.Column.State; } }
         public bool IsRowNumber { get { return this.Column.IsRowNumber; } }
         public bool IsReferenced { get { return this.Column.IsReferenced; } }

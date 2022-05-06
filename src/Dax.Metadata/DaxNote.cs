@@ -10,6 +10,11 @@ namespace Dax.Metadata
     {
         public string Note { get; }
 
+        public static DaxNote FromString(string name)
+        {
+            return string.IsNullOrEmpty(name) ? null : new DaxNote(name);
+        }
+
         public DaxNote(string note)
         {
             this.Note = note;

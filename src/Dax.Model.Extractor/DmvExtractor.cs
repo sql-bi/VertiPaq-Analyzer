@@ -78,20 +78,6 @@ namespace Dax.Metadata.Extractor
         }
 
 
-        // ***************************
-        // ***************************
-        //
-        //  TODO - check whether modifying the signature from AdomdConnection to IDbConnection broke compatibility
-        //
-        // ***************************
-        // ***************************
-
-        /*
-        public static void PopulateFromDmv(Dax.Metadata.Model daxModel, AdomdConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
-        {
-            PopulateFromDmv(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
-        }
-        */
         public static void PopulateFromDmv(Dax.Metadata.Model daxModel, IDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
             Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
@@ -256,7 +242,8 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
                 daxColumn = new Dax.Metadata.Column(daxTable)
                 {
                     ColumnName = new Dax.Metadata.DaxName(columnName),
-                    IsRowNumber = (columnName == "RowNumber")  // TODO Not a safe technique, but it should work most of the times for DMV 1100
+                    // Using the RowNumber name is not a safe technique, but it should work most of the times for DMV 1100
+                    IsRowNumber = (columnName == "RowNumber")  
                                   || columnName.StartsWith("RowNumber-")
                 };
 
@@ -459,8 +446,8 @@ ORDER BY MEASUREGROUP_NAME";
                                 MeasureExpression = new DaxExpression(measureExpression),
                                 FormatString = defaultFormatString, // TODO - this might change to DaxExpression with dynamic format strings
                                 IsHidden = !measureVisible,
-                                DisplayFolder = measureDisplayFolder, // TODO - DisplayFolder should be a DaxName?
-                                Description = measureDescription
+                                DisplayFolder = DaxNote.FromString(measureDisplayFolder), 
+                                Description = DaxNote.FromString(measureDescription)
                             };
 
                             daxTable.Measures.Add(daxMeasure);
