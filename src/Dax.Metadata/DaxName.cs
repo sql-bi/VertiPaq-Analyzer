@@ -3,29 +3,22 @@ using Newtonsoft.Json;
 
 namespace Dax.Metadata
 {
-
     /// <summary>
     /// Support future tokenization of names to anonymize a data model
     /// </summary>
-    /// 
-
     [JsonConverter(typeof(DaxNameJsonConverter))]
     public class DaxName
     {
-        public readonly static DaxName Empty = new(string.Empty);
-
         public string Name { get; }
-
-        public static DaxName FromString( string name )
-        {
-            return string.IsNullOrEmpty(name) ? DaxName.Empty : new DaxName( name );
-        }
 
         public DaxName( string name )
         {
             this.Name = name;
         }
-        private DaxName() { }
+
+        private DaxName()
+        {
+        }
        
         public static bool operator == ( DaxName a, DaxName b )
         {
@@ -46,7 +39,6 @@ namespace Dax.Metadata
         {
             return base.GetHashCode();
         }
-
         public override string ToString()
         {
             return this.Name;

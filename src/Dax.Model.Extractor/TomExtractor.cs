@@ -110,7 +110,7 @@ namespace Dax.Metadata.Extractor
                 TableExpression = Dax.Metadata.DaxExpression.GetExpression(isCalculatedTable ? partitionSource.Expression : null),
                 TableType = isCalculatedTable ? Table.TableSourceType.CalculatedTable.ToString() :
                        (isCalculationGroup ? Table.TableSourceType.CalculationGroup.ToString() : null),
-                Description = DaxNote.FromString(table.Description),
+                Description = new  DaxNote(table.Description),
                 IsDateTable = (table.DataCategory == Microsoft.AnalysisServices.DimensionType.Time.ToString())
             };
             if (daxTable.IsDateTable == false)
@@ -182,7 +182,7 @@ namespace Dax.Metadata.Extractor
                 ErrorMessage = tomCalcItem.ErrorMessage,
                 FormatStringState = tomCalcItem.FormatStringDefinition?.State.ToString(),
                 FormatStringErrorMessage = tomCalcItem.FormatStringDefinition?.ErrorMessage,
-                Description = !string.IsNullOrEmpty(tomCalcItem?.Description) ? new Dax.Metadata.DaxNote(tomCalcItem.Description) : null
+                Description = new DaxNote(tomCalcItem.Description)
             };
             calcGroup.CalculationItems.Add(calcItem);
         }
@@ -208,8 +208,8 @@ namespace Dax.Metadata.Extractor
                 Table = daxTable,
                 MeasureName = new Dax.Metadata.DaxName(measure.Name),
                 MeasureExpression = Dax.Metadata.DaxExpression.GetExpression(measure?.Expression),
-                DisplayFolder = DaxNote.FromString(measure.DisplayFolder),
-                Description = DaxNote.FromString(measure.Description),
+                DisplayFolder = new DaxNote(measure.DisplayFolder),
+                Description = new DaxNote(measure.Description),
                 IsHidden = measure.IsHidden,
                 DataType = measure.DataType.ToString(),
                 DetailRowsExpression = Dax.Metadata.DaxExpression.GetExpression(measure.DetailRowsDefinition?.Expression),
@@ -243,14 +243,14 @@ namespace Dax.Metadata.Extractor
                 IsNullable = column.IsNullable,
                 IsUnique = column.IsUnique,
                 KeepUniqueRows = column.KeepUniqueRows,
-                SortByColumnName = DaxName.FromString(column.SortByColumn?.Name),
+                SortByColumnName = new DaxName(column.SortByColumn?.Name),
                 IsRowNumber = (column.Type == Tom.ColumnType.RowNumber),
                 State = column.State.ToString(),
                 ColumnType = column.Type.ToString(),
                 ColumnExpression = Dax.Metadata.DaxExpression.GetExpression(calculatedColumnExpression),
-                DisplayFolder = new Dax.Metadata.DaxNote(column.DisplayFolder),
+                DisplayFolder = new DaxNote(column.DisplayFolder),
                 FormatString = column.FormatString,
-                Description = new Dax.Metadata.DaxNote(column.Description)
+                Description = new DaxNote(column.Description)
             };
         }
         public static Dax.Metadata.Model GetDaxModel(Tom.Model model, string extractorApp, string extractorVersion)

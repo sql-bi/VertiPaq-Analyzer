@@ -32,7 +32,7 @@ namespace Dax.Vpax
             Uri uriTom = PackUriHelper.CreatePartUri(new Uri(uriString, UriKind.Relative));
             if (!this.Package.PartExists(uriTom)) return null;
 
-            var part = this.Package.GetPart(uriTom);            
+            var part = this.Package.GetPart(uriTom);
             using (TextReader tw = new StreamReader(part.GetStream(), Encoding.UTF8))
             {
                 string content = tw.ReadToEnd();
@@ -44,7 +44,7 @@ namespace Dax.Vpax
         public Metadata.Model ImportModel()
         {
             string viewVpa = ReadPackageContentAsString(VpaxFormat.DAXMODEL);
-            return JsonConvert.DeserializeObject(viewVpa, typeof(Metadata.Model)) as Metadata.Model;
+            return JsonConvert.DeserializeObject<Metadata.Model>(viewVpa);
         }
 
         /* ViewVpa cannot be imported - it is designed only to be exported to VertiPaq Analyzer in Excel

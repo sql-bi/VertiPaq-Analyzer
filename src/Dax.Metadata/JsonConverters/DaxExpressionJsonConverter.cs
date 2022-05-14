@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 
 namespace Dax.Metadata.JsonConverters
@@ -8,8 +7,6 @@ namespace Dax.Metadata.JsonConverters
     {
         public override DaxExpression ReadJson(JsonReader reader, Type objectType, DaxExpression existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonToken.Null) return null;
-
             /* For future implementation
              * if DaxName is implemented with encryption/tokenization, then we might use
              * something similar to the following code
@@ -25,7 +22,7 @@ namespace Dax.Metadata.JsonConverters
             //}
             //return new DaxExpression(name);
 
-            string name = reader.Value.ToString();
+            string name = (string)reader.Value;
             return new DaxExpression(name);
         }
 
@@ -34,6 +31,5 @@ namespace Dax.Metadata.JsonConverters
         {
             writer.WriteValue(value.Expression);
         }
-
     }
 }
