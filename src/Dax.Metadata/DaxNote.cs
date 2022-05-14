@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Dax.Metadata.JsonConverters;
+using Newtonsoft.Json;
 
 namespace Dax.Metadata
 {
+    /// <summary>
+    /// Support future tokenization of notes to anonymize a data model
+    /// </summary>
+    [JsonConverter(typeof(DaxNoteJsonConverter))]
     public class DaxNote
     {
         public string Note { get; }
-
-        public static DaxNote FromString(string name)
-        {
-            return string.IsNullOrEmpty(name) ? null : new DaxNote(name);
-        }
 
         public DaxNote(string note)
         {
             this.Note = note;
         }
-        private DaxNote() { }
+
+        private DaxNote() 
+        {
+        }
 
         public static bool operator ==(DaxNote a, DaxNote b)
         {
@@ -46,5 +45,4 @@ namespace Dax.Metadata
             return this.Note;
         }
     }
-
 }

@@ -2181,8 +2181,8 @@
         ],
         "measures": [
           {
-            "name": "StoreCount",
-            "expression": "COUNTROWS(Store)",
+            "name": "M1",
+            "expression": "1",
             "formatString": "0",
             "lineageTag": "425f5e15-f238-41d0-be18-c2a61a4617f5"
           }
@@ -2280,20 +2280,6 @@
           },
           "contentType": "json"
         }
-      }
-    ],
-    "roles": [
-      {
-        "name": "Role1",
-        "tablePermissions": [
-          {
-            "name": "Date"
-          },
-          {
-            "name": "Product",
-            "metadataPermission": "read"
-          }
-        ]
       }
     ],
     "annotations": [

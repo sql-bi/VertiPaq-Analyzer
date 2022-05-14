@@ -446,8 +446,8 @@ ORDER BY MEASUREGROUP_NAME";
                                 MeasureExpression = new DaxExpression(measureExpression),
                                 FormatString = defaultFormatString, // TODO - this might change to DaxExpression with dynamic format strings
                                 IsHidden = !measureVisible,
-                                DisplayFolder = DaxNote.FromString(measureDisplayFolder), 
-                                Description = DaxNote.FromString(measureDescription)
+                                DisplayFolder = new DaxNote(measureDisplayFolder), 
+                                Description = new DaxNote(measureDescription)
                             };
 
                             daxTable.Measures.Add(daxMeasure);
@@ -526,7 +526,7 @@ ORDER BY [TableID]";
                     {
                         // Table daxTable = GetDaxTable(tableName);
                         var daxPartition = GetDaxPartition(tableName, partitionName);
-                        daxPartition.Description = !string.IsNullOrEmpty(description) ? new Dax.Metadata.DaxNote(description) : null;
+                        daxPartition.Description = new DaxNote(description);
                         daxPartition.State = (Partition.PartitionState)state;
                         daxPartition.Type = (Partition.PartitionType)type;
                         daxPartition.RefreshedTime = refreshedTime;
