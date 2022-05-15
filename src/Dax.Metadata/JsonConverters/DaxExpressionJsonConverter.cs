@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace Dax.Metadata.JsonConverters
@@ -7,25 +8,19 @@ namespace Dax.Metadata.JsonConverters
     {
         public override DaxExpression ReadJson(JsonReader reader, Type objectType, DaxExpression existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            /* For future implementation
-             * if DaxName is implemented with encryption/tokenization, then we might use
-             * something similar to the following code
-             */
-            //string name;
-            //if (reader.Value is JObject) {
-            //    JObject jo = JObject.Load(reader);
-            //    name = (string)jo["Expression"];
-            //}
-            //else {
-            //    // if the object has been serialized as a string the following will work
-            //    name = reader.Value.ToString();
-            //}
-            //return new DaxExpression(name);
+            // This "if" statement handles DaxExpression deserialization for older VPAX files
+            // where DaxExpression properties were serialized as a JObject instead of string.
 
-            string name = (string)reader.Value;
-            return new DaxExpression(name);
+            if (reader.TokenType == JsonToken.StartObject) 
+            {
+                var jobject = JObject.Load(reader);
+                var expressionValue = (string)jobject["Expression"];
+                return new DaxExpression(expressionValue);
+            }
+
+            string expression = (string)reader.Value;
+            return new DaxExpression(expression);
         }
-
 
         public override void WriteJson(JsonWriter writer, DaxExpression value, JsonSerializer serializer)
         {
