@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -85,10 +86,11 @@ namespace Dax.Metadata
             // TODO - how to support versioning?
             Version daxModelVersion = new Version(1, 1);
             this.DaxModelVersion = daxModelVersion.ToString();
-            AssemblyName modelAssemblyName = this.GetType().Assembly.GetName();
+            var modelAssembly = this.GetType().Assembly;
+            var modelAssemblyName = modelAssembly.GetName();
+            var modelFileVersionInfo = FileVersionInfo.GetVersionInfo(modelAssembly.Location);
             this.DaxModelLib = modelAssemblyName.Name;
-            Version version = modelAssemblyName.Version;
-            this.DaxModelLibVersion = version.ToString();
+            this.DaxModelLibVersion = modelFileVersionInfo.ProductVersion; // e.g. CI build: 1.2.5-preview2+<git-commit-hash> , RELEASE build: 1.2.5
         }
         public Model(string extractorLib, string extractorLibVersion, string extractorApp = null, string extractorAppVersion = null) : this()
         {
