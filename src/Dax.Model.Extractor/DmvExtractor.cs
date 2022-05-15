@@ -63,12 +63,11 @@ namespace Dax.Metadata.Extractor
                 throw new ExtractorException(connection, databaseName);
             }
 
-            AssemblyName tomExtractorAssemblyName = this.GetType().Assembly.GetName();
-            Version version = tomExtractorAssemblyName.Version;
+            var extractorInfo = Util.GetExtractorInfo(this);
             // Create a DAX model if it is not provided in the constructor arguments
             // This should be outsider the constructor, but we want to make sure the database name is 
             // validated before using other DMVs
-            DaxModel = daxModel ?? new Dax.Metadata.Model(tomExtractorAssemblyName.Name, version.ToString(), extractorApp, extractorVersion);
+            DaxModel = daxModel ?? new Dax.Metadata.Model(extractorInfo.Name, extractorInfo.Version, extractorApp, extractorVersion);
             DaxModel.ServerName = new DaxName(serverName);
             DaxModel.ModelName = new DaxName(databaseName);
             DaxModel.CompatibilityLevel = compatibilityLevel;

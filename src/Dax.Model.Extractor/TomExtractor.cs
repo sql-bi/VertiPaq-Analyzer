@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,9 +18,10 @@ namespace Dax.Metadata.Extractor
         private TomExtractor(Tom.Model model, string extractorApp = null, string extractorVersion = null)
         {
             tomModel = model;
-            AssemblyName tomExtractorAssemblyName = GetType().Assembly.GetName();
-            Version version = tomExtractorAssemblyName.Version;
-            DaxModel = new Dax.Metadata.Model(tomExtractorAssemblyName.Name, version.ToString(), extractorApp, extractorVersion);
+
+            var extractorInfo = Util.GetExtractorInfo(this);
+            DaxModel = new Dax.Metadata.Model(extractorInfo.Name, extractorInfo.Version, extractorApp, extractorVersion);
+
             if (tomModel != null) {
                 PopulateModel();
             }
