@@ -179,8 +179,8 @@ namespace TestDaxModel
             //const string databaseName = "Adventure Works Internet Sales";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            const string serverName = "localhost:53456";
-            const string databaseName = "ec85796a-ceb9-4fc5-a67a-a8740ae037e6";
+            const string serverName = "localhost:53393";
+            const string databaseName = "e9dbe0cd-a38d-435f-9400-0786baeff640";
 
             //const string serverName = @"localhost\ctp22";
             //const string databaseName = "Contoso Base";
