@@ -179,8 +179,8 @@ namespace TestDaxModel
             //const string databaseName = "Adventure Works Internet Sales";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            const string serverName = "localhost:61969";
-            const string databaseName = "f50971af-5c38-408a-af58-b5c6b851fb44";
+            const string serverName = "localhost:53456";
+            const string databaseName = "ec85796a-ceb9-4fc5-a67a-a8740ae037e6";
 
             //const string serverName = @"localhost\ctp22";
             //const string databaseName = "Contoso Base";
@@ -189,7 +189,7 @@ namespace TestDaxModel
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
             var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
-            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10 );
+            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10, analyzeDirectQuery:true);
             Console.WriteLine(database.CompatibilityMode);
             //DumpReferencedColumns(daxModel);
             //DumpReferencedMeasures(daxModel);

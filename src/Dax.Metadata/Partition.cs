@@ -33,6 +33,15 @@ namespace Dax.Metadata
             Inferred = 8
         }
 
+        public enum PartitionMode
+        {
+            Import = 0,
+            DirectQuery = 1,
+            Default = 2,
+            Push = 3,
+            Dual = 4
+        }
+
         public Partition(Table table)
         {
             Table = table;
@@ -47,6 +56,7 @@ namespace Dax.Metadata
 
         public PartitionState? State { get; set; }
         public PartitionType? Type { get; set; }
+        public PartitionMode? Mode { get; set; }
         public DateTime? RefreshedTime { get; set; }
     }
 }

@@ -77,6 +77,17 @@ namespace Dax.Metadata
         public List<Table> Tables { get; }
         public List<Relationship> Relationships { get; }
         public List<Role> Roles { get; }
+
+        /// <summary>
+        /// Default partition mode
+        /// </summary>
+        public Partition.PartitionMode DefaultMode { get; set; }
+
+        /// <summary>
+        /// Model culture
+        /// </summary>
+        public string Culture { get; set; }
+
         public Model()
         {
             this.Tables = new List<Table>();
