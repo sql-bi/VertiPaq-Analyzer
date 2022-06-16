@@ -41,6 +41,7 @@ namespace Dax.ViewModel
         public long UserHierarchiesSize { get { return this.Table.UserHierarchiesSize; } }
         public bool IsReferenced { get { return this.Table.IsReferenced; } }
         public bool? IsDateTable { get { return this.Table.IsDateTable; } }
+        public bool? HasDirectQueryPartitions { get { return this.Table.HasDirectQueryPartitions; } }
 
         public double PercentageDatabase {
             get {
