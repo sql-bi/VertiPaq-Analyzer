@@ -40,6 +40,10 @@ namespace Dax.Metadata.Extractor
                 AddRole(role);
             }
 
+            // Specific model properties
+            DaxModel.DefaultMode = (Partition.PartitionMode)tomModel.DefaultMode;
+            DaxModel.Culture = tomModel.Culture;
+
             // Compatibility Level and Mode
             DaxModel.CompatibilityLevel = tomModel.Database.CompatibilityLevel;
             DaxModel.CompatibilityMode = tomModel.Database.CompatibilityMode.ToString();
@@ -270,7 +274,7 @@ namespace Dax.Metadata.Extractor
             return db ?? throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it.");
         }
 
-        public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0)
+        public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false)
         {
             Tom.Database db = GetDatabase(serverName, databaseName);
             Tom.Model tomModel = db.Model;
@@ -287,7 +291,7 @@ namespace Dax.Metadata.Extractor
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData)
                 {
-                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows);
+                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery );
                 }
             }
             return daxModel;

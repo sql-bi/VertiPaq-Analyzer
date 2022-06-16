@@ -80,6 +80,7 @@ namespace Dax.Metadata.Extractor
         public static void PopulateFromDmv(Dax.Metadata.Model daxModel, IDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
             Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
+            de.PopulateModel();
             de.PopulateTables();
             de.PopulatePartitions();
             de.PopulateColumns();
@@ -484,6 +485,43 @@ FROM $SYSTEM.TMSCHEMA_TABLES";
             return map;
         }
 
+        public void PopulateModel()
+        {
+            // Skip the PopulateRelationships task if the compatibility level is older than TOM
+            if (this.DaxModel.CompatibilityLevel < 1200) {
+                return;
+            }
+            const string QUERY_MODELS = @"
+SELECT
+    [ID] AS MODEL_ID,
+    [Name] AS MODEL_NAME,
+    [DefaultMode] AS PARTITION_DEFAULT_MODE,
+    [DefaultDataView] AS DEFAULT_DATA_VIEW,
+    [Culture] AS MODEL_CULTURE,
+    [ForceUniqueNames] AS MODEL_FORCE_UNIQUE_NAMES
+FROM $SYSTEM.TMSCHEMA_MODEL
+ORDER BY [ID]";
+
+
+            var cmd = CreateCommand(QUERY_MODELS);
+            cmd.CommandTimeout = CommandTimeout;
+
+            using (var rdr = cmd.ExecuteReader()) {
+                // Read only one row - we do not expect multiple models in a single database
+                if (rdr.Read()) {
+                    // long modelId = (long)rdr.GetDecimal(0);
+                    // string modelName = rdr.GetString(1);
+                    long defaultMode = rdr.GetInt64(2);
+                    // long defaultDataView = rdr.GetInt64(3);
+                    string modelCulture = rdr.GetString(4);
+                    // bool forceUniqueNames = rdr.GetBoolean(5);
+
+                    this.DaxModel.DefaultMode = (Partition.PartitionMode)defaultMode;
+                    this.DaxModel.Culture = modelCulture;
+                }
+            }
+        }
+
         public void PopulatePartitions()
         {
             // Skip the PopulateRelationships task if the compatibility level is older than TOM
@@ -500,6 +538,7 @@ SELECT
     [Description] AS PARTITION_DESCRIPTION,
     [State] AS PARTITION_STATE,
     [Type] AS PARTITION_TYPE,
+    [Mode] AS PARTITION_MODE,
     [RefreshedTime] AS REFRESHED_TIME
 FROM $SYSTEM.TMSCHEMA_PARTITIONS
 ORDER BY [TableID]";
@@ -519,7 +558,8 @@ ORDER BY [TableID]";
                     string description = !rdr.IsDBNull(3) ? rdr.GetString(3) : null;
                     long state = rdr.GetInt64(4);
                     long type = rdr.GetInt64(5);
-                    DateTime? refreshedTime = !rdr.IsDBNull(6) ? rdr.GetDateTime(6) : (DateTime?) null;
+                    long mode = rdr.GetInt64(6);
+                    DateTime? refreshedTime = !rdr.IsDBNull(7) ? rdr.GetDateTime(7) : (DateTime?) null;
 
                     if (mapTableIds.TryGetValue(tableId, out string tableName))
                     {
@@ -528,6 +568,7 @@ ORDER BY [TableID]";
                         daxPartition.Description = new DaxNote(description);
                         daxPartition.State = (Partition.PartitionState)state;
                         daxPartition.Type = (Partition.PartitionType)type;
+                        daxPartition.Mode = (Partition.PartitionMode)mode;
                         daxPartition.RefreshedTime = refreshedTime;
                     }
                 }

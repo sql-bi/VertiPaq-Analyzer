@@ -25,6 +25,7 @@ namespace Dax.ViewVpaExport
         public string PartitionName => this._ColumnSegment.Partition.PartitionName.ToString();
         public string PartitionState => this._ColumnSegment.Partition.State?.ToString();
         public string PartitionType => this._ColumnSegment.Partition.Type?.ToString();
+        public string PartitionMode => this._ColumnSegment.Partition.Type?.ToString();
         public DateTime? RefreshedTime => this._ColumnSegment.Partition.RefreshedTime;
 
 

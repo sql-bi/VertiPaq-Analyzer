@@ -39,6 +39,17 @@ namespace Dax.Metadata
         public CalculationGroup CalculationGroup { get; set; }
         public DaxNote Description { get; set; }
         public bool IsReferenced { get; set; }
+
+        public bool HasDirectQueryPartitions { 
+            get {
+                var partitionModes = Partitions.GroupBy(p => p.Mode).Select(m => m.First().Mode);
+                if (partitionModes.Where(m => m == Partition.PartitionMode.DirectQuery || m == Partition.PartitionMode.Dual).Any()) return true;
+                if (partitionModes.Where(m => m == Partition.PartitionMode.Default).Any() 
+                    && (this.Model.DefaultMode == Partition.PartitionMode.DirectQuery || this.Model.DefaultMode == Partition.PartitionMode.Dual)) return true;
+                return false;
+            }
+        }
+
         /// <summary>
         /// Returns true if the table is marked as auto-date/time table or is a valid user-defined date/time table, otherwise it returns false
         /// </summary>

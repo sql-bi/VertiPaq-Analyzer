@@ -37,18 +37,18 @@ namespace Dax.Metadata.Extractor
             }
         }
 
-        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0)
+        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false )
         {
             StatExtractor extractor = new StatExtractor(daxModel, connection);
-            extractor.LoadTableStatistics();
-            extractor.LoadColumnStatistics();
-            extractor.LoadRelationshipStatistics(sampleRows);
+            extractor.LoadTableStatistics(analyzeDirectQuery);
+            extractor.LoadColumnStatistics(analyzeDirectQuery);
+            extractor.LoadRelationshipStatistics(sampleRows, analyzeDirectQuery);
 
             // Update ExtractionDate
             extractor.DaxModel.ExtractionDate = DateTime.UtcNow;
         }
 
-        public void LoadRelationshipStatistics(int sampleRows = 0)
+        public void LoadRelationshipStatistics(int sampleRows = 0,bool analyzeDirectQuery = false)
         {
             // Maximum number of invalid keys used for extraction through SAMPLE, use TOPNSKIP or TOPN otherwise
             const int MAX_KEYS_FOR_SAMPLE = 1000;
@@ -57,14 +57,22 @@ namespace Dax.Metadata.Extractor
             var relationshipList = DaxModel.Relationships.Where(r => r.Dmv1200RelationshipId != 0).ToList();
             var loopRelationships = relationshipList.SplitList(10);
             #region Statistics
-            foreach (var relationshipSet in loopRelationships)
+            foreach (var relationshipSetComplete in loopRelationships)
             {
+                var relationshipSet = 
+                    relationshipSetComplete
+                    .Where(rel => analyzeDirectQuery || ((!rel.FromColumn.Table.HasDirectQueryPartitions) && (!rel.ToColumn.Table.HasDirectQueryPartitions)))
+                    .ToList();
+                // Skip EVALUATE if no valid relationships are found
+                if (!relationshipSet.Any()) continue;
+
                 var daxStatistics = "EVALUATE ";
                 //only union if there is more than 1 column in the columnSet
                 if (relationshipSet.Count > 1) { daxStatistics += "UNION("; }
                 daxStatistics += string.Join(
                     ",",
-                    relationshipSet.Select(rel => $@"
+                    relationshipSet
+                        .Select(rel => $@"
 CALCULATETABLE (
 ROW( 
     ""RelationshipId"", {rel.Dmv1200RelationshipId},
@@ -102,8 +110,15 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
             {
                 var loopInvalidRelationships = relationshipList.Where(r => r.InvalidRows > 0).ToList().SplitList(10);
                 #region Details
-                foreach (var relationshipSet in loopInvalidRelationships)
+                foreach (var relationshipSetComplete in loopInvalidRelationships)
                 {
+                    var relationshipSet =
+                        relationshipSetComplete
+                        .Where(rel => analyzeDirectQuery || ((!rel.FromColumn.Table.HasDirectQueryPartitions) && (!rel.ToColumn.Table.HasDirectQueryPartitions)))
+                        .ToList();
+                    // Skip EVALUATE if no valid relationships are found
+                    if (!relationshipSet.Any()) continue;
+
                     var daxDetails = "EVALUATE ";
                     //only union if there is more than 1 column in the columnSet
                     if (relationshipSet.Count > 1) { daxDetails += "UNION("; }
@@ -170,11 +185,13 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
             #endregion
         }
 
-        public void LoadTableStatistics()
+        public void LoadTableStatistics( bool analyzeDirectQuery = false )
         {
             // only get table stats if the table has more than 1 user created column 
             // (every table has a RowNumber column so we only want tables with more than 1 column)
-            var tableList = DaxModel.Tables.Where(t => t.Columns.Count > 1).Select(t => t).ToList();
+            var tableList = DaxModel.Tables
+                .Where( t => t.Columns.Count > 1 && (analyzeDirectQuery || !t.HasDirectQueryPartitions) )
+                .Select(t => t).ToList();
             var loopTables = tableList.SplitList(50);
             foreach ( var tableSet in loopTables ) {
                 var dax = "EVALUATE ";
@@ -215,9 +232,11 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
         {
             return originalName.Replace("\"", "\"\"");
         }
-        public void LoadColumnStatistics()
+        public void LoadColumnStatistics(bool analyzeDirectQuery = false)
         {
-            var allColumns = (from t in DaxModel.Tables
+            var allColumns = 
+                (from t in DaxModel.Tables
+                 where t.Columns.Count > 1 && (analyzeDirectQuery || !t.HasDirectQueryPartitions)
                      from c in t.Columns
                      where c.State == "Ready"
                      select c).ToList();

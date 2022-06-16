@@ -23,6 +23,7 @@ namespace Dax.ViewModel
         public string Description => this.Partition.Description.ToString();
         public string PartitionState => this.Partition.State.ToString();
         public string PartitionType => this.Partition.Type.ToString();
+        public string PartitionMode => this.Partition.Mode.ToString();
         public DateTime? RefreshedTime => this.Partition.RefreshedTime;
 
         public int SegmentsTotalNumber
