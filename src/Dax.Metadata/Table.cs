@@ -40,6 +40,14 @@ namespace Dax.Metadata
         public DaxNote Description { get; set; }
         public bool IsReferenced { get; set; }
 
+        public bool HasDualPartitions {
+            get {
+                var partitionModes = Partitions.GroupBy(p => p.Mode).Select(m => m.First().Mode);
+                if (partitionModes.Where(m => m == Partition.PartitionMode.Dual).Any()) return true;
+                if (partitionModes.Where(m => m == Partition.PartitionMode.Default).Any() && this.Model.DefaultMode == Partition.PartitionMode.Dual) return true;
+                return false;
+            }
+        }
         public bool HasDirectQueryPartitions { 
             get {
                 var partitionModes = Partitions.GroupBy(p => p.Mode).Select(m => m.First().Mode);
