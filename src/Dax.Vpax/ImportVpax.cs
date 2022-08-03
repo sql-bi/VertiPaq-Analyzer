@@ -6,7 +6,7 @@ using System.IO;
 using System.IO.Packaging;
 using Newtonsoft.Json;
 using TOM = Microsoft.AnalysisServices.Tabular;
-
+using Microsoft.AnalysisServices;
 
 namespace Dax.Vpax
 {
@@ -57,9 +57,44 @@ namespace Dax.Vpax
 
         public TOM.Database ImportDatabase()
         {
+            string strCompatMode = ReadPackageContentAsString(VpaxFormat.COMPATMODE);
+            Microsoft.AnalysisServices.CompatibilityMode compatMode = Microsoft.AnalysisServices.CompatibilityMode.Unknown;
+            Enum.TryParse(strCompatMode,true , out compatMode );
             string modelBim = ReadPackageContentAsString(VpaxFormat.TOMMODEL);
             if (modelBim == null) return null;
-            return TOM.JsonSerializer.DeserializeDatabase(modelBim);
+            var tomDb = TryDeserializeDatabase(modelBim, compatMode);
+            return tomDb;
+        }
+
+        // This method is mainly here for backward compatibility
+        // if an existing vpax file has been created that will not deserialize with the default
+        // compat mode of 'Unknown' and we get a JsonSerializationException, then we recursively
+        // re-try with the other compat modes to see if they work.
+        private TOM.Database TryDeserializeDatabase(string modelBim, CompatibilityMode compatMode)
+        {
+            TOM.Database db = null;
+            try {
+                db = TOM.JsonSerializer.DeserializeDatabase(modelBim, null, compatMode);
+            }
+            catch (Microsoft.AnalysisServices.JsonSerializationException) {
+                // if we hit an error of any sort try to deserialize using the different compat modes
+                // in the following order: PowerBI, AnalysisServices, Excel
+                switch (compatMode) {
+                    case CompatibilityMode.Unknown:
+                        db = TryDeserializeDatabase(modelBim, CompatibilityMode.PowerBI);
+                        break;
+                    case CompatibilityMode.PowerBI:
+                        db = TryDeserializeDatabase(modelBim, CompatibilityMode.AnalysisServices);
+                        break;
+                    case CompatibilityMode.AnalysisServices:
+                        db = TryDeserializeDatabase(modelBim, CompatibilityMode.Excel);
+                        break;
+                     default:
+                        db = null;
+                        break;
+                }
+            }
+            return db;
         }
 
         #region IDisposable Support

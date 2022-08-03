@@ -35,6 +35,16 @@ namespace Dax.Vpax
                 tw.Write(TOM.JsonSerializer.SerializeDatabase(database));
                 tw.Close();
             }
+            ExportCompatibilityMode(database);
+        }
+
+        public void ExportCompatibilityMode(TOM.Database database)
+        {
+            Uri uriTom = PackUriHelper.CreatePartUri(new Uri(VpaxFormat.COMPATMODE, UriKind.Relative));
+            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriTom, "text/plain", CompressionOption.Maximum).GetStream(), Encoding.UTF8)) {
+                tw.Write(database.CompatibilityMode.ToString());
+                tw.Close();
+            }
         }
 
         public void ExportViewVpa(ViewVpaExport.Model viewVpa)

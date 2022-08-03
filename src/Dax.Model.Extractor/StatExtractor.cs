@@ -224,6 +224,13 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
             return $"'{table.TableName.Name.Replace("'", "''")}'";
         }
 
+        private static string DistinctCountExpression(Column column)
+        {
+            return column.GroupByColumns.Count == 0 
+                ? $"DISTINCTCOUNT({EscapeColumnName(column)})"
+                : $"COUNTROWS(DISTINCT(ALL({EscapeColumnName(column)}, { string.Join(",", column.GroupByColumns.Select(c => c.Name.Replace("]","]]")).ToArray<string>()) } ). ))";
+        }
+
         private static string EscapeColumnName(Column column)
         {
             return $"{EscapeTableName(column.Table)}[{column.ColumnName.Name.Replace("]", "]]")}]";
@@ -248,8 +255,8 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
                 //only union if there is more than 1 column in the columnSet
                 if (validColumns > 1) { dax += "UNION("; } 
                 dax += string.Join(",", columnSet
-                    .Where(c => !c.IsRowNumber )
-                    .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{EmbedNameInString(c.Table.TableName.Name)}\", \"Column\", \"{idString++:0000}{EmbedNameInString(c.ColumnName.Name)}\", \"Cardinality\", DISTINCTCOUNT({EscapeColumnName(c)}))").ToList());
+                    .Where(c => !c.IsRowNumber && c.GroupByColumns.Count == 0 )
+                    .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{EmbedNameInString(c.Table.TableName.Name)}\", \"Column\", \"{idString++:0000}{EmbedNameInString(c.ColumnName.Name)}\", \"Cardinality\", {DistinctCountExpression(c)})").ToList());
                 //only close the union call if there is more than 1 column in the columnSet
                 if (validColumns > 1) { dax += ")"; }
 
