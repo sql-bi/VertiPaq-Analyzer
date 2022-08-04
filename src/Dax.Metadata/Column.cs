@@ -15,6 +15,7 @@ namespace Dax.Metadata
         {
             ColumnHierarchies = new List<ColumnHierarchy>();
             ColumnSegments = new List<ColumnSegment>();
+            GroupByColumns = new List<DaxName>();
         }
 
         public Table Table { get; set; }
@@ -36,6 +37,7 @@ namespace Dax.Metadata
         public bool IsUnique { get; set; }
         public bool KeepUniqueRows { get; set; }
         public DaxName SortByColumnName { get; set; }
+        public List<DaxName> GroupByColumns { get; set; }
         public string State { get; set; }
         public bool IsRowNumber { get; set; }
         public bool IsCalculationGroupAttribute { get; set; }

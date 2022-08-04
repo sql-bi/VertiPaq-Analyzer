@@ -238,7 +238,7 @@ namespace Dax.Metadata.Extractor
             string calculatedColumnExpression =
                 (column.Type == Tom.ColumnType.Calculated) ? (column as Tom.CalculatedColumn)?.Expression : null;
 
-            return new Dax.Metadata.Column(daxTable)
+            Column col = new Dax.Metadata.Column(daxTable)
             {
                 ColumnName = new Dax.Metadata.DaxName(column.Name),
                 DataType = column.DataType.ToString(),
@@ -258,6 +258,13 @@ namespace Dax.Metadata.Extractor
                 FormatString = column.FormatString,
                 Description = new DaxNote(column.Description)
             };
+
+            // if any group by columns exist add them to the list of GroupByColumns
+            if (column.RelatedColumnDetails?.GroupByColumns != null) {
+                col.GroupByColumns.AddRange(column.RelatedColumnDetails?.GroupByColumns.Select(c => new DaxName(c.RelatedColumnDetails.Column.Name)).ToList());
+            }
+
+            return col;
         }
         public static Dax.Metadata.Model GetDaxModel(Tom.Model model, string extractorApp, string extractorVersion)
         {

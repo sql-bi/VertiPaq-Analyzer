@@ -11,6 +11,7 @@ namespace Dax.Vpax
         public const string DAXMODEL = "DaxModel.json";
         public const string DAXVPAVIEW = "DaxVpaView.json";
         public const string TOMMODEL = "Model.bim";
+        public const string COMPATMODE = "CompatabilityMode.txt";
 
     }
 }
