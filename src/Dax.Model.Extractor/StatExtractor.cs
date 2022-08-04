@@ -228,7 +228,7 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
         {
             return column.GroupByColumns.Count == 0 
                 ? $"DISTINCTCOUNT({EscapeColumnName(column)})"
-                : $"COUNTROWS(DISTINCT(ALL({EscapeColumnName(column)}, { string.Join(",", column.GroupByColumns.Select(c => c.Name.Replace("]","]]")).ToArray<string>()) } ). ))";
+                : $"COUNTROWS(ALLNOBLANKROW({EscapeColumnName(column)}))";
         }
 
         private static string EscapeColumnName(Column column)
