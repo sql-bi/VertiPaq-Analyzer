@@ -497,10 +497,14 @@ SELECT
     [Name] AS MODEL_NAME,
     [DefaultMode] AS PARTITION_DEFAULT_MODE,
     [DefaultDataView] AS DEFAULT_DATA_VIEW,
-    [Culture] AS MODEL_CULTURE,
-    [ForceUniqueNames] AS MODEL_FORCE_UNIQUE_NAMES
+    [Culture] AS MODEL_CULTURE
 FROM $SYSTEM.TMSCHEMA_MODEL
 ORDER BY [ID]";
+            // Note 2022-08-24
+            // We removed the field ForceUniqueNames as it is not supported in compatibility levels
+            // earlier than 1500 (to be verified). In case we want to restore it, add the following
+            // column to the previous query:
+            // ,[ForceUniqueNames] AS MODEL_FORCE_UNIQUE_NAMES
 
 
             var cmd = CreateCommand(QUERY_MODELS);
