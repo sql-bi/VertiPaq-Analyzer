@@ -41,7 +41,7 @@ namespace Dax.ViewVpaExport
         public string ColumnType { get { return this._Column.ColumnType; } }
         public bool IsHidden { get { return this._Column.IsHidden; } }
         public string Encoding { get { return this._Column.Encoding; } }
-        public string ColumnExpression { get { return this._Column.ColumnExpression?.Expression.ToString(); } }
+        public string ColumnExpression { get { return this._Column.ColumnExpression?.Expression?.ToString(); } }
         public string DisplayFolder { get { return this._Column.DisplayFolder?.Note; } }
         public string Description { get { return this._Column.Description?.Note; } }
         public string FormatString { get { return this._Column.FormatString;  } }
@@ -52,7 +52,7 @@ namespace Dax.ViewVpaExport
         public bool IsNullable { get { return this._Column.IsNullable; } }
         public bool IsUnique { get { return this._Column.IsUnique; } }
         public bool KeepUniqueRows { get { return this._Column.KeepUniqueRows; } }
-        public string SortByColumnName { get { return this._Column.SortByColumnName.ToString(); } }
+        public string SortByColumnName { get { return this._Column.SortByColumnName?.ToString(); } }
         public string State { get { return this._Column.State; } }
         public bool IsRowNumber { get { return this._Column.IsRowNumber; } }
         public bool IsReferenced { get { return this._Column.IsReferenced; } }
