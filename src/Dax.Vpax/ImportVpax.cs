@@ -41,10 +41,27 @@ namespace Dax.Vpax
             }
         }
 
+        private T DeserializePackageContent<T>(string uriString)
+        {
+            var partUri = PackUriHelper.CreatePartUri(new Uri(uriString, UriKind.Relative));
+
+            if (!this.Package.PartExists(partUri)) 
+                return default(T);
+            
+            var packagePart = this.Package.GetPart(partUri);
+
+            using (var stream = packagePart.GetStream())
+            using (var streamReader = new StreamReader(stream))
+            using (var jsonReader = new JsonTextReader(streamReader))
+            {
+                var serializer = new Newtonsoft.Json.JsonSerializer();
+                return serializer.Deserialize<T>(jsonReader);
+            }
+        }
+
         public Metadata.Model ImportModel()
         {
-            string viewVpa = ReadPackageContentAsString(VpaxFormat.DAXMODEL);
-            return JsonConvert.DeserializeObject<Metadata.Model>(viewVpa);
+            return DeserializePackageContent<Metadata.Model>(VpaxFormat.DAXMODEL);
         }
 
         /* ViewVpa cannot be imported - it is designed only to be exported to VertiPaq Analyzer in Excel
