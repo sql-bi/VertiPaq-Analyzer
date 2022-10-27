@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -272,10 +273,55 @@ namespace Dax.Metadata.Extractor
             return extractor.DaxModel;
         }
 
+        public static Dax.Metadata.Model GetDaxModel(string connectionString, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false)
+        {
+            Tom.Server server = new Tom.Server();
+            server.Connect(connectionString);
+            var database = GetDatabase(connectionString);
+            Tom.Model tomModel = database.Model;
+            string databaseName = database.Name;
+            string serverName = GetDataSource(connectionString);
+
+            Model daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
+
+            using (AdomdConnection connection = new(connectionString)) {
+                // Populate statistics from DMV
+                Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
+
+                // Populate statistics by querying the data model
+                if (readStatisticsFromData) {
+                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery);
+                }
+            }
+            return daxModel;
+        }
+
+        private static string GetDataSource(string connectionString)
+        {
+            var builder = new OleDbConnectionStringBuilder(connectionString);
+            return builder.DataSource;
+        }
+
+        private static string GetInitialCatalog(string connectionString)
+        {
+            var builder = new OleDbConnectionStringBuilder(connectionString);
+            builder.TryGetValue("Initial Catalog", out object initialCatalog);
+            return initialCatalog.ToString();
+        }
         public static Tom.Database GetDatabase(string serverName, string databaseName)
         {
             Tom.Server server = new();
             server.Connect(serverName);
+            Tom.Database db = server.Databases.FindByName(databaseName);
+            // if db is null either it does not exist or we do not have admin rights to it
+            return db ?? throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it.");
+        }
+
+        public static Tom.Database GetDatabase(string connectionString)
+        {
+            Tom.Server server = new();
+            server.Connect(connectionString);
+            var databaseName = GetInitialCatalog(connectionString);
             Tom.Database db = server.Databases.FindByName(databaseName);
             // if db is null either it does not exist or we do not have admin rights to it
             return db ?? throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it.");

@@ -20,8 +20,8 @@ namespace TestDaxModel
 
         static void Main()
         {
-            GenericTest();
-
+            //GenericTest();
+            ConnectionStringTest();
             //TestPbiShared_2022();
             //TestPbiShared();
             //TestLocalVpaModel();
@@ -224,6 +224,70 @@ namespace TestDaxModel
             Console.WriteLine("=================");
             Console.WriteLine($"Loading {filename}...");
             
+            var content = VpaxTools.ImportVpax(filename);
+            // var view2 = new Dax.ViewVpaExport.Model(content.DaxModel);
+            viewVpa = new Dax.ViewVpaExport.Model(content.DaxModel);
+            Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
+            Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
+            Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
+            Console.WriteLine($"   Relationships Count: {viewVpa.Relationships.Count()}");
+
+        }
+
+        static void ConnectionStringTest()
+        {
+            //
+            // Retrieve DAX model from database connection
+            //
+            // String connection for Power Pivot
+            // const string serverName = @"http://localhost:9000/xmla";
+            // const string databaseName = "Microsoft_SQLServer_AnalysisServices";
+
+            const string connectionString = "data source=powerbi://api.powerbi.com/v1.0/myorg/dgosbell%20aas%20migration;initial catalog=Adventure Works";
+            
+
+            //const string serverName = @"localhost\ctp22";
+            //const string databaseName = "Contoso Base";
+
+            const string pathOutput = @"c:\temp\";
+
+            Console.WriteLine("Getting model for connectionString {0}", connectionString);
+            var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(connectionString);
+            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(connectionString, "TestDaxModel", "0.2", true, 10, analyzeDirectQuery: true);
+            Console.WriteLine(database.CompatibilityMode);
+            //DumpReferencedColumns(daxModel);
+            //DumpReferencedMeasures(daxModel);
+            // DumpRelationships(daxModel);
+
+            //
+            // Test serialization of Dax.Model in JSON file
+            //
+            // ExportModelJSON(pathOutput, m);
+
+            Console.WriteLine("Exporting to VertiPaq Analyzer View");
+
+            // 
+            // Create VertiPaq Analyzer views
+            //
+            Dax.ViewVpaExport.Model viewVpa = new Dax.ViewVpaExport.Model(daxModel);
+
+            // Save JSON file
+            // ExportJSON(pathOutput, export);
+            Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
+            Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
+            Console.WriteLine($"   Relationships Count: {viewVpa.Relationships.Count()}");
+            string filename = pathOutput + database.Name + ".vpax";
+            Console.WriteLine("Saving {0}...", filename);
+
+            // Save VPAX file
+            // old internal version ExportVPAX(filename, daxModel, export);
+            VpaxTools.ExportVpax(filename, daxModel, viewVpa, database);
+            Console.WriteLine("File saved.");
+            // ImportExport();
+
+            Console.WriteLine("=================");
+            Console.WriteLine($"Loading {filename}...");
+
             var content = VpaxTools.ImportVpax(filename);
             // var view2 = new Dax.ViewVpaExport.Model(content.DaxModel);
             viewVpa = new Dax.ViewVpaExport.Model(content.DaxModel);
