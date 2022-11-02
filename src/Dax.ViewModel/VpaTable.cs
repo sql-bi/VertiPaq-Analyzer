@@ -54,7 +54,7 @@ namespace Dax.ViewModel
 
         public int SegmentsNumber {
             get {
-                return this.Table.Columns.First<Metadata.Column>().ColumnSegments.Count();
+                return this.Table.Columns.First<Metadata.Column>().ColumnSegments.Count;
             }
         }
 
@@ -62,7 +62,7 @@ namespace Dax.ViewModel
         {
             get
             {
-                return this.Table.Columns.Sum<Metadata.Column>( c => c.ColumnSegments.Count() );
+                return this.Table.Columns.Sum<Metadata.Column>( c => c.ColumnSegments.Count );
             }
         }
 
@@ -71,7 +71,7 @@ namespace Dax.ViewModel
             get
             {
                 return this.Table.Columns.Sum<Metadata.Column>( 
-                    c => (c.ColumnSegments.Count(s => s.IsPageable.HasValue == true) > 0) ?
+                    c => c.ColumnSegments.Any(s => s.IsPageable.HasValue == true) ?
                         c.ColumnSegments.Count(s => s.IsPageable == true) :
                         (int?)null
                 );
@@ -83,7 +83,7 @@ namespace Dax.ViewModel
             get
             {
                 return this.Table.Columns.Sum<Metadata.Column>( 
-                    c => (c.ColumnSegments.Count(s => s.IsResident.HasValue == true) > 0) ?
+                    c => (c.ColumnSegments.Any(s => s.IsResident.HasValue == true)) ?
                         c.ColumnSegments.Count(s => s.IsResident == true) :
                         (int?)null
                 );
@@ -112,26 +112,26 @@ namespace Dax.ViewModel
 
         public int PartitionsNumber {
             get {
-                return this.Table.Partitions.Count();
+                return this.Table.Partitions.Count;
             }
         }
 
         public int ColumnsNumber {
             get {
-                return this.Table.Columns.Count();
+                return this.Table.Columns.Count;
             }
         }
 
         public long MaxFromColumnCardinality {
             get {
                 var rFrom = this.Table.GetRelationshipsFrom();
-                return (rFrom?.Count() > 0) ? rFrom.Max(r => r.FromColumn.ColumnCardinality) : 0;
+                return (rFrom?.Any() == true) ? rFrom.Max(r => r.FromColumn.ColumnCardinality) : 0;
             }
         }
         public long MaxToColumnCardinality {
             get {
                 var rTo = this.Table.GetRelationshipsFrom();
-                return (rTo?.Count() > 0) ? rTo.Max(r => r.ToColumn.ColumnCardinality) : 0;
+                return (rTo?.Any() == true) ? rTo.Max(r => r.ToColumn.ColumnCardinality) : 0;
             }
         }
 

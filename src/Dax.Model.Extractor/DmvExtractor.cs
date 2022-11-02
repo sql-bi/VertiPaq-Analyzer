@@ -171,7 +171,7 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         private Column GetDaxColumnDmv1100Id(string tableName, string columnDmv1100Id)
         {
             var daxTable = GetDaxTable(tableName);
-            var daxColumn = daxTable.Columns.Where(t => t.Dmv1100ColumnId?.Equals(columnDmv1100Id) == true).FirstOrDefault();
+            var daxColumn = daxTable.Columns.FirstOrDefault(t => t.Dmv1100ColumnId?.Equals(columnDmv1100Id) == true);
             if (daxColumn == null) {
                 daxColumn = new Dax.Metadata.Column(daxTable);
                 daxColumn.SetDmv1100ColumnId(columnDmv1100Id);
@@ -191,7 +191,7 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         private Column GetDaxColumnDmv1200Id(int tableDmv1200Id, int columnDmv1200Id)
         {
             var daxTable = GetDaxTableDmv1200Id(tableDmv1200Id);
-            var daxColumn = daxTable?.Columns.Where(t => t.Dmv1200ColumnId == columnDmv1200Id).FirstOrDefault();
+            var daxColumn = daxTable?.Columns.FirstOrDefault(t => t.Dmv1200ColumnId == columnDmv1200Id);
             return daxColumn;
         }
 
@@ -203,7 +203,7 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         /// <returns></returns>
         private Table GetDaxTable(string tableName)
         {
-            var daxTable = DaxModel.Tables.Where(t => t.TableName.Name.Equals(tableName)).FirstOrDefault();
+            var daxTable = DaxModel.Tables.FirstOrDefault(t => t.TableName.Name.Equals(tableName));
             if (daxTable == null) {
                 daxTable = new Dax.Metadata.Table(DaxModel)
                 {
@@ -223,7 +223,7 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         /// <returns>Returns null if the table does not exists</returns>
         private Table GetDaxTableDmv1200Id(int tableDmv1200Id)
         {
-            var daxTable = DaxModel.Tables.Where(t => t.Dmv1200TableId == tableDmv1200Id).FirstOrDefault();
+            var daxTable = DaxModel.Tables.FirstOrDefault(t => t.Dmv1200TableId == tableDmv1200Id);
             return daxTable;
         }
 
@@ -237,7 +237,7 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         private Column GetDaxColumn(string tableName, string columnName)
         {
             var daxTable = GetDaxTable(tableName);
-            var daxColumn = daxTable.Columns.Where(t => t.ColumnName.Name.Equals(columnName)).FirstOrDefault();
+            var daxColumn = daxTable.Columns.FirstOrDefault(t => t.ColumnName.Name.Equals(columnName));
             if (daxColumn == null) {
                 daxColumn = new Dax.Metadata.Column(daxTable)
                 {
@@ -256,7 +256,7 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         private Partition GetDaxPartition(string tableName, string partitionName)
         {
             var daxTable = GetDaxTable(tableName);
-            var daxPartition = daxTable.Partitions.Where(p => p.PartitionName.Name.Equals(partitionName)).FirstOrDefault();
+            var daxPartition = daxTable.Partitions.FirstOrDefault(p => p.PartitionName.Name.Equals(partitionName));
             if (daxPartition == null) {
                 daxPartition = new Dax.Metadata.Partition(daxTable)
                 {
@@ -274,7 +274,7 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
             var daxColumn = GetDaxColumnDmv1100Id(tableName, columnDmv1100Id);
             var daxPartition = GetDaxPartition(tableName, partitionName);
             daxPartition.PartitionNumber = tablePartitionNumber;
-            var daxColumnSegment = daxColumn.ColumnSegments.Where(s => s.SegmentNumber == segmentNumber).FirstOrDefault();
+            var daxColumnSegment = daxColumn.ColumnSegments.FirstOrDefault(s => s.SegmentNumber == segmentNumber);
             if (daxColumnSegment == null) {
                 daxColumnSegment = new Dax.Metadata.ColumnSegment(daxColumn, daxPartition)
                 {
@@ -291,12 +291,12 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         {
             var daxColumn = GetDaxColumnDmv1100Id(tableName, columnDmv1100Id);
             var daxColumnHierarchy =
-                daxColumn.ColumnHierarchies.Where(
+                daxColumn.ColumnHierarchies.FirstOrDefault(
                     h =>
                         h.StructureName.Name == structureName
                         && h.TablePartitionNumber == tablePartitionNumber
                         && h.SegmentNumber == segmentNumber
-                ).FirstOrDefault();
+                );
             if (daxColumnHierarchy == null) {
                 daxColumnHierarchy = new Dax.Metadata.ColumnHierarchy(daxColumn)
                 {
@@ -316,7 +316,7 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
         {
             var daxTable = GetDaxTable(tableName);
             var daxUserHierarchy =
-                daxTable.UserHierarchies.Where(h => h.HierarchyName.Name == userHierarchyName).FirstOrDefault();
+                daxTable.UserHierarchies.FirstOrDefault(h => h.HierarchyName.Name == userHierarchyName);
             if (daxUserHierarchy == null) {
                 daxUserHierarchy = new Dax.Metadata.UserHierarchy(daxTable)
                 {
@@ -433,7 +433,7 @@ ORDER BY MEASUREGROUP_NAME";
                         string measureDescription = rdr.GetString(8);
 
                         Table daxTable = GetDaxTable(tableName);
-                        var daxMeasure = daxTable.Measures.Where(m => m.MeasureName.Name == measureName).FirstOrDefault();
+                        var daxMeasure = daxTable.Measures.FirstOrDefault(m => m.MeasureName.Name == measureName);
                         if (daxMeasure == null && 
                                 // Does not add hidden measures created for KPIs
                                 (string.IsNullOrEmpty(measureUniqueName) || !kpiInternalMeasures.Contains(measureUniqueName)) )

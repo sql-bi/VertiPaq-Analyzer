@@ -21,7 +21,7 @@ namespace Dax.ViewModel
             get {
                 return
                     from t in this.Model.Tables
-                    where t.GetRelationshipsFrom().Count() > 0
+                    where t.GetRelationshipsFrom().Any()
                     select new VpaTable(t);
             }
         }
