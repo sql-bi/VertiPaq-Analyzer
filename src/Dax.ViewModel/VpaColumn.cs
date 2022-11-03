@@ -83,12 +83,12 @@ namespace Dax.ViewModel
         }
         public int SegmentsNumber {
             get {
-                return this.Column.ColumnSegments.Count();
+                return this.Column.ColumnSegments.Count;
             }
         }
         public int PartitionsNumber {
             get {
-                return this.Column.Table.Partitions.Count();
+                return this.Column.Table.Partitions.Count;
             }
         }
 
@@ -96,7 +96,7 @@ namespace Dax.ViewModel
         {
             get
             {
-                return (this.Column.ColumnSegments.Count(s => s.IsPageable.HasValue == true) > 0) ?
+                return (this.Column.ColumnSegments.Any(s => s.IsPageable.HasValue == true)) ?
                     this.Column.ColumnSegments.Count(s => s.IsPageable == true) :
                     (int?)null;
             }
@@ -106,7 +106,7 @@ namespace Dax.ViewModel
         {
             get
             {
-                return (this.Column.ColumnSegments.Count(s => s.IsResident.HasValue == true) > 0) ?
+                return (this.Column.ColumnSegments.Any(s => s.IsResident.HasValue == true)) ?
                     this.Column.ColumnSegments.Count(s => s.IsResident == true) :
                     (int?)null;
 

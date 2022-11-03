@@ -39,7 +39,7 @@ namespace Dax.ViewModel
             get
             {
                 return this.Partition.Table.Columns.Sum<Metadata.Column>(
-                    c => (c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count(s => s.IsPageable.HasValue == true) > 0) ?
+                    c => (c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Any(s => s.IsPageable.HasValue == true)) ?
                         c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count(s => s.IsPageable == true) :
                         (int?)null
                 );
@@ -51,7 +51,7 @@ namespace Dax.ViewModel
             get
             {
                 return this.Partition.Table.Columns.Sum<Metadata.Column>(
-                    c => (c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count(s => s.IsResident.HasValue == true) > 0) ?
+                    c => (c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Any(s => s.IsResident.HasValue == true)) ?
                         c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count(s => s.IsResident == true) :
                         (int?)null
                 );
