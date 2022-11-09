@@ -56,10 +56,10 @@
     <PackageReference Include="System.IO.Packaging" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <PackageReference Include="Microsoft.AnalysisServices.retail.amd64" Version="19.46.0" />
+    <PackageReference Include="Microsoft.AnalysisServices.retail.amd64" Version="19.51.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.AnalysisServices.NetCore.retail.amd64" Version="19.46.0" />
+    <PackageReference Include="Microsoft.AnalysisServices.NetCore.retail.amd64" Version="19.51.0" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
