@@ -35,7 +35,9 @@ namespace Dax.Metadata
         public bool IsKey { get; set; }
         public bool IsNullable { get; set; }
         public bool IsUnique { get; set; }
+        public bool? IsNameInferred { get; set; }
         public bool KeepUniqueRows { get; set; }
+        public DaxName SourceColumn { get; set; }
         public DaxName SortByColumnName { get; set; }
         public List<DaxName> GroupByColumns { get; set; }
         public string State { get; set; }
