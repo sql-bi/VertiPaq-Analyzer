@@ -260,6 +260,11 @@ namespace Dax.Metadata.Extractor
                 Description = new DaxNote(column.Description)
             };
 
+            if (column is Tom.CalculatedTableColumn ctc && !ctc.IsNameInferred) {
+                col.IsNameInferred = ctc.IsNameInferred;
+                col.SourceColumn = new DaxName(ctc.SourceColumn);
+            }
+
             // if any group by columns exist add them to the list of GroupByColumns
             if (column.RelatedColumnDetails?.GroupByColumns != null) {
                 col.GroupByColumns.AddRange(column.RelatedColumnDetails?.GroupByColumns.Select(c => new DaxName(c.RelatedColumnDetails.Column.Name)));
