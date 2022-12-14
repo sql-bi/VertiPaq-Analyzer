@@ -78,7 +78,7 @@ namespace Dax.Vpax
             Microsoft.AnalysisServices.CompatibilityMode compatMode = Microsoft.AnalysisServices.CompatibilityMode.Unknown;
             Enum.TryParse(strCompatMode,true , out compatMode );
             string modelBim = ReadPackageContentAsString(VpaxFormat.TOMMODEL);
-            if (modelBim == null) return null;
+            if (string.IsNullOrEmpty(modelBim)) return null;
             var tomDb = TryDeserializeDatabase(modelBim, compatMode);
             return tomDb;
         }
