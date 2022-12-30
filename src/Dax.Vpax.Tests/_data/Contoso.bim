@@ -2282,6 +2282,17 @@
         }
       }
     ],
+    "roles": [
+      {
+        "name": "Role1",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "cdd38b14491e4f2baf697f3ba9fb77f4"
+          }
+        ]
+      }
+    ],
     "annotations": [
       {
         "name": "__PBI_TimeIntelligenceEnabled",
@@ -2289,7 +2300,7 @@
       },
       {
         "name": "PBIDesktopVersion",
-        "value": "2.104.941.0 (22.04)"
+        "value": "2.112.603.0 (22.12)"
       },
       {
         "name": "PBI_QueryOrder",
