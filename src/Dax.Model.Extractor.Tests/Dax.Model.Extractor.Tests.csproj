@@ -28,6 +28,9 @@
     <None Update="_data\bim\Contoso.bim">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="_data\bim\TestModel1.bim">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
