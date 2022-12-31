@@ -25,7 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="_data\bim\Contoso.bim">
+    <Folder Include="_data\" />
+    <None Include="..\Dax.Vpax.Tests\_data\Contoso.bim" Link="_data\Contoso.bim">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Dax.Vpax.Tests\_data\Vaccini.bim" Link="_data\Vaccini.bim">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
