@@ -94,9 +94,9 @@ namespace Dax.Metadata
             this.Relationships = new List<Relationship>();
             this.Roles = new List<Role>();
 
-            // TODO - how to support versioning?
-            Version daxModelVersion = new Version(1, 1);
-            this.DaxModelVersion = daxModelVersion.ToString();
+            // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
+            this.DaxModelVersion = new Version(1, 2, 0).ToString(3);
+
             var modelAssembly = this.GetType().Assembly;
             var modelAssemblyName = modelAssembly.GetName();
             var modelFileVersionInfo = FileVersionInfo.GetVersionInfo(modelAssembly.Location);
