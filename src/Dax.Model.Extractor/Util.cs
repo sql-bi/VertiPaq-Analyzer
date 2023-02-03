@@ -16,13 +16,13 @@ namespace Dax.Metadata.Extractor
         {
             // AssemblyVersion - contains MAJOR version number only. MINOR,REVISION,BUILDNUMBER numbers are always zero.
             // e.g.
-            // - RELEASE build: 1.0.0.0
-            // - CI build: 1.0.0.0
+            // - CI and RELEASE build: 1.0.0.0
 
-            // AssemblyInformationalVersion
+            // AssemblyInformationalVersion - <semanticVersion>-<previewVersion>+<commitHash>
             // e.g.
-            // - RELEASE build: 1.2.5
-            // - CI build: 1.2.5-preview2+<git-commit-hash>
+            // - CI and RELEASE build:
+            //          1.2.6+946cc83a3405704663a3f2dbfcbd2a5ae3431088
+            //      OR  1.2.6-preview1+946cc83a3405704663a3f2dbfcbd2a5ae3431088
 
             var assembly = extractorInstance.GetType().Assembly;
             var assemblyName = assembly.GetName();

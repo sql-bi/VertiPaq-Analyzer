@@ -267,7 +267,7 @@ namespace Dax.Metadata.Extractor
 
             // if any group by columns exist add them to the list of GroupByColumns
             if (column.RelatedColumnDetails?.GroupByColumns != null) {
-                col.GroupByColumns.AddRange(column.RelatedColumnDetails?.GroupByColumns.Select(c => new DaxName(c.RelatedColumnDetails.Column.Name)));
+                col.GroupByColumns.AddRange(column.RelatedColumnDetails.GroupByColumns.Select(c => new DaxName(c.GroupingColumn.Name)));
             }
 
             return col;
