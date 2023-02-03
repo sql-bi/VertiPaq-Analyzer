@@ -113,13 +113,9 @@ namespace Dax.ViewModel
             }
         }
 
-        public double? SegmentsAverageTemperature
-        {
-            get
-            {
-                return this.Column.ColumnSegments.Average(s => s.Temperature );
-            }
-        }
+        public double? SegmentsAverageTemperature =>  this.Column.ColumnSegments.Average(s => s.Temperature );
+        public double? SegmentsMinTemperature => this.Column.ColumnSegments.Min(s => s.Temperature);
+        public double? SegmentsMaxTemperature => this.Column.ColumnSegments.Max(s => s.Temperature);
 
         public DateTime? SegmentsLastAccessed
         {
