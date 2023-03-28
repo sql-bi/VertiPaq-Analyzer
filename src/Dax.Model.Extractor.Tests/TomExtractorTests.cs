@@ -43,8 +43,8 @@ namespace Dax.Model.Extractor.Tests
             Assert.Equal("en-US", daxModel.Culture);
             Assert.Equal(1550, daxModel.CompatibilityLevel);
             Assert.Equal(CompatibilityMode.Unknown.ToString(), daxModel.CompatibilityMode);
-            Assert.Equal(DateTime.MinValue, daxModel.LastProcessed);
-            Assert.Equal(DateTime.MinValue, daxModel.LastUpdate);
+            Assert.Equal(DateTimeOffset.Parse("2022-03-07T16:33:34.6033330+01:00"), daxModel.LastProcessed);
+            Assert.Equal(DateTimeOffset.Parse("2023-03-28T15:41:29.3433330+02:00"), daxModel.LastUpdate);
             Assert.Equal(0, daxModel.Version);
             Assert.True((DateTime.UtcNow - daxModel.ExtractionDate) < TimeSpan.FromSeconds(10));
 
@@ -59,10 +59,10 @@ namespace Dax.Model.Extractor.Tests
             var daxModel = GetDaxModelFromTomModel(_fixture.Vaccini);
 
             Assert.Equal("it-IT", daxModel.Culture);
-            Assert.Equal(1550, daxModel.CompatibilityLevel);
+            Assert.Equal(1567, daxModel.CompatibilityLevel);
             Assert.Equal(CompatibilityMode.Unknown.ToString(), daxModel.CompatibilityMode);
-            Assert.NotEqual(DateTime.MinValue, daxModel.LastProcessed);
-            Assert.NotEqual(DateTime.MinValue, daxModel.LastUpdate);
+            Assert.Equal(DateTimeOffset.Parse("2021-04-20T17:58:07.836667+02:00"), daxModel.LastProcessed);
+            Assert.Equal(DateTimeOffset.Parse("2023-03-28T15:46:54.613333+02:00"), daxModel.LastUpdate);
             Assert.Equal(0, daxModel.Version);
             Assert.True((DateTime.UtcNow - daxModel.ExtractionDate) < TimeSpan.FromSeconds(10));
 
