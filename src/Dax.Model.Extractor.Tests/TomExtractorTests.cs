@@ -15,6 +15,26 @@ namespace Dax.Model.Extractor.Tests
             _fixture = fixture;
         }
 
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData("VPAXUnitTest", "VPAXUnitTest")]
+        public void GetDaxModel_ExtractorApp_Test(string extractorApp, string expected)
+        {
+            var daxModel = TomExtractor.GetDaxModel(_fixture.Contoso, extractorApp, extractorVersion: null);
+            Assert.Equal(expected, daxModel.ExtractorApp);
+        }
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData("1.2.3.4", "1.2.3.4")]
+        public void GetDaxModel_ExtractorVersion_Test(string extractorVersion, string expected)
+        {
+            var daxModel = TomExtractor.GetDaxModel(_fixture.Contoso, extractorApp: null, extractorVersion);
+            Assert.Equal(expected, daxModel.ExtractorAppVersion);
+        }
+
         [Fact]
         public void GetDaxModel_FromTomModel_Contoso_Test()
         {
