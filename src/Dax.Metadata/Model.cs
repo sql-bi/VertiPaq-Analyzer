@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -89,6 +90,14 @@ namespace Dax.Metadata
             this.Tables = new List<Table>();
             this.Relationships = new List<Relationship>();
             this.Roles = new List<Role>();
+        }
+
+        public Model(string extractorLib, string extractorLibVersion, string extractorApp = null, string extractorAppVersion = null) : this()
+        {
+            this.ExtractorLib = extractorLib;
+            this.ExtractorLibVersion = extractorLibVersion;
+            this.ExtractorApp = extractorApp;
+            this.ExtractorAppVersion = extractorAppVersion;
 
             // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
             this.DaxModelVersion = new Version(1, 2, 0).ToString(3);
@@ -98,13 +107,6 @@ namespace Dax.Metadata
             var modelFileVersionInfo = FileVersionInfo.GetVersionInfo(modelAssembly.Location);
             this.DaxModelLib = modelAssemblyName.Name;
             this.DaxModelLibVersion = modelFileVersionInfo.ProductVersion; // e.g. CI build: 1.2.5-preview2+<git-commit-hash> , RELEASE build: 1.2.5
-        }
-        public Model(string extractorLib, string extractorLibVersion, string extractorApp = null, string extractorAppVersion = null) : this()
-        {
-            this.ExtractorLib = extractorLib;
-            this.ExtractorLibVersion = extractorLibVersion;
-            this.ExtractorApp = extractorApp;
-            this.ExtractorAppVersion = extractorAppVersion;
         }
         /*
         public void PopulateColumnReferences()
