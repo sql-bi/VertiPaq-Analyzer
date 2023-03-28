@@ -1,40 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dax.Metadata
 {
     public class Model
     {
-        public string DaxModelVersion { get; }
+        public string DaxModelVersion { get; set; }
         /// <summary>
         /// Application that extracts the model info (e.g. DAX Studio, Tabular Editor, ...)
         /// </summary>
-        public string ExtractorApp { get; }
+        public string ExtractorApp { get; set; }
         /// <summary>
         /// Version of application that extracts the model info
         /// </summary>
-        public string ExtractorAppVersion { get; }
+        public string ExtractorAppVersion { get; set; }
         /// <summary>
         /// Library that extracts the model info (e.g. Dax.Model.Extractor)
         /// </summary>
-        public string ExtractorLib { get; }
+        public string ExtractorLib { get; set; }
         /// <summary>
         /// Version of the library that extracts the model info 
         /// </summary>
-        public string ExtractorLibVersion { get; }
+        public string ExtractorLibVersion { get; set; }
         /// <summary>
         /// Library that manages the model info (e.g. Dax.Model)
         /// </summary>
-        public string DaxModelLib { get; }
+        public string DaxModelLib { get; set; }
         /// <summary>
         /// LVersion of the library that manages the model info 
         /// </summary>
-        public string DaxModelLibVersion { get; }
+        public string DaxModelLibVersion { get; set; }
 
         public DaxName ServerName { get; set; }
         public DaxName ModelName { get; set; }
