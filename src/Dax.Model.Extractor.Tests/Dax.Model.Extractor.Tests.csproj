@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="_data\" />
     <None Include="..\Dax.Vpax.Tests\_data\Contoso.bim" Link="_data\Contoso.bim">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
