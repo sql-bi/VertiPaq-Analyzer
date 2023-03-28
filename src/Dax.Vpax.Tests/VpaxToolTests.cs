@@ -43,14 +43,14 @@ namespace Dax.Vpax.Tests
         }
 
         [Theory]
-        [InlineData(ContosoVpaxFilePath, ContosoBimFilePath)]
-        [InlineData(VacciniVpaxFilePath, VacciniBimFilePath)]
-        public void ImportVpax_VpaxDaxModelEqualsBimTomModel_Test(string vpaxPath, string bimPath, CompatibilityMode mode = CompatibilityMode.Unknown)
+        [InlineData(ContosoVpaxFilePath, ContosoBimFilePath, 3)]
+        [InlineData(VacciniVpaxFilePath, VacciniBimFilePath, 4)]
+        public void ImportVpax_VpaxDaxModelEqualsBimTomModel_Test(string vpaxPath, string bimPath, int tomVersion)
         {
             var daxModel = VpaxTools.ImportVpax(vpaxPath).DaxModel;
-            var tomDatabase = DeserializeDatabase(bimPath, mode);
+            var tomDatabase = DeserializeDatabase(bimPath, CompatibilityMode.Unknown);
 
-            Assert.Equal(0, daxModel.Version);
+            Assert.Equal(tomVersion, daxModel.Version);
             Assert.Equal(tomDatabase.CompatibilityLevel, daxModel.CompatibilityLevel);
             Assert.Equal(tomDatabase.Model.Tables.Count, daxModel.Tables.Count);
             Assert.Equal(tomDatabase.Model.Relationships.Count, daxModel.Relationships.Count);
@@ -75,8 +75,10 @@ namespace Dax.Vpax.Tests
         [Theory]
         [InlineData(ContosoVpaxFilePath, ContosoBimFilePath)]
         [InlineData(VacciniVpaxFilePath, VacciniBimFilePath)]
-        public void ImportVpax_VpaxTomDatabaseEqualsBimTomDatabase_Test(string vpaxPath, string bimPath, CompatibilityMode mode = CompatibilityMode.Unknown)
+        public void ImportVpax_VpaxTomDatabaseEqualsBimTomDatabase_Test(string vpaxPath, string bimPath)
         {
+            var mode = CompatibilityMode.Unknown;
+
             var vpaxTomDatabase = VpaxTools.ImportVpax(vpaxPath).TomDatabase;
             var bimTomDatabase = DeserializeDatabase(bimPath, mode);
 
@@ -89,10 +91,10 @@ namespace Dax.Vpax.Tests
         [Theory]
         [InlineData(ContosoBimFilePath)]
         [InlineData(VacciniBimFilePath)]
-        public void ExportVpax_ToFile_Test(string bimPath, CompatibilityMode mode = CompatibilityMode.Unknown)
+        public void ExportVpax_ToFile_Test(string bimPath)
         {
             var vpaxPath = Path.GetTempFileName();
-            var tomDatabase = DeserializeDatabase(bimPath, mode);
+            var tomDatabase = DeserializeDatabase(bimPath, CompatibilityMode.Unknown);
             var daxModel = GetDaxModel(tomDatabase);
 
             VpaxTools.ExportVpax(vpaxPath, daxModel, viewVpa: null, tomDatabase);
@@ -101,10 +103,10 @@ namespace Dax.Vpax.Tests
         [Theory]
         [InlineData(ContosoBimFilePath)]
         [InlineData(VacciniBimFilePath)]
-        public void ExportVpax_ToStream_Test(string bimPath, CompatibilityMode mode = CompatibilityMode.Unknown)
+        public void ExportVpax_ToStream_Test(string bimPath)
         {
             using var vpaxStream = new MemoryStream();
-            var tomDatabase = DeserializeDatabase(bimPath, mode);
+            var tomDatabase = DeserializeDatabase(bimPath, CompatibilityMode.Unknown);
             var daxModel = GetDaxModel(tomDatabase);
 
             VpaxTools.ExportVpax(vpaxStream, daxModel, viewVpa: null, tomDatabase);
@@ -151,25 +153,6 @@ namespace Dax.Vpax.Tests
         {
             var daxModel = TomExtractor.GetDaxModel(database.Model, extractorApp: "VPAXUnitTest", extractorVersion: "1.0.0.0");
             return daxModel;
-        }
-
-        private void Util__UpdateTestVpaxFiles()
-        {
-            var basePath = @"C:\Users\alberto\source\repos\github\sql-bi\VertiPaq-Analyzer\src\Dax.Vpax.Tests";
-
-            Export(ContosoVpaxFilePath, ContosoBimFilePath, CompatibilityMode.Unknown);
-            Export(VacciniVpaxFilePath, VacciniBimFilePath, CompatibilityMode.Unknown);
-
-            void Export(string vpaxPath, string bimPath, CompatibilityMode mode)
-            {
-                vpaxPath = Path.Combine(basePath, vpaxPath);
-                bimPath = Path.Combine(basePath, bimPath);
-
-                var tomDatabase = DeserializeDatabase(bimPath, mode);
-                var daxModel = GetDaxModel(tomDatabase);
-
-                VpaxTools.ExportVpax(vpaxPath, daxModel, viewVpa: null, tomDatabase);
-            }
         }
     }
 }

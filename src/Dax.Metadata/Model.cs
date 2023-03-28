@@ -1,40 +1,37 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dax.Metadata
 {
     public class Model
     {
-        public string DaxModelVersion { get; }
+        public string DaxModelVersion { get; set; }
         /// <summary>
         /// Application that extracts the model info (e.g. DAX Studio, Tabular Editor, ...)
         /// </summary>
-        public string ExtractorApp { get; }
+        public string ExtractorApp { get; set; }
         /// <summary>
         /// Version of application that extracts the model info
         /// </summary>
-        public string ExtractorAppVersion { get; }
+        public string ExtractorAppVersion { get; set; }
         /// <summary>
         /// Library that extracts the model info (e.g. Dax.Model.Extractor)
         /// </summary>
-        public string ExtractorLib { get; }
+        public string ExtractorLib { get; set; }
         /// <summary>
         /// Version of the library that extracts the model info 
         /// </summary>
-        public string ExtractorLibVersion { get; }
+        public string ExtractorLibVersion { get; set; }
         /// <summary>
         /// Library that manages the model info (e.g. Dax.Model)
         /// </summary>
-        public string DaxModelLib { get; }
+        public string DaxModelLib { get; set; }
         /// <summary>
         /// LVersion of the library that manages the model info 
         /// </summary>
-        public string DaxModelLibVersion { get; }
+        public string DaxModelLibVersion { get; set; }
 
         public DaxName ServerName { get; set; }
         public DaxName ModelName { get; set; }
@@ -93,22 +90,26 @@ namespace Dax.Metadata
             this.Tables = new List<Table>();
             this.Relationships = new List<Relationship>();
             this.Roles = new List<Role>();
-
-            // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
-            this.DaxModelVersion = new Version(1, 2, 0).ToString(3);
-
-            var modelAssembly = this.GetType().Assembly;
-            var modelAssemblyName = modelAssembly.GetName();
-            var modelFileVersionInfo = FileVersionInfo.GetVersionInfo(modelAssembly.Location);
-            this.DaxModelLib = modelAssemblyName.Name;
-            this.DaxModelLibVersion = modelFileVersionInfo.ProductVersion; // e.g. CI build: 1.2.5-preview2+<git-commit-hash> , RELEASE build: 1.2.5
         }
+
+        // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
+        [JsonIgnore]
+        public static readonly string CurrentDaxModelVersion = new Version(1, 2, 0).ToString(3);
+
         public Model(string extractorLib, string extractorLibVersion, string extractorApp = null, string extractorAppVersion = null) : this()
         {
             this.ExtractorLib = extractorLib;
             this.ExtractorLibVersion = extractorLibVersion;
             this.ExtractorApp = extractorApp;
             this.ExtractorAppVersion = extractorAppVersion;
+
+            var modelAssembly = this.GetType().Assembly;
+            var modelAssemblyName = modelAssembly.GetName();
+            var modelFileVersionInfo = FileVersionInfo.GetVersionInfo(modelAssembly.Location);
+
+            this.DaxModelVersion = CurrentDaxModelVersion;
+            this.DaxModelLib = modelAssemblyName.Name;
+            this.DaxModelLibVersion = modelFileVersionInfo.ProductVersion; // e.g. CI build: 1.2.5-preview2+<git-commit-hash> , RELEASE build: 1.2.5
         }
         /*
         public void PopulateColumnReferences()

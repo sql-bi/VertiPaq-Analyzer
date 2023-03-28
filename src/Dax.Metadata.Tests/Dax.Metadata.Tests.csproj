@@ -21,16 +21,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dax.Model.Extractor\Dax.Model.Extractor.csproj" />
+    <None Include="..\Dax.Vpax.Tests\_data\Contoso.vpax" Link="_data\Contoso.vpax">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Dax.Vpax.Tests\_data\Vaccini.vpax" Link="_data\Vaccini.vpax">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\Dax.Vpax.Tests\_data\Contoso.bim" Link="_data\Contoso.bim">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Dax.Vpax.Tests\_data\Vaccini.bim" Link="_data\Vaccini.bim">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\Dax.Metadata\Dax.Metadata.csproj" />
+    <ProjectReference Include="..\Dax.Vpax\Dax.Vpax.csproj" />
   </ItemGroup>
 
 </Project>

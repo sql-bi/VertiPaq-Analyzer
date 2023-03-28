@@ -6,13 +6,33 @@ namespace Dax.Model.Extractor.Tests
     using Xunit;
     using TOM = Microsoft.AnalysisServices.Tabular;
 
-    public class TomExtractorTests : IClassFixture<TomExtractorTestsFixture>
+    public class TomExtractorTests : IClassFixture<TomExtractorFixture>
     {
-        private readonly TomExtractorTestsFixture _fixture;
+        private readonly TomExtractorFixture _fixture;
 
-        public TomExtractorTests(TomExtractorTestsFixture fixture)
+        public TomExtractorTests(TomExtractorFixture fixture)
         {
             _fixture = fixture;
+        }
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData("VPAXUnitTest", "VPAXUnitTest")]
+        public void GetDaxModel_ExtractorApp_Test(string extractorApp, string expected)
+        {
+            var daxModel = TomExtractor.GetDaxModel(_fixture.Contoso, extractorApp, extractorVersion: null);
+            Assert.Equal(expected, daxModel.ExtractorApp);
+        }
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData("1.2.3.4", "1.2.3.4")]
+        public void GetDaxModel_ExtractorVersion_Test(string extractorVersion, string expected)
+        {
+            var daxModel = TomExtractor.GetDaxModel(_fixture.Contoso, extractorApp: null, extractorVersion);
+            Assert.Equal(expected, daxModel.ExtractorAppVersion);
         }
 
         [Fact]
@@ -23,8 +43,8 @@ namespace Dax.Model.Extractor.Tests
             Assert.Equal("en-US", daxModel.Culture);
             Assert.Equal(1550, daxModel.CompatibilityLevel);
             Assert.Equal(CompatibilityMode.Unknown.ToString(), daxModel.CompatibilityMode);
-            Assert.Equal(DateTime.MinValue, daxModel.LastProcessed);
-            Assert.Equal(DateTime.MinValue, daxModel.LastUpdate);
+            Assert.Equal(DateTimeOffset.Parse("2022-03-07T16:33:34.6033330+01:00"), daxModel.LastProcessed);
+            Assert.Equal(DateTimeOffset.Parse("2023-03-28T15:41:29.3433330+02:00"), daxModel.LastUpdate);
             Assert.Equal(0, daxModel.Version);
             Assert.True((DateTime.UtcNow - daxModel.ExtractionDate) < TimeSpan.FromSeconds(10));
 
@@ -39,10 +59,10 @@ namespace Dax.Model.Extractor.Tests
             var daxModel = GetDaxModelFromTomModel(_fixture.Vaccini);
 
             Assert.Equal("it-IT", daxModel.Culture);
-            Assert.Equal(1550, daxModel.CompatibilityLevel);
+            Assert.Equal(1567, daxModel.CompatibilityLevel);
             Assert.Equal(CompatibilityMode.Unknown.ToString(), daxModel.CompatibilityMode);
-            Assert.NotEqual(DateTime.MinValue, daxModel.LastProcessed);
-            Assert.NotEqual(DateTime.MinValue, daxModel.LastUpdate);
+            Assert.Equal(DateTimeOffset.Parse("2021-04-20T17:58:07.836667+02:00"), daxModel.LastProcessed);
+            Assert.Equal(DateTimeOffset.Parse("2023-03-28T15:46:54.613333+02:00"), daxModel.LastUpdate);
             Assert.Equal(0, daxModel.Version);
             Assert.True((DateTime.UtcNow - daxModel.ExtractionDate) < TimeSpan.FromSeconds(10));
 

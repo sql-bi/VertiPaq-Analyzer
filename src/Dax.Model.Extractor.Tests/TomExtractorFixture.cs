@@ -4,12 +4,12 @@
     using System.IO;
     using TOM = Microsoft.AnalysisServices.Tabular;
 
-    public class TomExtractorTestsFixture
+    public class TomExtractorFixture
     {
         private const string ContosoBimFilePath = @".\_data\Contoso.bim";
         private const string VacciniBimFilePath = @".\_data\Vaccini.bim";
 
-        public TomExtractorTestsFixture()
+        public TomExtractorFixture()
         {
             Contoso = GetTomModel(ContosoBimFilePath);
             Vaccini = GetTomModel(VacciniBimFilePath);

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.IO.Packaging;
-using Newtonsoft.Json;
+﻿using System.IO;
 using TOM = Microsoft.AnalysisServices.Tabular;
 
 namespace Dax.Vpax.Tools
@@ -19,7 +12,7 @@ namespace Dax.Vpax.Tools
         {
             using (ExportVpax exportVpax = new ExportVpax(stream))
             {
-                InternalExportVpax(exportVpax, model, viewVpa, database);
+                ExportVpaxImpl(exportVpax, model, viewVpa, database);
             }
 
             stream.Position = 0L;
@@ -32,11 +25,11 @@ namespace Dax.Vpax.Tools
         {
             using (ExportVpax exportVpax = new ExportVpax(path))
             {
-                InternalExportVpax(exportVpax, model, viewVpa, database);
+                ExportVpaxImpl(exportVpax, model, viewVpa, database);
             }
         }
 
-        internal static void InternalExportVpax(ExportVpax exportVpax, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, TOM.Database database = null)
+        internal static void ExportVpaxImpl(ExportVpax exportVpax, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, TOM.Database database = null)
         {
             if (model != null)
             {
@@ -65,14 +58,14 @@ namespace Dax.Vpax.Tools
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static VpaxContent ImportVpax(string path)
+        public static VpaxContent ImportVpax(string path, bool importDatabase = true)
         {
             VpaxContent Content;
             using (ImportVpax importVpax = new ImportVpax(path))
             {
                 Content.DaxModel = importVpax.ImportModel();
                 Content.ViewVpa = null;
-                Content.TomDatabase = importVpax.ImportDatabase();
+                Content.TomDatabase = importDatabase ? importVpax.ImportDatabase() : null;
             }
             return Content;
         }
@@ -82,14 +75,14 @@ namespace Dax.Vpax.Tools
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static VpaxContent ImportVpax(Stream stream)
+        public static VpaxContent ImportVpax(Stream stream, bool importDatabase = true)
         {
             VpaxContent Content;
             using (ImportVpax importVpax = new ImportVpax(stream))
             {
                 Content.DaxModel = importVpax.ImportModel();
                 Content.ViewVpa = null;
-                Content.TomDatabase = importVpax.ImportDatabase();
+                Content.TomDatabase = importDatabase ? importVpax.ImportDatabase() : null;
             }
             return Content;
         }
