@@ -6,11 +6,11 @@
     using Xunit;
     using TOM = Microsoft.AnalysisServices.Tabular;
 
-    public class DaxModelTests : IClassFixture<DaxModelTestsFixture>
+    public class DaxModelTests : IClassFixture<DaxModelFixture>
     {
-        private readonly DaxModelTestsFixture _fixture;
+        private readonly DaxModelFixture _fixture;
 
-        public DaxModelTests(DaxModelTestsFixture fixture)
+        public DaxModelTests(DaxModelFixture fixture)
         {
             _fixture = fixture;
         }

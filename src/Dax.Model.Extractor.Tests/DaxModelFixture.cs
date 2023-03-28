@@ -5,11 +5,11 @@
     using System.IO;
     using TOM = Microsoft.AnalysisServices.Tabular;
 
-    public class DaxModelTestsFixture
+    public class DaxModelFixture
     {
         private const string ContosoBimFilePath = @".\_data\Contoso.bim";
 
-        public DaxModelTestsFixture()
+        public DaxModelFixture()
         {
             Contoso = GetDaxModel(ContosoBimFilePath);
         }

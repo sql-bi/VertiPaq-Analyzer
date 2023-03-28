@@ -6,11 +6,11 @@ namespace Dax.Model.Extractor.Tests
     using Xunit;
     using TOM = Microsoft.AnalysisServices.Tabular;
 
-    public class TomExtractorTests : IClassFixture<TomExtractorTestsFixture>
+    public class TomExtractorTests : IClassFixture<TomExtractorFixture>
     {
-        private readonly TomExtractorTestsFixture _fixture;
+        private readonly TomExtractorFixture _fixture;
 
-        public TomExtractorTests(TomExtractorTestsFixture fixture)
+        public TomExtractorTests(TomExtractorFixture fixture)
         {
             _fixture = fixture;
         }
