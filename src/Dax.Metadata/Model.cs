@@ -92,6 +92,10 @@ namespace Dax.Metadata
             this.Roles = new List<Role>();
         }
 
+        // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
+        [JsonIgnore]
+        public static readonly string CurrentDaxModelVersion = new Version(1, 2, 0).ToString(3);
+
         public Model(string extractorLib, string extractorLibVersion, string extractorApp = null, string extractorAppVersion = null) : this()
         {
             this.ExtractorLib = extractorLib;
@@ -99,12 +103,11 @@ namespace Dax.Metadata
             this.ExtractorApp = extractorApp;
             this.ExtractorAppVersion = extractorAppVersion;
 
-            // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
-            this.DaxModelVersion = new Version(1, 2, 0).ToString(3);
-
             var modelAssembly = this.GetType().Assembly;
             var modelAssemblyName = modelAssembly.GetName();
             var modelFileVersionInfo = FileVersionInfo.GetVersionInfo(modelAssembly.Location);
+
+            this.DaxModelVersion = CurrentDaxModelVersion;
             this.DaxModelLib = modelAssemblyName.Name;
             this.DaxModelLibVersion = modelFileVersionInfo.ProductVersion; // e.g. CI build: 1.2.5-preview2+<git-commit-hash> , RELEASE build: 1.2.5
         }
