@@ -58,14 +58,14 @@ namespace Dax.Vpax.Tools
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static VpaxContent ImportVpax(string path)
+        public static VpaxContent ImportVpax(string path, bool importDatabase = true)
         {
             VpaxContent Content;
             using (ImportVpax importVpax = new ImportVpax(path))
             {
                 Content.DaxModel = importVpax.ImportModel();
                 Content.ViewVpa = null;
-                Content.TomDatabase = importVpax.ImportDatabase();
+                Content.TomDatabase = importDatabase ? importVpax.ImportDatabase() : null;
             }
             return Content;
         }
@@ -75,14 +75,14 @@ namespace Dax.Vpax.Tools
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static VpaxContent ImportVpax(Stream stream)
+        public static VpaxContent ImportVpax(Stream stream, bool importDatabase = true)
         {
             VpaxContent Content;
             using (ImportVpax importVpax = new ImportVpax(stream))
             {
                 Content.DaxModel = importVpax.ImportModel();
                 Content.ViewVpa = null;
-                Content.TomDatabase = importVpax.ImportDatabase();
+                Content.TomDatabase = importDatabase ? importVpax.ImportDatabase() : null;
             }
             return Content;
         }
