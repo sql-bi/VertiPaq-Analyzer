@@ -27,7 +27,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPowerBI", "TestPowerBI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWpfPowerBI", "TestWpfPowerBI\TestWpfPowerBI.csproj", "{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dax.Metadata.Tests", "Dax.Metadata.Tests\Dax.Metadata.Tests.csproj", "{B58960AE-6FE4-4E95-8DCD-D9F14920A8FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Metadata.Tests", "Dax.Metadata.Tests\Dax.Metadata.Tests.csproj", "{B58960AE-6FE4-4E95-8DCD-D9F14920A8FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Consumer", "Dax.Consumer\Dax.Consumer.csproj", "{20465175-1ED1-4303-8B86-6C243CDD947B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{B58960AE-6FE4-4E95-8DCD-D9F14920A8FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B58960AE-6FE4-4E95-8DCD-D9F14920A8FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B58960AE-6FE4-4E95-8DCD-D9F14920A8FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20465175-1ED1-4303-8B86-6C243CDD947B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20465175-1ED1-4303-8B86-6C243CDD947B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20465175-1ED1-4303-8B86-6C243CDD947B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20465175-1ED1-4303-8B86-6C243CDD947B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
