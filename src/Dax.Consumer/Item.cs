@@ -9,6 +9,13 @@ namespace Dax.Consumer
 {
     public class Item
     {
+        public Item() 
+        { 
+            this.TableDependencies = new List<TableDependency>(); 
+            this.ColumnDependencies = new List<ColumnDependency>(); 
+            this.MeasureDependencies = new List<MeasureDependency>();   
+        }
+
         public DaxName ItemName { get; set; }
 
         // TODO: should we add canonical names or an enum type?

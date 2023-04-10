@@ -10,6 +10,11 @@ namespace Dax.Consumer
 {
     public class Consumer
     {
+        public Consumer() 
+        {
+            this.Items = new List<Item>();
+        }
+        
         public DaxName ConsumerName { get; set; }
 
         // TODO: should we add canonical names or an enum type?
