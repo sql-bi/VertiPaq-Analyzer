@@ -23,6 +23,7 @@ namespace Dax.ViewVpaExport
         }
 
         public string MeasureExpression { get { return this._Measure.MeasureExpression?.Expression; } }
+        public string FormatStringExpression { get { return this._Measure.FormatStringExpression?.Expression; } }  
         public string DisplayFolder { get { return this._Measure.DisplayFolder.ToString(); } }
         public string Description { get { return this._Measure.Description.ToString(); } }
         public bool IsHidden { get { return this._Measure.IsHidden; } }

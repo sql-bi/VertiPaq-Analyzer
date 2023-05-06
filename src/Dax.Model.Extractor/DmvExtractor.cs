@@ -385,9 +385,25 @@ SELECT
 FROM $SYSTEM.MDSCHEMA_MEASURES
 WHERE MEASURE_NAME <> '__Default measure'
 ORDER BY MEASUREGROUP_NAME";
+            const string QUERY_FORMATSTRINGS = @"
+SELECT 
+    [ID] AS FORMAT_ID,
+    [Expression] AS FORMAT_STRING_EXPRESSION
+FROM $SYSTEM.TMSCHEMA_FORMAT_STRING_DEFINITIONS
+";
+            const string QUERY_MEASURESFORMATID = @"
+SELECT 
+    [FormatStringDefinitionID] AS FORMAT_ID,
+    [Name] AS MEASURE_NAME
+FROM $SYSTEM.TMSCHEMA_MEASURES
+WHERE [FormatStringDefinitionID] > 0
 
+";
+
+            Dictionary<string, string> formatStringExpressions = new Dictionary<string, string>();
             List<string> kpiInternalMeasures = new List<string>();
             ReadKpis();
+            ReadFormatStringExpressions();
             ProcessMeasures();
 
             void ReadKpis()
@@ -413,6 +429,39 @@ ORDER BY MEASUREGROUP_NAME";
                 }
             }
 
+            void ReadFormatStringExpressions()
+            {
+                Dictionary<long, string> mapFormatId = new Dictionary<long, string>();
+                using (var cmdId = CreateCommand(QUERY_MEASURESFORMATID)) {
+                    cmdId.CommandTimeout = CommandTimeout;
+                    using (var rdr = cmdId.ExecuteReader()) {
+                        while (rdr.Read()) {
+                            long formatId = rdr.GetInt64(0);
+                            string measureName = rdr.GetValue(1)?.ToString() ?? string.Empty;
+                            if (formatId > 0 && !string.IsNullOrEmpty(measureName)) {
+                                mapFormatId.Add(formatId, measureName);
+                            }
+                        }
+                    }
+                }
+
+                using var cmd = CreateCommand(QUERY_FORMATSTRINGS);
+                cmd.CommandTimeout = CommandTimeout;
+                using (var rdr = cmd.ExecuteReader()) {
+                    while (rdr.Read()) {
+                        long formatId = rdr.GetInt64(0);
+                        string formatStringExpression = rdr.GetValue(1)?.ToString() ?? string.Empty;
+                        if (formatId > 0 && !string.IsNullOrEmpty(formatStringExpression)) {
+                            if (mapFormatId.ContainsKey(formatId)) {
+                                string measureName = mapFormatId[formatId];
+                                formatStringExpressions.Add(measureName, formatStringExpression);
+                            }
+                        }
+                    }
+                }
+
+            }
+
             void ProcessMeasures()
             {
                 var cmd = CreateCommand(QUERY_MEASURES);
@@ -425,6 +474,7 @@ ORDER BY MEASUREGROUP_NAME";
                         string tableName = (rdr.GetValue(0) as string) ?? string.Empty;
                         string measureName = rdr.GetString(1);
                         int dataType = rdr.GetInt32(2);
+                        string formatStringExpression = formatStringExpressions.ContainsKey(measureName) ? formatStringExpressions[measureName] : string.Empty;
                         string measureExpression = rdr.GetValue(3)?.ToString() ?? string.Empty;
                         string defaultFormatString = rdr.GetValue(4)?.ToString() ?? string.Empty;
                         bool measureVisible = rdr.GetBoolean(5);
@@ -444,7 +494,8 @@ ORDER BY MEASUREGROUP_NAME";
                                 MeasureName = new DaxName(measureName),
                                 // dataType not set?
                                 MeasureExpression = new DaxExpression(measureExpression),
-                                FormatString = defaultFormatString, // TODO - this might change to DaxExpression with dynamic format strings
+                                FormatString = defaultFormatString, 
+                                FormatStringExpression = new DaxExpression(formatStringExpression),
                                 IsHidden = !measureVisible,
                                 DisplayFolder = new DaxNote(measureDisplayFolder), 
                                 Description = new DaxNote(measureDescription)

@@ -215,6 +215,7 @@ namespace Dax.Metadata.Extractor
                 Table = daxTable,
                 MeasureName = new Dax.Metadata.DaxName(measure.Name),
                 MeasureExpression = Dax.Metadata.DaxExpression.GetExpression(measure?.Expression),
+                FormatStringExpression = Dax.Metadata.DaxExpression.GetExpression(measure?.FormatStringDefinition?.Expression),
                 DisplayFolder = new DaxNote(measure.DisplayFolder),
                 Description = new DaxNote(measure.Description),
                 IsHidden = measure.IsHidden,
