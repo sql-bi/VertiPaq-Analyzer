@@ -20,8 +20,8 @@ namespace TestDaxModel
 
         static void Main()
         {
-            //GenericTest();
-            ConnectionStringTest();
+            GenericTest();
+            //ConnectionStringTest();
             //TestPbiShared_2022();
             //TestPbiShared();
             //TestLocalVpaModel();
@@ -179,8 +179,8 @@ namespace TestDaxModel
             //const string databaseName = "Adventure Works Internet Sales";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            const string serverName = "localhost:53406";
-            const string databaseName = "84d819d1-e1b3-4c8a-b9f6-c34ac2d2aba2";
+            const string serverName = "localhost:49306";
+            const string databaseName = "8829b1b2-732f-4404-802b-d8e0060b0cdd";
 
             //const string serverName = @"localhost\ctp22";
             //const string databaseName = "Contoso Base";
@@ -231,7 +231,11 @@ namespace TestDaxModel
             Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
             Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
             Console.WriteLine($"   Relationships Count: {viewVpa.Relationships.Count()}");
-
+            
+            var vm = new Dax.ViewModel.VpaModel(daxModel);
+            foreach (var r in vm.Relationships) {
+                Console.WriteLine($"From: {r.FromColumnName}  To: {r.ToColumnName} ({r.RelationshipFromToName})");
+            }
         }
 
         static void ConnectionStringTest()

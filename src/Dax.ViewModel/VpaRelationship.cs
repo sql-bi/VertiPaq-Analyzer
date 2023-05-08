@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Dax.ViewModel
@@ -47,5 +48,8 @@ namespace Dax.ViewModel
         /// The ration between dimension and fact table is meaningful only for 1:M relationships
         /// </summary>
         public double OneToManyRatio { get { return (this.Relationship.FromColumn.Table.RowsCount == 0) ? 0 : (double)this.Relationship.ToColumn.ColumnCardinality / (double)this.Relationship.FromColumn.Table.RowsCount; } }
+
+        public string FromColumnName => $"'{Relationship.FromColumn.Table.TableName.Name}'[{Relationship.FromColumn.ColumnName.Name}]";
+        public string ToColumnName => $"'{Relationship.ToColumn.Table.TableName.Name}'[{Relationship.ToColumn.ColumnName.Name}]";
     }
 }

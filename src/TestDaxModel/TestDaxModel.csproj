@@ -59,6 +59,10 @@
       <Project>{ed728880-f58a-4198-bb71-d24ac4883236}</Project>
       <Name>Dax.Model.Extractor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dax.ViewModel\Dax.ViewModel.csproj">
+      <Project>{fcfc0033-ea10-4a50-befe-efd02cf6b35c}</Project>
+      <Name>Dax.ViewModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dax.ViewVpaExport\Dax.ViewVpaExport.csproj">
       <Project>{d8b86b34-102d-4e98-a57e-a4d3fe29af8d}</Project>
       <Name>Dax.ViewVpaExport</Name>
