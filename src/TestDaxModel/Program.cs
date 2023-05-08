@@ -231,7 +231,11 @@ namespace TestDaxModel
             Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
             Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
             Console.WriteLine($"   Relationships Count: {viewVpa.Relationships.Count()}");
-
+            
+            var vm = new Dax.ViewModel.VpaModel(daxModel);
+            foreach (var r in vm.Relationships) {
+                Console.WriteLine($"From: {r.FromColumnName}  To: {r.ToColumnName} ({r.RelationshipFromToName})");
+            }
         }
 
         static void ConnectionStringTest()
