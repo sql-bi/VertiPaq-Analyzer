@@ -436,16 +436,21 @@ WHERE [FormatStringDefinitionID] > 0
                 // read all format string expressions into a dictionary
                 using var cmd = CreateCommand(QUERY_FORMATSTRINGS);
                 cmd.CommandTimeout = CommandTimeout;
-                using (var rdr = cmd.ExecuteReader()) {
-                    while (rdr.Read()) {
-                        long formatId = rdr.GetInt64(0);
-                        string formatStringExpression = rdr.GetValue(1)?.ToString() ?? string.Empty;
-                        if (formatId > 0 && !string.IsNullOrEmpty(formatStringExpression)) {
-                            mapExpressions.Add(formatId, formatStringExpression);
+                try {
+                    using (var rdr = cmd.ExecuteReader()) {
+                        while (rdr.Read()) {
+                            long formatId = rdr.GetInt64(0);
+                            string formatStringExpression = rdr.GetValue(1)?.ToString() ?? string.Empty;
+                            if (formatId > 0 && !string.IsNullOrEmpty(formatStringExpression)) {
+                                mapExpressions.Add(formatId, formatStringExpression);
+                            }
                         }
                     }
                 }
-
+                catch (Exception ex) { 
+                    // we will get an error if the current server does not support dynamic format strings
+                    // we can just swallow this and go on as if no dynamic format strings are defined
+                }
                 // if there are no format string expressions exit here
                 if (mapExpressions.Count == 0) return;
 
