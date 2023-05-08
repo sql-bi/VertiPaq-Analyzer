@@ -20,8 +20,8 @@ namespace TestDaxModel
 
         static void Main()
         {
-            //GenericTest();
-            ConnectionStringTest();
+            GenericTest();
+            //ConnectionStringTest();
             //TestPbiShared_2022();
             //TestPbiShared();
             //TestLocalVpaModel();
@@ -175,12 +175,12 @@ namespace TestDaxModel
             // const string serverName = @"http://localhost:9000/xmla";
             // const string databaseName = "Microsoft_SQLServer_AnalysisServices";
 
-            //const string serverName = @"localhost\tab19";
-            //const string databaseName = "Adventure Works Internet Sales";
+            const string serverName = @"localhost\tab19";
+            const string databaseName = "Adventure Works";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            const string serverName = "localhost:53406";
-            const string databaseName = "84d819d1-e1b3-4c8a-b9f6-c34ac2d2aba2";
+            //const string serverName = "localhost:53406";
+            //const string databaseName = "84d819d1-e1b3-4c8a-b9f6-c34ac2d2aba2";
 
             //const string serverName = @"localhost\ctp22";
             //const string databaseName = "Contoso Base";
