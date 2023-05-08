@@ -431,20 +431,9 @@ WHERE [FormatStringDefinitionID] > 0
 
             void ReadFormatStringExpressions()
             {
-                Dictionary<long, string> mapFormatId = new Dictionary<long, string>();
-                using (var cmdId = CreateCommand(QUERY_MEASURESFORMATID)) {
-                    cmdId.CommandTimeout = CommandTimeout;
-                    using (var rdr = cmdId.ExecuteReader()) {
-                        while (rdr.Read()) {
-                            long formatId = rdr.GetInt64(0);
-                            string measureName = rdr.GetValue(1)?.ToString() ?? string.Empty;
-                            if (formatId > 0 && !string.IsNullOrEmpty(measureName)) {
-                                mapFormatId.Add(formatId, measureName);
-                            }
-                        }
-                    }
-                }
+                Dictionary<long,string> mapExpressions = new Dictionary<long, string>();
 
+                // read all format string expressions into a dictionary
                 using var cmd = CreateCommand(QUERY_FORMATSTRINGS);
                 cmd.CommandTimeout = CommandTimeout;
                 using (var rdr = cmd.ExecuteReader()) {
@@ -452,13 +441,31 @@ WHERE [FormatStringDefinitionID] > 0
                         long formatId = rdr.GetInt64(0);
                         string formatStringExpression = rdr.GetValue(1)?.ToString() ?? string.Empty;
                         if (formatId > 0 && !string.IsNullOrEmpty(formatStringExpression)) {
-                            if (mapFormatId.ContainsKey(formatId)) {
-                                string measureName = mapFormatId[formatId];
-                                formatStringExpressions.Add(measureName, formatStringExpression);
+                            mapExpressions.Add(formatId, formatStringExpression);
+                        }
+                    }
+                }
+
+                // if there are no format string expressions exit here
+                if (mapExpressions.Count == 0) return;
+
+                // map the format string expressions to the measure names
+                using (var cmdId = CreateCommand(QUERY_MEASURESFORMATID)) {
+                    cmdId.CommandTimeout = CommandTimeout;
+                    using (var rdr = cmdId.ExecuteReader()) {
+                        while (rdr.Read()) {
+                            long formatId = rdr.GetInt64(0);
+                            string measureName = rdr.GetValue(1)?.ToString() ?? string.Empty;
+                            if (formatId > 0 && !string.IsNullOrEmpty(measureName)) {
+                            
+                                if (mapExpressions.ContainsKey(formatId)) {
+                                    formatStringExpressions.Add(measureName, mapExpressions[formatId]);
+                                }
                             }
                         }
                     }
                 }
+
 
             }
 
