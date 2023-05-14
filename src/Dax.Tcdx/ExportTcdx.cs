@@ -6,7 +6,7 @@ using System.IO.Packaging;
 using Newtonsoft.Json;
 using TOM = Microsoft.AnalysisServices.Tabular;
 
-namespace Dax.Vpax
+namespace Dax.Tdcx
 {
     internal class ExportVpax : IDisposable
     {
