@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Vpax.Tests", "Dax.Vpax.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{8E9D56A1-B5BE-46A8-A5F4-2E5039CCAC89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dax.Model.Extractor.Tests", "Dax.Model.Extractor.Tests\Dax.Model.Extractor.Tests.csproj", "{0D4DE4BB-D168-4653-BCD7-F1A507346A0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Model.Extractor.Tests", "Dax.Model.Extractor.Tests\Dax.Model.Extractor.Tests.csproj", "{0D4DE4BB-D168-4653-BCD7-F1A507346A0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Tcdx", "Dax.Tcdx\Dax.Tcdx.csproj", "{B8998FC6-A334-4088-A3F2-819A5404EEC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{0D4DE4BB-D168-4653-BCD7-F1A507346A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D4DE4BB-D168-4653-BCD7-F1A507346A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D4DE4BB-D168-4653-BCD7-F1A507346A0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8998FC6-A334-4088-A3F2-819A5404EEC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8998FC6-A334-4088-A3F2-819A5404EEC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8998FC6-A334-4088-A3F2-819A5404EEC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8998FC6-A334-4088-A3F2-819A5404EEC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
