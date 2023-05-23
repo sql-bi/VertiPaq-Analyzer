@@ -3,10 +3,10 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Microsoft.AnalysisServices.retail.amd64" Version="19.54.1" />
-    <PackageVersion Include="Microsoft.AnalysisServices.NetCore.retail.amd64" Version="19.54.1" />
-    <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient.retail.amd64" Version="19.54.1" />
-    <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.54.1" />
+    <PackageVersion Include="Microsoft.AnalysisServices.retail.amd64" Version="19.64.0" />
+    <PackageVersion Include="Microsoft.AnalysisServices.NetCore.retail.amd64" Version="19.64.0" />
+    <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient.retail.amd64" Version="19.64.0" />
+    <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.64.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageVersion Include="System.Data.OleDb" Version="6.0.0" />
