@@ -27,10 +27,10 @@ jobs:
       - name: .NET info
         run: dotnet --info
       - name: .NET restore
-        run: dotnet restore ./src/VertiPaq-Analyzer.sln
+        run: dotnet restore ./VertiPaq-Analyzer.slnf
       - name: .NET build
-        run: dotnet build ./src/VertiPaq-Analyzer.sln --configuration ${{ env.CONFIGURATION }} --no-restore
+        run: dotnet build ./VertiPaq-Analyzer.slnf --configuration ${{ env.CONFIGURATION }} --no-restore
       - name: .NET test
-        run: dotnet test ./src/VertiPaq-Analyzer.sln --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
+        run: dotnet test ./VertiPaq-Analyzer.slnf --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
       - name: .NET pack
-        run: dotnet pack ./src/VertiPaq-Analyzer.sln --configuration ${{ env.CONFIGURATION }} --no-build --no-restore --verbosity normal
+        run: dotnet pack ./VertiPaq-Analyzer.slnf --configuration ${{ env.CONFIGURATION }} --no-build --no-restore --verbosity normal
