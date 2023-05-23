@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp3.1;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net462;netcoreapp3.1;net6.0-windows</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -56,7 +56,7 @@
     </PackageReference>
     <PackageReference Include="System.Data.OleDb" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Microsoft.AnalysisServices.retail.amd64" />
     <PackageReference Include="Microsoft.AnalysisServices.AdomdClient.retail.amd64" />
   </ItemGroup>
@@ -65,8 +65,8 @@
     <PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
-    <AssemblyTitle>Dax.Model.Extractor .NET Framework 4.6.1</AssemblyTitle>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
+    <AssemblyTitle>Dax.Model.Extractor .NET Framework 4.6.2</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <AssemblyTitle>Dax.Model.Extractor .NET Core 3.1</AssemblyTitle>

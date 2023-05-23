@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>net462;netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -57,8 +57,8 @@
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
-    <AssemblyTitle>Dax.ViewVpaExport .NET Framework 4.6.1</AssemblyTitle>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
+    <AssemblyTitle>Dax.ViewVpaExport .NET Framework 4.6.2</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <AssemblyTitle>Dax.ViewVpaExport .NET Standard 2.0</AssemblyTitle>
