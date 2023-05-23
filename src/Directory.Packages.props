@@ -8,7 +8,7 @@
     <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient.retail.amd64" Version="19.64.0" />
     <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.64.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="System.Data.OleDb" Version="6.0.0" />
     <PackageVersion Include="System.IO.Packaging" Version="6.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
