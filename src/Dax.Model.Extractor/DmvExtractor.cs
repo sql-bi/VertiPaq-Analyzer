@@ -447,7 +447,7 @@ WHERE [FormatStringDefinitionID] > 0
                         }
                     }
                 }
-                catch (Exception ex) { 
+                catch (Exception) { 
                     // we will get an error if the current server does not support dynamic format strings
                     // we can just swallow this and go on as if no dynamic format strings are defined
                 }
