@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.IO;
 using System.IO.Packaging;
 using Newtonsoft.Json;
 using TOM = Microsoft.AnalysisServices.Tabular;
+using Dax.Vpax.Json;
 
 namespace Dax.Vpax
 {
@@ -50,9 +50,13 @@ namespace Dax.Vpax
         public void ExportViewVpa(ViewVpaExport.Model viewVpa)
         {
             Uri uriModelVpa = PackUriHelper.CreatePartUri(new Uri(VpaxFormat.DAXVPAVIEW, UriKind.Relative));
-            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModelVpa, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
-            {
-                tw.Write(JsonConvert.SerializeObject(viewVpa, Formatting.Indented));
+            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModelVpa, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8)) {
+                var value = JsonConvert.SerializeObject(viewVpa, Formatting.None, new JsonSerializerSettings
+                {
+                    ContractResolver = ShouldSerializeContractResolver.Instance,
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                });
+                tw.Write(value);
                 tw.Close();
             }
         }
@@ -60,24 +64,19 @@ namespace Dax.Vpax
         public void ExportModel(Metadata.Model model)
         {
             Uri uriModel = PackUriHelper.CreatePartUri(new Uri(VpaxFormat.DAXMODEL, UriKind.Relative));
-            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
-            {
-                tw.Write(
-                    JsonConvert.SerializeObject(
-                        model,
-                        Formatting.Indented,
-                        new JsonSerializerSettings
-                        {
-                            PreserveReferencesHandling = PreserveReferencesHandling.All,
-                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-                        }
-                    )
-                );
+            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8)) {
+                var value = JsonConvert.SerializeObject(model, Formatting.None, new JsonSerializerSettings
+                {
+                    ContractResolver = ShouldSerializeContractResolver.Instance,
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    PreserveReferencesHandling = PreserveReferencesHandling.All,
+                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                });
+                tw.Write(value);
                 tw.Close();
             }
         }
 
-       
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
