@@ -21,12 +21,26 @@ namespace TestDaxModel
         static void Main()
         {
             GenericTest();
+            //TestTomConnection();
             //ConnectionStringTest();
             //TestPbiShared_2022();
             //TestPbiShared();
             //TestLocalVpaModel();
             //TestExport();
             //TestExportStream();
+        }
+
+        static void TestTomConnection()
+        {
+            const string serverName = "localhost:61422";
+            const string databaseName = "4fcf623e-9bfe-42ff-bdf6-c5b7bd02e7a4";
+
+            var server = new TOM.Server();
+            server.Connect($"Provider=MSOLAP;Data Source={serverName};Initial Catalog={databaseName};");
+            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(server.Databases[databaseName].Model, "TestDaxModel", "0.2");
+            var tomConnection = new Dax.Model.Extractor.Data.TomConnection(server, databaseName);
+            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, tomConnection, serverName, databaseName, "TestDaxModel", "0.2");
+            Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, tomConnection, sampleRows: 100);
         }
 
         static void TestExportStream()

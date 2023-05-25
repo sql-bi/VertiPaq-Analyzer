@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.OleDb;
-using Microsoft.AnalysisServices.AdomdClient;
-using System.Reflection;
+﻿using Dax.Model.Extractor.Data;
+using System;
 using System.Data;
+using System.Linq;
 
 namespace Dax.Metadata.Extractor
 {
@@ -23,18 +18,7 @@ namespace Dax.Metadata.Extractor
 
         protected IDbCommand CreateCommand(string commandText)
         {
-            if (Connection is AdomdConnection)
-            {
-                return new AdomdCommand(commandText, Connection as AdomdConnection);
-            }
-            else if (Connection is OleDbConnection)
-            {
-                return new OleDbCommand(commandText, Connection as OleDbConnection);
-            }
-            else
-            {
-                throw new ExtractorException(Connection);
-            }
+            return Connection.CreateCommand(commandText);
         }
 
         public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false )

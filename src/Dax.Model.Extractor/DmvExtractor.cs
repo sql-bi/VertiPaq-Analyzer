@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.OleDb;
-using Tom = Microsoft.AnalysisServices.Tabular;
+﻿using Dax.Model.Extractor.Data;
 using Microsoft.AnalysisServices.AdomdClient;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Linq;
+using Tom = Microsoft.AnalysisServices.Tabular;
 
 namespace Dax.Metadata.Extractor
 {
-    
+
     public class ExtractorException : Exception
     {
         public IDbConnection Connection { get; private set; }
@@ -31,25 +28,13 @@ namespace Dax.Metadata.Extractor
     {
         public int CommandTimeout { get; set; } = 0;
 
-        // protected AdomdConnection Connection { get; private set; }
         protected IDbConnection Connection { get; private set; }
 
         public Dax.Metadata.Model DaxModel { get; private set; }
 
         protected IDbCommand CreateCommand(string commandText)
         {
-            if (Connection is AdomdConnection)
-            {
-                return new AdomdCommand(commandText, Connection as AdomdConnection);
-            }
-            else if (Connection is OleDbConnection)
-            {
-                return new OleDbCommand(commandText, Connection as OleDbConnection);
-            }
-            else
-            {
-                throw new ExtractorException(Connection);
-            }
+            return Connection.CreateCommand(commandText);
         }
 
         public DmvExtractor(Dax.Metadata.Model daxModel, IDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
