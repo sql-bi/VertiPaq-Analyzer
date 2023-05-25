@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.IO;
 using System.IO.Packaging;
 using Newtonsoft.Json;
 using TOM = Microsoft.AnalysisServices.Tabular;
+using Dax.Vpax.Json;
 
 namespace Dax.Vpax
 {
@@ -53,6 +53,7 @@ namespace Dax.Vpax
             using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModelVpa, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8)) {
                 var value = JsonConvert.SerializeObject(viewVpa, Formatting.None, new JsonSerializerSettings
                 {
+                    ContractResolver = ShouldSerializeContractResolver.Instance,
                     DefaultValueHandling = DefaultValueHandling.Ignore,
                 });
                 tw.Write(value);
@@ -66,6 +67,7 @@ namespace Dax.Vpax
             using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8)) {
                 var value = JsonConvert.SerializeObject(model, Formatting.None, new JsonSerializerSettings
                 {
+                    ContractResolver = ShouldSerializeContractResolver.Instance,
                     DefaultValueHandling = DefaultValueHandling.Ignore,
                     PreserveReferencesHandling = PreserveReferencesHandling.All,
                     ReferenceLoopHandling = ReferenceLoopHandling.Serialize
