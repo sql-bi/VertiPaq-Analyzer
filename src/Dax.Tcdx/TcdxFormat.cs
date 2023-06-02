@@ -4,14 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dax.Vpax
+namespace Dax.Tcdx
 {
-    public static class VpaxFormat
+    public static class TcdxFormat
     {
-        public const string DAXMODEL = "DaxModel.json";
-        public const string DAXVPAVIEW = "DaxVpaView.json";
-        public const string TOMMODEL = "Model.bim";
-        public const string COMPATMODE = "CompatabilityMode.txt";
-
+        public const string CONSUMERS = "Consumers.json";
     }
 }

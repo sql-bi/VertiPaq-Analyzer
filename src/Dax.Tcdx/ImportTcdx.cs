@@ -8,16 +8,16 @@ using Newtonsoft.Json;
 using TOM = Microsoft.AnalysisServices.Tabular;
 using Microsoft.AnalysisServices;
 
-namespace Dax.Tdcx
+namespace Dax.Tcdx
 {
-    internal class ImportTdcx : IDisposable
+    internal class ImportTcdx : IDisposable
     {
         public Package Package { get; private set; }
-        public ImportTdcx(string path)
+        public ImportTcdx(string path)
         {
             this.Package = Package.Open(path, FileMode.Open, FileAccess.Read);
         }
-        public ImportTdcx(Stream stream)
+        public ImportTcdx(Stream stream)
         {
             this.Package = Package.Open(stream);
         }
@@ -25,20 +25,6 @@ namespace Dax.Tdcx
         public void Close()
         {
             this.Package.Close();
-        }
-
-        private string ReadPackageContentAsString(string uriString)
-        {
-            Uri uriTom = PackUriHelper.CreatePartUri(new Uri(uriString, UriKind.Relative));
-            if (!this.Package.PartExists(uriTom)) return null;
-
-            var part = this.Package.GetPart(uriTom);
-            using (TextReader tw = new StreamReader(part.GetStream(), Encoding.UTF8))
-            {
-                string content = tw.ReadToEnd();
-                tw.Close();
-                return content;
-            }
         }
 
         private T DeserializePackageContent<T>(string uriString)
@@ -59,60 +45,11 @@ namespace Dax.Tdcx
             }
         }
 
-        public Metadata.Model ImportModel()
+        public Dax.Consumer.ConsumersCollection ImportConsumers()
         {
-            return DeserializePackageContent<Metadata.Model>(VpaxFormat.DAXMODEL);
+            return DeserializePackageContent<Dax.Consumer.ConsumersCollection>(TcdxFormat.CONSUMERS);
         }
 
-        /* ViewVpa cannot be imported - it is designed only to be exported to VertiPaq Analyzer in Excel
-        public ViewVpaExport.Model ImportViewVpa()
-        {
-            string viewVpa = ReadPackageContentAsString(VpaxFormat.DAXVPAVIEW);
-            return JsonConvert.DeserializeObject(viewVpa, typeof(ViewVpaExport.Model)) as ViewVpaExport.Model;
-        }
-        */
-
-        public TOM.Database ImportDatabase()
-        {
-            string strCompatMode = ReadPackageContentAsString(VpaxFormat.COMPATMODE);
-            Microsoft.AnalysisServices.CompatibilityMode compatMode = Microsoft.AnalysisServices.CompatibilityMode.Unknown;
-            Enum.TryParse(strCompatMode,true , out compatMode );
-            string modelBim = ReadPackageContentAsString(VpaxFormat.TOMMODEL);
-            if (string.IsNullOrEmpty(modelBim)) return null;
-            var tomDb = TryDeserializeDatabase(modelBim, compatMode);
-            return tomDb;
-        }
-
-        // This method is mainly here for backward compatibility
-        // if an existing vpax file has been created that will not deserialize with the default
-        // compat mode of 'Unknown' and we get a JsonSerializationException, then we recursively
-        // re-try with the other compat modes to see if they work.
-        private TOM.Database TryDeserializeDatabase(string modelBim, CompatibilityMode compatMode)
-        {
-            TOM.Database db = null;
-            try {
-                db = TOM.JsonSerializer.DeserializeDatabase(modelBim, null, compatMode);
-            }
-            catch (Microsoft.AnalysisServices.JsonSerializationException) {
-                // if we hit an error of any sort try to deserialize using the different compat modes
-                // in the following order: PowerBI, AnalysisServices, Excel
-                switch (compatMode) {
-                    case CompatibilityMode.Unknown:
-                        db = TryDeserializeDatabase(modelBim, CompatibilityMode.PowerBI);
-                        break;
-                    case CompatibilityMode.PowerBI:
-                        db = TryDeserializeDatabase(modelBim, CompatibilityMode.AnalysisServices);
-                        break;
-                    case CompatibilityMode.AnalysisServices:
-                        db = TryDeserializeDatabase(modelBim, CompatibilityMode.Excel);
-                        break;
-                     default:
-                        db = null;
-                        break;
-                }
-            }
-            return db;
-        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

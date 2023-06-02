@@ -1,56 +1,45 @@
 ﻿using System.IO;
 using TOM = Microsoft.AnalysisServices.Tabular;
 
-namespace Dax.Vpax.Tools
+namespace Dax.Tcdx.Tools
 {
-    public static class VpaxTools
+    public static class TcdxTools
     {
         /// <summary>
-        /// Export to VertiPaq Analyzer (VPAX) stream
+        /// Export to TDCX stream
         /// </summary>
-        public static void ExportVpax(Stream stream, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, TOM.Database database = null)
+        public static void ExportTcdx(Stream stream, Dax.Consumer.ConsumersCollection consumers)
         {
-            using (ExportVpax exportVpax = new ExportVpax(stream))
+            using (ExportTcdx exportTcdx = new ExportTcdx(stream))
             {
-                ExportVpaxImpl(exportVpax, model, viewVpa, database);
+                ExportTcdxImpl(exportTcdx, consumers);
             }
 
             stream.Position = 0L;
         }
 
         /// <summary>
-        /// Export to VertiPaq Analyzer (VPAX) file
+        /// Export to TDCX file
         /// </summary>
-        public static void ExportVpax(string path, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, TOM.Database database = null)
+        public static void ExportTcdx(string path, Dax.Consumer.ConsumersCollection consumers)
         {
-            using (ExportVpax exportVpax = new ExportVpax(path))
+            using (ExportTcdx exportVpax = new ExportTcdx(path))
             {
-                ExportVpaxImpl(exportVpax, model, viewVpa, database);
+                ExportTcdxImpl(exportVpax, consumers);
             }
         }
 
-        internal static void ExportVpaxImpl(ExportVpax exportVpax, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, TOM.Database database = null)
+        internal static void ExportTcdxImpl(ExportTcdx exportTcdx, Dax.Consumer.ConsumersCollection consumers)
         {
-            if (model != null)
+            if (consumers != null)
             {
-                exportVpax.ExportModel(model);
+                exportTcdx.ExportConsumers(consumers);
             }
-            if (viewVpa != null)
-            {
-                exportVpax.ExportViewVpa(viewVpa);
-            }
-            if (database != null)
-            {
-                exportVpax.ExportDatabase(database);
-            }
-            exportVpax.Close();
         }
 
-        public struct VpaxContent
+        public struct TcdxContent
         {
-            public Dax.Metadata.Model DaxModel;
-            public Dax.ViewVpaExport.Model ViewVpa;
-            public TOM.Database TomDatabase;
+            public Dax.Consumer.ConsumersCollection Consumers;
         }
 
         /// <summary>
@@ -58,14 +47,12 @@ namespace Dax.Vpax.Tools
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static VpaxContent ImportVpax(string path, bool importDatabase = true)
+        public static TcdxContent ImportTcdx(string path, bool importDatabase = true)
         {
-            VpaxContent Content;
-            using (ImportVpax importVpax = new ImportVpax(path))
+            TcdxContent Content;
+            using (ImportTcdx importTcdx = new ImportTcdx(path))
             {
-                Content.DaxModel = importVpax.ImportModel();
-                Content.ViewVpa = null;
-                Content.TomDatabase = importDatabase ? importVpax.ImportDatabase() : null;
+                Content.Consumers = importTcdx.ImportConsumers();
             }
             return Content;
         }
@@ -75,14 +62,12 @@ namespace Dax.Vpax.Tools
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static VpaxContent ImportVpax(Stream stream, bool importDatabase = true)
+        public static TcdxContent ImportTcdx(Stream stream, bool importDatabase = true)
         {
-            VpaxContent Content;
-            using (ImportVpax importVpax = new ImportVpax(stream))
+            TcdxContent Content;
+            using (ImportTcdx importTcdx = new ImportTcdx(stream))
             {
-                Content.DaxModel = importVpax.ImportModel();
-                Content.ViewVpa = null;
-                Content.TomDatabase = importDatabase ? importVpax.ImportDatabase() : null;
+                Content.Consumers = importTcdx.ImportConsumers();
             }
             return Content;
         }

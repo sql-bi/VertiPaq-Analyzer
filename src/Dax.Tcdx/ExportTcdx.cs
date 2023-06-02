@@ -6,18 +6,18 @@ using System.IO.Packaging;
 using Newtonsoft.Json;
 using TOM = Microsoft.AnalysisServices.Tabular;
 
-namespace Dax.Tdcx
+namespace Dax.Tcdx
 {
-    internal class ExportVpax : IDisposable
+    internal class ExportTcdx : IDisposable
     {
         public Package Package { get; private set; }
 
-        public ExportVpax(string path) 
+        public ExportTcdx(string path) 
         {
             this.Package = Package.Open(path, FileMode.Create);
         }
 
-        public ExportVpax(Stream stream)
+        public ExportTcdx(Stream stream)
         {
             this.Package = Package.Open(stream, FileMode.Create, FileAccess.ReadWrite);
         }
@@ -26,45 +26,14 @@ namespace Dax.Tdcx
         {
             this.Package.Close();
         }
-
-        public void ExportDatabase(TOM.Database database)
+        public void ExportConsumers(Dax.Consumer.ConsumersCollection consumers)
         {
-            Uri uriTom = PackUriHelper.CreatePartUri(new Uri(VpaxFormat.TOMMODEL, UriKind.Relative));
-            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriTom, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
-            {
-                tw.Write(TOM.JsonSerializer.SerializeDatabase(database));
-                tw.Close();
-            }
-            ExportCompatibilityMode(database);
-        }
-
-        public void ExportCompatibilityMode(TOM.Database database)
-        {
-            Uri uriTom = PackUriHelper.CreatePartUri(new Uri(VpaxFormat.COMPATMODE, UriKind.Relative));
-            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriTom, "text/plain", CompressionOption.Maximum).GetStream(), Encoding.UTF8)) {
-                tw.Write(database.CompatibilityMode.ToString());
-                tw.Close();
-            }
-        }
-
-        public void ExportViewVpa(ViewVpaExport.Model viewVpa)
-        {
-            Uri uriModelVpa = PackUriHelper.CreatePartUri(new Uri(VpaxFormat.DAXVPAVIEW, UriKind.Relative));
-            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModelVpa, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
-            {
-                tw.Write(JsonConvert.SerializeObject(viewVpa, Formatting.Indented));
-                tw.Close();
-            }
-        }
-
-        public void ExportModel(Metadata.Model model)
-        {
-            Uri uriModel = PackUriHelper.CreatePartUri(new Uri(VpaxFormat.DAXMODEL, UriKind.Relative));
+            Uri uriModel = PackUriHelper.CreatePartUri(new Uri(TcdxFormat.CONSUMERS, UriKind.Relative));
             using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
             {
                 tw.Write(
                     JsonConvert.SerializeObject(
-                        model,
+                        consumers,
                         Formatting.Indented,
                         new JsonSerializerSettings
                         {
