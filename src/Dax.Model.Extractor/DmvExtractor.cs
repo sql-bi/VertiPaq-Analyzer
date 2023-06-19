@@ -439,24 +439,29 @@ WHERE [FormatStringDefinitionID] > 0
                 // if there are no format string expressions exit here
                 if (mapExpressions.Count == 0) return;
 
-                // map the format string expressions to the measure names
-                using (var cmdId = CreateCommand(QUERY_MEASURESFORMATID)) {
-                    cmdId.CommandTimeout = CommandTimeout;
-                    using (var rdr = cmdId.ExecuteReader()) {
-                        while (rdr.Read()) {
-                            long formatId = rdr.GetInt64(0);
-                            string measureName = rdr.GetValue(1)?.ToString() ?? string.Empty;
-                            if (formatId > 0 && !string.IsNullOrEmpty(measureName)) {
-                            
-                                if (mapExpressions.ContainsKey(formatId)) {
-                                    formatStringExpressions.Add(measureName, mapExpressions[formatId]);
+                try {
+                    // map the format string expressions to the measure names
+                    using (var cmdId = CreateCommand(QUERY_MEASURESFORMATID)) {
+                        cmdId.CommandTimeout = CommandTimeout;
+                        using (var rdr = cmdId.ExecuteReader()) {
+                            while (rdr.Read()) {
+                                long formatId = rdr.GetInt64(0);
+                                string measureName = rdr.GetValue(1)?.ToString() ?? string.Empty;
+                                if (formatId > 0 && !string.IsNullOrEmpty(measureName)) {
+                                
+                                    if (mapExpressions.ContainsKey(formatId)) {
+                                        formatStringExpressions.Add(measureName, mapExpressions[formatId]);
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
-
+                catch (Exception)
+                {
+                    // we will get an error if the current model has no dynamic format strings
+                    // we can just swallow this and go on as if no dynamic format strings are defined
+                }
             }
 
             void ProcessMeasures()
