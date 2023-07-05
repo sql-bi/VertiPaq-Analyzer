@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Tom = Microsoft.AnalysisServices;
 
 namespace Dax.Metadata.Extractor
 {
@@ -42,5 +43,23 @@ namespace Dax.Metadata.Extractor
             }
         }
 
+        public static string GetPowerBIPaaSConnectionType(Tom.ConnectionInfo connectionInfo)
+        {
+            if (connectionInfo.ConnectionType != Tom.ConnectionType.Http)
+                return null;
+
+            try {
+                var uri = new Uri(connectionInfo.Server, UriKind.Absolute);
+                var scheme = uri.Scheme.ToLowerInvariant();
+
+                if (scheme == "asazure" || scheme == "pbidedicated" || scheme == "powerbi" || scheme == "pbiazure")
+                    return scheme;
+
+                return "other";
+            }
+            catch {
+                return "unknown";
+            }
+        }
     }
 }
