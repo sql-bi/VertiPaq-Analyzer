@@ -71,6 +71,11 @@ namespace Dax.Metadata
         /// </summary>
         public long Version { get; set; }
 
+        public string ServerPaaSConnectionType { get; set; }
+        public string ServerMode { get; set; }
+        public string ServerLocation { get; set; }
+        public string ServerVersion { get; set; }
+
         public List<Table> Tables { get; }
         public List<Relationship> Relationships { get; }
         public List<Role> Roles { get; }

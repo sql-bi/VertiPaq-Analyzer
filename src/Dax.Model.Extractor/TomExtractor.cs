@@ -1,13 +1,7 @@
 ﻿using Microsoft.AnalysisServices.AdomdClient;
 using System;
-using System.Collections.Generic;
 using System.Data.OleDb;
-using System.Data.SqlTypes;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Tom = Microsoft.AnalysisServices.Tabular;
 
 namespace Dax.Metadata.Extractor
@@ -53,6 +47,13 @@ namespace Dax.Metadata.Extractor
             DaxModel.LastProcessed = tomModel.Database.LastProcessed;
             DaxModel.LastUpdate = tomModel.Database.LastUpdate;
             DaxModel.Version = tomModel.Database.Version;
+
+            if (tomModel.Server != null) {
+                DaxModel.ServerVersion = tomModel.Server.Version;
+                DaxModel.ServerLocation = tomModel.Server.ServerLocation.ToString();
+                DaxModel.ServerMode = tomModel.Server.ServerMode.ToString();
+                DaxModel.ServerPaaSConnectionType = Util.GetPowerBIPaaSConnectionType(tomModel.Server.ConnectionInfo);
+            }
 
             // Update ExtractionDate
             DaxModel.ExtractionDate = DateTime.UtcNow;
