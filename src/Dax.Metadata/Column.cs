@@ -67,23 +67,28 @@ namespace Dax.Metadata
             }
         }
 
+        [JsonIgnore]
         public long DataSize {
             get {
                 return ColumnSegments.Select(s => s.UsedSize).Sum();
             }
         }
 
+        [JsonIgnore]
         public long HierarchiesSize {
             get {
                 return ColumnHierarchies.Select(h => h.UsedSize).Sum();
             }
         }
 
+        [JsonIgnore]
         public long TotalSize {
             get {
                 return DataSize + DictionarySize + HierarchiesSize;
             }
         }
+
+        [JsonIgnore]
         public double? Selectivity {
             get {
                 var tableRowsCount = this.Table?.RowsCount ?? 0;
