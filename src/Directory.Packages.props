@@ -3,7 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftAnalysisServicesVersion>19.67.0</MicrosoftAnalysisServicesVersion>
+    <MicrosoftAnalysisServicesVersion>19.69.2.2</MicrosoftAnalysisServicesVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.AnalysisServices.retail.amd64" Version="$(MicrosoftAnalysisServicesVersion)" />
