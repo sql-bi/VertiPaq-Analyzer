@@ -4,9 +4,13 @@ Title: Tcdx format
 
 classDiagram
     class ConsumersCollection {
-        ConsumerName Path
+        Dictionary~string_TcdxName~ ConsumerCollectionProperties
+        List~Consumer~ Consumers
     }
-    class QueryGroupsCollection 
+    class QueryGroupsCollection {
+        Dictionary~string_TcdxName~ QueryGroupsCollectionProperties
+        List~QueryGroup~ QueryGroups
+    }
     class Model {
         <<Dax.Metadata>> 
     }
@@ -20,38 +24,35 @@ classDiagram
         <<Dax.Metadata>> 
     }
     class Consumer{
-        ConsumerName ConsumerName
-        string ConsumerType
+        Dictionary~string_TcdxName~ ConsumerProperties
         List~Items~ Items
         GetModels() IEnumerable~ModelDependency~
     }
     class ColumnDependency {
         ModelDependency Model
-        ConsumerName TableName
-        ConsumerName ColumnName
+        TcdxName TableName
+        TcdxName ColumnName
         TableDepenency Table
         Column ModelColumn
     }
     class ModelDependency {
-        ConsumerName ServerName
-        ConsumerName ModelName
+        TcdxName ServerName
+        TcdxName ModelName
         Model Model
     }
     class TableDependency {
         ModelDependency Model
-        ConsumerName TableName
+        TcdxName TableName
         Table ModelTable
     }
     class MeasureDependency {
         ModelDependency Model
-        ConsumerName MeasureName
+        TcdxName MeasureName
         TableDependency Table
         Measure ModelMeasure
     }
     class Item{
-        ConsumerName ItemName
-        string ItemType
-        string QueryLanguage
+        Dictionary~string_TcdxName~ ItemProperties
         ModelDependency Model
         List~TableDependency~ TableDependencies
         List~ColumnDependency~ ColumnDependencies
@@ -59,18 +60,19 @@ classDiagram
     }
     class QueryGroup {
         string CorrelationId
+        Dictionary~string_TcdxName~ QueryGroupProperties
         ModelDependency Model
         Item Item
-        Dictionary~Table_Counter~ TableQueries
-        Dictionary~Column_Counter~ ColumnQueries
-        Dictionary~Measure_Counter~ MeasureQueries
-        Dictionary~Token_Counter~ TableQueries
-        bigint TotalExecTimeMilliseconds
-        int NumberOfQueries
-        int maxExecTimeMilliseconds
-        int minExecTimeMilliseconds
-        int AverageTimeMilliseconds
-        float StandardDeviationTimeMilliseconds
+        Dictionary~string_Counter~ TableQueries
+        Dictionary~string_Counter~ ColumnQueries
+        Dictionary~string_Counter~ MeasureQueries
+        Dictionary~string_Counter~ TableQueries
+        Int64 TotalExecTimeMilliseconds
+        Int32 NumberOfQueries
+        Int32 maxExecTimeMilliseconds
+        Int32 minExecTimeMilliseconds
+        Int32 AverageTimeMilliseconds
+        double StandardDeviationTimeMilliseconds
         DateTime UtcStart
         DateTime UtcEnd
         note: "consider DateTimeOffset for UtcStart / UtcEnd"
