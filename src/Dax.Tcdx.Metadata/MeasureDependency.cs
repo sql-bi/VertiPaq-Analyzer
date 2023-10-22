@@ -5,13 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Dax.Metadata;
 
-namespace Dax.Consumer
+namespace Dax.Tcdx.Metadata
 {
     public class MeasureDependency
     {
+        public MeasureDependency() 
+        { 
+            // we initialize the model dependency to a dummy value to avoid null references
+            ModelDependency._dummyModelDependency.ModelName = new TcdxName("Dummy");
+        }
+
         public ModelDependency Model { get; set; }
 
-        public DaxName MeasureName { get; set; }
+        public TcdxName MeasureName { get; set; }
 
         // TODO: how do we manage KPIs? 
 

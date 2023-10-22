@@ -13,14 +13,14 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <VersionSuffix>dev</VersionSuffix>
     
-    <Title>Dax.Consumer</Title>
+    <Title>Dax.Tcdx.Metadata</Title>
     <Company>SQLBI</Company>
     <!--Copyright>Copyright ©</Copyright-->
     <Authors>Marco Russo</Authors>
     <Product>VertiPaq Analyzer</Product>
     <Description>Tabular model object model including statistics from DMV and data distribution for VertiPaq Analyzer and other tools</Description>
     <!--Summary>...</Summary-->
-    <PackageId>Dax.Consumer</PackageId>
+    <PackageId>Dax.Tcdx.Metadata</PackageId>
     <PackageTags>VPAX;DAX;VERTIPAQ;ANALYZER</PackageTags>
     <PackageIcon>package-icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -42,7 +42,7 @@
   </ItemGroup>
 	
 	<ItemGroup>
-		<ProjectReference Include="..\Dax.Tcdx.Metadata\Dax.Tcdx.Metadata.csproj" />
+		<ProjectReference Include="..\Dax.Metadata\Dax.Metadata.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -58,16 +58,16 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
-    <AssemblyTitle>Dax.Consumer .NET Framework 4.6.1</AssemblyTitle>
+    <AssemblyTitle>Dax.Tcdx.Metadata .NET Framework 4.6.1</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <AssemblyTitle>Dax.Consumer .NET Standard 2.0</AssemblyTitle>
+    <AssemblyTitle>Dax.Tcdx.Metadata .NET Standard 2.0</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <AssemblyTitle>Dax.Consumer .NET Core 3.1</AssemblyTitle>
+    <AssemblyTitle>Dax.Tcdx.Metadata .NET Core 3.1</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <AssemblyTitle>Dax.Consumer .NET 6.0</AssemblyTitle>
+    <AssemblyTitle>Dax.Tcdx.Metadata .NET 6.0</AssemblyTitle>
   </PropertyGroup>
 
 </Project>

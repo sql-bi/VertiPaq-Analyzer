@@ -1,0 +1,97 @@
+---
+Title: Tcdx format
+---
+
+classDiagram
+    class ConsumersCollection {
+        ConsumerName Path
+    }
+    class QueryGroupsCollection 
+    class Model {
+        <<Dax.Metadata>> 
+    }
+    class Table {
+        <<Dax.Metadata>> 
+    }
+    class Measure {
+        <<Dax.Metadata>> 
+    }
+    class Column {
+        <<Dax.Metadata>> 
+    }
+    class Consumer{
+        ConsumerName ConsumerName
+        string ConsumerType
+        List~Items~ Items
+        GetModels() IEnumerable~ModelDependency~
+    }
+    class ColumnDependency {
+        ModelDependency Model
+        ConsumerName TableName
+        ConsumerName ColumnName
+        TableDepenency Table
+        Column ModelColumn
+    }
+    class ModelDependency {
+        ConsumerName ServerName
+        ConsumerName ModelName
+        Model Model
+    }
+    class TableDependency {
+        ModelDependency Model
+        ConsumerName TableName
+        Table ModelTable
+    }
+    class MeasureDependency {
+        ModelDependency Model
+        ConsumerName MeasureName
+        TableDependency Table
+        Measure ModelMeasure
+    }
+    class Item{
+        ConsumerName ItemName
+        string ItemType
+        string QueryLanguage
+        ModelDependency Model
+        List~TableDependency~ TableDependencies
+        List~ColumnDependency~ ColumnDependencies
+        List~MeasureDependency~ MeasureDependencies
+    }
+    class QueryGroup {
+        string CorrelationId
+        ModelDependency Model
+        Item Item
+        Dictionary~Table_Counter~ TableQueries
+        Dictionary~Column_Counter~ ColumnQueries
+        Dictionary~Measure_Counter~ MeasureQueries
+        Dictionary~Token_Counter~ TableQueries
+        bigint TotalExecTimeMilliseconds
+        int NumberOfQueries
+        int maxExecTimeMilliseconds
+        int minExecTimeMilliseconds
+        int AverageTimeMilliseconds
+        float StandardDeviationTimeMilliseconds
+        DateTime UtcStart
+        DateTime UtcEnd
+        note: "consider DateTimeOffset for UtcStart / UtcEnd"
+    }
+    ConsumersCollection "1" --o "n" Consumer
+    QueryGroupsCollection "1" --o "n" QueryGroup
+    Consumer "0" --* "n" Item
+    ColumnDependency --o ModelDependency
+    ColumnDependency --o TableDependency
+    ColumnDependency --o Column
+    ModelDependency --o Model
+    TableDependency --o ModelDependency
+    TableDependency --o Table
+    MeasureDependency --o ModelDependency
+    MeasureDependency --o TableDependency
+    MeasureDependency --o Measure
+    Item "0" --* "n" TableDependency
+    Item "0" --* "n" ColumnDependency
+    Item "0" --* "n" MeasureDependency
+    Item --* ModelDependency
+    QueryGroup .. Item
+    QueryGroup -- ModelDependency
+
+
