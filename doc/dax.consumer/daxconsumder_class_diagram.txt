@@ -24,6 +24,12 @@ classDiagram
         <<Dax.Metadata>> 
     }
     class Consumer{
+        EnumConsumerType ConsumerType
+        TcdxName HostName
+        %% Container is like path but more generic
+        TcdxName Container
+        TcdxName FileName
+        TcdxName Uri
         Dictionary~string_TcdxName~ ConsumerProperties
         List~Items~ Items
         GetModels() IEnumerable~ModelDependency~
@@ -60,18 +66,21 @@ classDiagram
     }
     class QueryGroup {
         string CorrelationId
+        note: "Query Analytics [Azure], Extended Events, Profiler, Others"
+        EnumQueryGroupType QueryGroupType
+        TcdxName QueryGroupName
         Dictionary~string_TcdxName~ QueryGroupProperties
         ModelDependency Model
         Item Item
-        Dictionary~string_Counter~ TableQueries
-        Dictionary~string_Counter~ ColumnQueries
-        Dictionary~string_Counter~ MeasureQueries
-        Dictionary~string_Counter~ TableQueries
-        Int64 TotalExecTimeMilliseconds
-        Int32 NumberOfQueries
-        Int32 maxExecTimeMilliseconds
-        Int32 minExecTimeMilliseconds
-        Int32 AverageTimeMilliseconds
+        Dictionary~string_int~ TableQueries
+        Dictionary~string_int~ ColumnQueries
+        Dictionary~string_int~ MeasureQueries
+        Dictionary~string_int~ TokenQueries
+        long TotalExecTimeMilliseconds
+        int NumberOfQueries
+        int maxExecTimeMilliseconds
+        int minExecTimeMilliseconds
+        int AverageTimeMilliseconds
         double StandardDeviationTimeMilliseconds
         DateTime UtcStart
         DateTime UtcEnd
