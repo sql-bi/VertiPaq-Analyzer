@@ -50,6 +50,10 @@ namespace Dax.Tcdx
             return DeserializePackageContent<Dax.Consumer.ConsumersCollection>(TcdxFormat.CONSUMERS);
         }
 
+        public Dax.QueryGroup.QueryGroupsCollection ImportQueryGroups()
+        {
+            return DeserializePackageContent<Dax.QueryGroup.QueryGroupsCollection>(TcdxFormat.QUERY_GROUPS);
+        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

@@ -46,7 +46,25 @@ namespace Dax.Tcdx
             }
         }
 
-       
+        public void ExportQueryGroups(Dax.QueryGroup.QueryGroupsCollection queryGroups)
+        {
+            Uri uriModel = PackUriHelper.CreatePartUri(new Uri(TcdxFormat.QUERY_GROUPS, UriKind.Relative));
+            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8)) {
+                tw.Write(
+                    JsonConvert.SerializeObject(
+                        queryGroups,
+                        Formatting.Indented,
+                        new JsonSerializerSettings
+                        {
+                            PreserveReferencesHandling = PreserveReferencesHandling.All,
+                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                        }
+                    )
+                );
+                tw.Close();
+            }
+        }
+
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 

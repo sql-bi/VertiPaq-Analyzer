@@ -9,5 +9,6 @@ namespace Dax.Tcdx
     public static class TcdxFormat
     {
         public const string CONSUMERS = "Consumers.json";
+        public const string QUERY_GROUPS = "QueryGroups.json";
     }
 }

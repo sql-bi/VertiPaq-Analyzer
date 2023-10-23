@@ -44,6 +44,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Dax.Metadata\Dax.Metadata.csproj" />
     <ProjectReference Include="..\Dax.Consumer\Dax.Consumer.csproj" />
+    <ProjectReference Include="..\Dax.QueryGroup\Dax.QueryGroup.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
