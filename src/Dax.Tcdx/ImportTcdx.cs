@@ -5,8 +5,7 @@ using System.Text;
 using System.IO;
 using System.IO.Packaging;
 using Newtonsoft.Json;
-using TOM = Microsoft.AnalysisServices.Tabular;
-using Microsoft.AnalysisServices;
+using Dax.Tcdx.Metadata;
 
 namespace Dax.Tcdx
 {
@@ -40,19 +39,19 @@ namespace Dax.Tcdx
             using (var streamReader = new StreamReader(stream))
             using (var jsonReader = new JsonTextReader(streamReader))
             {
-                var serializer = new Newtonsoft.Json.JsonSerializer();
+                var serializer = new JsonSerializer();
                 return serializer.Deserialize<T>(jsonReader);
             }
         }
 
-        public Dax.Consumer.ConsumersCollection ImportConsumers()
+        public ConsumersCollection ImportConsumers()
         {
-            return DeserializePackageContent<Dax.Consumer.ConsumersCollection>(TcdxFormat.CONSUMERS);
+            return DeserializePackageContent<ConsumersCollection>(TcdxFormat.CONSUMERS);
         }
 
-        public Dax.QueryGroup.QueryGroupsCollection ImportQueryGroups()
+        public QueryGroupsCollection ImportQueryGroups()
         {
-            return DeserializePackageContent<Dax.QueryGroup.QueryGroupsCollection>(TcdxFormat.QUERY_GROUPS);
+            return DeserializePackageContent<QueryGroupsCollection>(TcdxFormat.QUERY_GROUPS);
         }
 
         #region IDisposable Support

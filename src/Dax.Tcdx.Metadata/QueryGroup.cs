@@ -5,11 +5,17 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Dax.Tcdx.Metadata;
 using System.Numerics;
 
-namespace Dax.QueryGroup
+namespace Dax.Tcdx.Metadata
 {
+    enum EnumQueryGroupType
+    {
+        QueryAnalytics,
+        Profiler,
+        ExtendedEvents,
+        OtherQueryGroupType
+    }
     public class QueryGroup
     {
         public QueryGroup() 
@@ -20,7 +26,7 @@ namespace Dax.QueryGroup
             this.ColumnQueries = new Dictionary<TcdxName, int>();
             this.MeasureQueries = new Dictionary<TcdxName, int>();
             this.TokenQueries = new Dictionary<TcdxName, int>();
-
+            this.QueryGroupType = EnumQueryGroupType.OtherQueryGroupType;
         }
 
         /// <summary>
@@ -28,6 +34,11 @@ namespace Dax.QueryGroup
         /// included into the tcdx file for privacy reasons
         /// </summary>
         string CorrelationId { get; set; }
+
+        EnumQueryGroupType QueryGroupType { get; set; }
+
+        TcdxName QueryGroupName { get; set; }
+
 
         public Dictionary<string, TcdxName> QueryGroupProperties { get; set; }
 
@@ -45,11 +56,11 @@ namespace Dax.QueryGroup
         // token can be a column or a measure but it was not possible to distinguish them from the context
         public Dictionary<TcdxName, int> TokenQueries{ get; set; }
 
-        public Int64 TotalExecTimeMilliseconds { get; set; }
-        public Int32 NumberOfQueries { get; set; }
-        public Int32 MaxExcTimeMilliseconds { get; set; }
-        public Int32 MinExcTimeMilliseconds { get; set; }
-        public Int32 AverageExcTimeMilliseconds { get; set; }
+        public long TotalExecTimeMilliseconds { get; set; }
+        public int NumberOfQueries { get; set; }
+        public int MaxExcTimeMilliseconds { get; set; }
+        public int MinExcTimeMilliseconds { get; set; }
+        public int AverageExcTimeMilliseconds { get; set; }
         public double StandardDeviationExcTimeMilliseconds { get; set; }
 
         // consider using DateTimeOffset instead of DateTime, to include the timezone

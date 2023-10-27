@@ -29,18 +29,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWpfPowerBI", "TestWpfPo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Metadata.Tests", "Dax.Metadata.Tests\Dax.Metadata.Tests.csproj", "{B58960AE-6FE4-4E95-8DCD-D9F14920A8FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Consumer", "Dax.Consumer\Dax.Consumer.csproj", "{20465175-1ED1-4303-8B86-6C243CDD947B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Tcdx", "Dax.Tcdx\Dax.Tcdx.csproj", "{38947D6A-40B2-40EC-8A0A-5E9CC98DD375}"
-	ProjectSection(ProjectDependencies) = postProject
-		{20465175-1ED1-4303-8B86-6C243CDD947B} = {20465175-1ED1-4303-8B86-6C243CDD947B}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Tcdx.Tests", "Dax.Tcdx.Tests\Dax.Tcdx.Tests.csproj", "{B6C518F7-183C-4BB0-BF96-62C8BF73C242}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Tcdx.Metadata", "Dax.Tcdx.Metadata\Dax.Tcdx.Metadata.csproj", "{131CA598-208B-47B0-8D92-5A42E772967C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.QueryGroup", "Dax.QueryGroup\Dax.QueryGroup.csproj", "{044CDFDC-2978-42D4-BAE3-14854C051E1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,10 +89,6 @@ Global
 		{B58960AE-6FE4-4E95-8DCD-D9F14920A8FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B58960AE-6FE4-4E95-8DCD-D9F14920A8FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B58960AE-6FE4-4E95-8DCD-D9F14920A8FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20465175-1ED1-4303-8B86-6C243CDD947B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20465175-1ED1-4303-8B86-6C243CDD947B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20465175-1ED1-4303-8B86-6C243CDD947B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20465175-1ED1-4303-8B86-6C243CDD947B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{38947D6A-40B2-40EC-8A0A-5E9CC98DD375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{38947D6A-40B2-40EC-8A0A-5E9CC98DD375}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38947D6A-40B2-40EC-8A0A-5E9CC98DD375}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -112,10 +101,6 @@ Global
 		{131CA598-208B-47B0-8D92-5A42E772967C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{131CA598-208B-47B0-8D92-5A42E772967C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{131CA598-208B-47B0-8D92-5A42E772967C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{044CDFDC-2978-42D4-BAE3-14854C051E1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{044CDFDC-2978-42D4-BAE3-14854C051E1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{044CDFDC-2978-42D4-BAE3-14854C051E1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{044CDFDC-2978-42D4-BAE3-14854C051E1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.IO.Packaging;
 using Newtonsoft.Json;
-using TOM = Microsoft.AnalysisServices.Tabular;
+using Dax.Tcdx.Metadata;
 
 namespace Dax.Tcdx
 {
@@ -26,7 +26,7 @@ namespace Dax.Tcdx
         {
             this.Package.Close();
         }
-        public void ExportConsumers(Dax.Consumer.ConsumersCollection consumers)
+        public void ExportConsumers(ConsumersCollection consumers)
         {
             Uri uriModel = PackUriHelper.CreatePartUri(new Uri(TcdxFormat.CONSUMERS, UriKind.Relative));
             using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8))
@@ -46,7 +46,7 @@ namespace Dax.Tcdx
             }
         }
 
-        public void ExportQueryGroups(Dax.QueryGroup.QueryGroupsCollection queryGroups)
+        public void ExportQueryGroups(QueryGroupsCollection queryGroups)
         {
             Uri uriModel = PackUriHelper.CreatePartUri(new Uri(TcdxFormat.QUERY_GROUPS, UriKind.Relative));
             using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8)) {

@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using TOM = Microsoft.AnalysisServices.Tabular;
+using Dax.Tcdx.Metadata;
 
 namespace Dax.Tcdx.Tools
 {
@@ -8,7 +8,7 @@ namespace Dax.Tcdx.Tools
         /// <summary>
         /// Export to TDCX stream
         /// </summary>
-        public static void ExportTcdx(Stream stream, Dax.Consumer.ConsumersCollection consumers)
+        public static void ExportTcdx(Stream stream, ConsumersCollection consumers)
         {
             using (ExportTcdx exportTcdx = new ExportTcdx(stream))
             {
@@ -21,7 +21,7 @@ namespace Dax.Tcdx.Tools
         /// <summary>
         /// Export to TDCX file
         /// </summary>
-        public static void ExportTcdx(string path, Dax.Consumer.ConsumersCollection consumers)
+        public static void ExportTcdx(string path, ConsumersCollection consumers)
         {
             using (ExportTcdx exportVpax = new ExportTcdx(path))
             {
@@ -29,7 +29,7 @@ namespace Dax.Tcdx.Tools
             }
         }
 
-        internal static void ExportTcdxImpl(ExportTcdx exportTcdx, Dax.Consumer.ConsumersCollection consumers)
+        internal static void ExportTcdxImpl(ExportTcdx exportTcdx, ConsumersCollection consumers)
         {
             if (consumers != null)
             {
@@ -39,7 +39,7 @@ namespace Dax.Tcdx.Tools
 
         public struct TcdxContent
         {
-            public Dax.Consumer.ConsumersCollection Consumers;
+            public ConsumersCollection Consumers;
         }
 
         /// <summary>

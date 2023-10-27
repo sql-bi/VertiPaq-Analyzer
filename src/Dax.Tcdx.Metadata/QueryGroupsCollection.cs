@@ -5,9 +5,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Dax.Tcdx.Metadata;
 
-namespace Dax.QueryGroup
+namespace Dax.Tcdx.Metadata
 {
     public class QueryGroupsCollection 
     {
