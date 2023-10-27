@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{05F7D96E-0910-48FE-9F2E-205A079C4760}</ProjectGuid>
+    <ProjectGuid>{DF8C39B4-F4CC-4ECD-B60E-AD7979B640CB}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>TestTcdx</RootNamespace>
     <AssemblyName>TestTcdx</AssemblyName>
@@ -51,30 +51,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dax.Metadata\Dax.Metadata.csproj">
-      <Project>{a665075a-afd6-4902-8cc6-e762c4297daa}</Project>
-      <Name>Dax.Metadata</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dax.Model.Extractor\Dax.Model.Extractor.csproj">
-      <Project>{ed728880-f58a-4198-bb71-d24ac4883236}</Project>
-      <Name>Dax.Model.Extractor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dax.ViewVpaExport\Dax.ViewVpaExport.csproj">
-      <Project>{d8b86b34-102d-4e98-a57e-a4d3fe29af8d}</Project>
-      <Name>Dax.ViewVpaExport</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dax.Vpax\Dax.Vpax.csproj">
-      <Project>{f57c3cbb-db2c-4e8c-a2b5-81803913e04a}</Project>
-      <Name>Dax.Vpax</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.AnalysisServices.retail.amd64">
       <Version>19.54.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dax.Tcdx\Dax.Tcdx.csproj">
+      <Project>{38947d6a-40b2-40ec-8a0a-5e9cc98dd375}</Project>
+      <Name>Dax.Tcdx</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,16 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.OleDb;
-using Newtonsoft.Json;
 using System.IO.Packaging;
 using System.IO;
-using Dax.Vpax.Tools;
-using TOM = Microsoft.AnalysisServices.Tabular;
+using Dax.Tcdx.Tools;
 
 // TODO
 // - Import from DMV 1100 (check for missing attributes?)
 #pragma warning disable IDE0051 // Remove unused private members
-namespace TestDaxModel
+namespace TestTcdx
 {
     class Program
     {
@@ -31,6 +29,9 @@ namespace TestDaxModel
 
         static void TestExportStream()
         {
+            // TODO implement Tcdx sample generator
+
+            /*
             string databaseName = "Microsoft_SQLServer_AnalysisServices";
             const string serverName = @"http://localhost:9000/xmla";
             const string applicationName = "Test";
@@ -73,10 +74,12 @@ namespace TestDaxModel
             }
 
             Console.WriteLine("Completed");
+            */
         }
 
         static void TestExport()
         {
+            /*
             string databaseName = "Microsoft_SQLServer_AnalysisServices";
             const string serverName = @"http://localhost:9000/xmla";
             const string applicationName = "Test";
@@ -109,9 +112,11 @@ namespace TestDaxModel
             Dax.Vpax.Tools.VpaxTools.ExportVpax(path, model, viewVpa, database);
 
             Console.WriteLine("Completed");
+            */
         }
         static void TestLocalVpaModel()
         {
+            /*
             //string databaseName = "Contoso";
             //const string serverName = @".\tab17";
             // string databaseName = "CalculationGroups_Currency";
@@ -126,9 +131,11 @@ namespace TestDaxModel
             Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
             Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(m, conn, 10);
             DumpRelationships(m);
+            */
         }
         static void TestPbiShared()
         {
+            /*
             const string dataSource = "pbiazure://api.powerbi.com";
             const string identityProvider = "https://login.microsoftonline.com/common, https://analysis.windows.net/powerbi/api, 929d0ec0-7a41-4b1e-bc7c-b754a28bddcc;";
             const string initialCatalog = "cffc2ad9-6ba9-4597-adec-b78af24e8fee";
@@ -151,9 +158,11 @@ namespace TestDaxModel
 
             Dax.Metadata.Model m = new Dax.Metadata.Model();
             Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            */
         }
         static void TestPbiShared_2022()
         {
+            /*
             const string dataSource = "powerbi://api.powerbi.com/v1.0/myorg/Azure";
             const string databaseName = "BookSales Azure";
 
@@ -165,9 +174,12 @@ namespace TestDaxModel
 
             Dax.Metadata.Model m = new Dax.Metadata.Model();
             Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            */
         }
         static void GenericTest()
         {
+            /*
+             * 
             //
             // Retrieve DAX model from database connection
             //
@@ -231,11 +243,13 @@ namespace TestDaxModel
             Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
             Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
             Console.WriteLine($"   Relationships Count: {viewVpa.Relationships.Count()}");
-
+            */
         }
 
         static void ConnectionStringTest()
         {
+            /*
+
             //
             // Retrieve DAX model from database connection
             //
@@ -296,52 +310,64 @@ namespace TestDaxModel
             Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
             Console.WriteLine($"   Relationships Count: {viewVpa.Relationships.Count()}");
 
+            */
         }
 
         private static void ImportExport()
         {
+            /*
+
             string filename = @"c:\temp\AdventureWorks.vpax";
             string fileout = @"c:\temp\export.vpax";
             var content = VpaxTools.ImportVpax(filename);
             VpaxTools.ExportVpax(fileout, content.DaxModel, content.ViewVpa, content.TomDatabase);
+            */
         }
         /// <summary>
         /// Export the Dax.Model in JSON format
         /// </summary>
         /// <param name="pathOutput"></param>
         /// <param name="m"></param>
-        private static void ExportModelJSON(string pathOutput, Dax.Metadata.Model m)
-        {
-            var json = JsonConvert.SerializeObject(
-                m,
-                Formatting.Indented,
-                new JsonSerializerSettings
-                {
-                    PreserveReferencesHandling = PreserveReferencesHandling.All,
-                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-                });
-            System.IO.File.WriteAllText(pathOutput + "model.json", json);
-            // Console.WriteLine(json);
-        }
+        /*
+    private static void ExportModelJSON(string pathOutput, Dax.Metadata.Model m)
+    {
+
+        var json = JsonConvert.SerializeObject(
+            m,
+            Formatting.Indented,
+            new JsonSerializerSettings
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+            });
+        System.IO.File.WriteAllText(pathOutput + "model.json", json);
+        // Console.WriteLine(json);
+
+    }
+        */
 
         /// <summary>
         /// Export VertiPaq Analyzer JSON format (just for test, the same file is embedded in VPAX)
         /// </summary>
         /// <param name="pathOutput"></param>
         /// <param name="export"></param>
-        private static void ExportJSON(string pathOutput, Dax.ViewVpaExport.Model export)
-        {
-            var json = JsonConvert.SerializeObject(
-                export,
-                Formatting.Indented,
-                new JsonSerializerSettings
-                {
-                    PreserveReferencesHandling = PreserveReferencesHandling.None,
-                    ReferenceLoopHandling = ReferenceLoopHandling.Error
-                });
-            System.IO.File.WriteAllText(pathOutput + "export.json", json);
-            // Console.WriteLine(json);
-        }
+        /*
+    private static void ExportJSON(string pathOutput, Dax.ViewVpaExport.Model export)
+    {
+
+        var json = JsonConvert.SerializeObject(
+            export,
+            Formatting.Indented,
+            new JsonSerializerSettings
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.None,
+                ReferenceLoopHandling = ReferenceLoopHandling.Error
+            });
+        System.IO.File.WriteAllText(pathOutput + "export.json", json);
+        // Console.WriteLine(json);
+
+    }
+*/
         /*
         /// <summary>
         /// Export to VertiPaq Analyzer (VPAX) file
@@ -351,6 +377,7 @@ namespace TestDaxModel
         /// <param name="export"></param>
         private static void ExportVPAX(string path, Dax.Model.Model model, Dax.ViewVpaExport.Model export)
         {
+
             Uri uriModel = PackUriHelper.CreatePartUri(new Uri("DaxModel.json", UriKind.Relative));
             Uri uriModelVpa = PackUriHelper.CreatePartUri(new Uri("DaxModelVpa.json", UriKind.Relative));
             using (Package package = Package.Open(path, FileMode.Create))
@@ -383,88 +410,100 @@ namespace TestDaxModel
         /// Dump internal structure for permissions
         /// </summary>
         /// <param name="m"></param>
-        private static void DumpPermissions(Dax.Metadata.Model m)
-        {
-            Console.WriteLine("------------------------");
-            foreach (var t in m.Tables)
-            {
-                Console.WriteLine("---Table={0}", t.TableName);
-                foreach (var tp in t.GetTablePermissions())
-                {
-                    Console.WriteLine("Role {0} = {1} ", tp.Role.RoleName.Name, tp.FilterExpression?.Expression);
-                }
-            }
-        }
+        /// 
+        /*
+    private static void DumpPermissions(Dax.Metadata.Model m)
+    {
 
-        private static void DumpReferencedColumns(Dax.Metadata.Model model)
+        Console.WriteLine("------------------------");
+        foreach (var t in m.Tables)
         {
-            Console.WriteLine("------------------------");
-            foreach (var t in model.Tables)
+            Console.WriteLine("---Table={0}", t.TableName);
+            foreach (var tp in t.GetTablePermissions())
             {
-                Console.WriteLine($"---Table={t.TableName} [referenced={t.IsReferenced}]");
-                foreach (var c in t.Columns.Where(c=>c.IsReferenced))
-                {
-                    Console.WriteLine(c.ColumnName);
-                }
+                Console.WriteLine("Role {0} = {1} ", tp.Role.RoleName.Name, tp.FilterExpression?.Expression);
             }
-        }
 
-        private static void DumpReferencedMeasures(Dax.Metadata.Model model)
+        }
+    }
+        */
+
+        /*
+    private static void DumpReferencedColumns(Dax.Metadata.Model model)
+    {
+        Console.WriteLine("------------------------");
+        foreach (var t in model.Tables)
         {
-            Console.WriteLine("------------------------");
-            foreach (var t in model.Tables)
+            Console.WriteLine($"---Table={t.TableName} [referenced={t.IsReferenced}]");
+            foreach (var c in t.Columns.Where(c=>c.IsReferenced))
             {
-                Console.WriteLine($"---Table={t.TableName} [referenced={t.IsReferenced}]");
-                foreach (var m in t.Measures.Where(m => m.IsReferenced))
-                {
-                    Console.WriteLine(m.MeasureName);
-                }
+                Console.WriteLine(c.ColumnName);
             }
         }
+    }
+        */
+
+        /*
+    private static void DumpReferencedMeasures(Dax.Metadata.Model model)
+    {
+        Console.WriteLine("------------------------");
+        foreach (var t in model.Tables)
+        {
+            Console.WriteLine($"---Table={t.TableName} [referenced={t.IsReferenced}]");
+            foreach (var m in t.Measures.Where(m => m.IsReferenced))
+            {
+                Console.WriteLine(m.MeasureName);
+            }
+        }
+    }
+        */
         /// <summary>
         /// Dump internal structure for Relationships
         /// </summary>
         /// <param name="m"></param>
-        private static void DumpRelationships(Dax.Metadata.Model m)
+        /*
+    private static void DumpRelationships(Dax.Metadata.Model m)
+    {
+        Console.WriteLine("------------------------");
+        foreach (var t in m.Tables)
         {
-            Console.WriteLine("------------------------");
-            foreach (var t in m.Tables)
+            Console.WriteLine("---Table={0}", t.TableName);
+            foreach (var r in t.GetRelationshipsTo())
             {
-                Console.WriteLine("---Table={0}", t.TableName);
-                foreach (var r in t.GetRelationshipsTo())
-                {
-                    Console.WriteLine(
-                        "{0}[{1}] ==> {2}[{3}] MissingKeys={4}, InvalidRows={5}, Violations={6}",
-                        r.FromColumn.Table.TableName,
-                        r.FromColumn.ColumnName,
-                        r.ToColumn.Table.TableName,
-                        r.ToColumn.ColumnName,
-                        r.MissingKeys,
-                        r.InvalidRows,
-                        string.Join(",",r.SampleReferentialIntegrityViolations)
-                    );
-                }
-                foreach (var r in t.GetRelationshipsFrom())
-                {
-                    Console.WriteLine(
-                        "{0}[{1}] ==> {2}[{3}] MissingKeys={4}, InvalidRows={5}, Violations={6}",
-                        r.FromColumn.Table.TableName,
-                        r.FromColumn.ColumnName,
-                        r.ToColumn.Table.TableName,
-                        r.ToColumn.ColumnName,
-                        r.MissingKeys,
-                        r.InvalidRows,
-                        string.Join(",", r.SampleReferentialIntegrityViolations)
-                    );
-                }
+                Console.WriteLine(
+                    "{0}[{1}] ==> {2}[{3}] MissingKeys={4}, InvalidRows={5}, Violations={6}",
+                    r.FromColumn.Table.TableName,
+                    r.FromColumn.ColumnName,
+                    r.ToColumn.Table.TableName,
+                    r.ToColumn.ColumnName,
+                    r.MissingKeys,
+                    r.InvalidRows,
+                    string.Join(",",r.SampleReferentialIntegrityViolations)
+                );
+            }
+            foreach (var r in t.GetRelationshipsFrom())
+            {
+                Console.WriteLine(
+                    "{0}[{1}] ==> {2}[{3}] MissingKeys={4}, InvalidRows={5}, Violations={6}",
+                    r.FromColumn.Table.TableName,
+                    r.FromColumn.ColumnName,
+                    r.ToColumn.Table.TableName,
+                    r.ToColumn.ColumnName,
+                    r.MissingKeys,
+                    r.InvalidRows,
+                    string.Join(",", r.SampleReferentialIntegrityViolations)
+                );
             }
         }
+    }
+        */
 
         /// <summary>
         /// Dump internal model structure 
         /// </summary>
         static void SimpleDump()
         {
+        /*
             Dax.Metadata.Model m = new Dax.Metadata.Model();
             Dax.Metadata.Table tA = new Dax.Metadata.Table(m)
             {
@@ -490,6 +529,7 @@ namespace TestDaxModel
             // Test serialization on JSON file
             var json = JsonConvert.SerializeObject(m, Formatting.Indented, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.All });
             System.IO.File.WriteAllText(@"C:\temp\model.json", json);
+        */
         }
     }
 
