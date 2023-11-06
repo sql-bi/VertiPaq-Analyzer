@@ -30,6 +30,8 @@ classDiagram
         TcdxName Container
         TcdxName FileName
         TcdxName Uri
+        DateTime UtcAcquisition
+        DateTime UtcModification
         Dictionary~string_TcdxName~ ConsumerProperties
         List~Items~ Items
         GetModels() IEnumerable~ModelDependency~
