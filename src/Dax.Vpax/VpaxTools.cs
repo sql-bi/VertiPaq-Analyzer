@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using TOM = Microsoft.AnalysisServices.Tabular;
 
 namespace Dax.Vpax.Tools
@@ -31,19 +33,21 @@ namespace Dax.Vpax.Tools
 
         internal static void ExportVpaxImpl(ExportVpax exportVpax, Dax.Metadata.Model model, Dax.ViewVpaExport.Model viewVpa = null, TOM.Database database = null)
         {
-            if (model != null)
-            {
-                exportVpax.ExportModel(model);
+            try {
+                if (model != null) exportVpax.ExportModel(model);
+                if (viewVpa != null) exportVpax.ExportViewVpa(viewVpa);
+                if (database != null) exportVpax.ExportDatabase(database);
+
+                exportVpax.Close();
             }
-            if (viewVpa != null)
-            {
-                exportVpax.ExportViewVpa(viewVpa);
+            catch {
+                // If an error occurs than remove all parts in the package to avoid generating a corrupt/incomplete VPAX file
+                foreach (var part in exportVpax.Package.GetParts().ToArray())
+                    exportVpax.Package.DeletePart(part.Uri);
+
+                exportVpax.Close();
+                throw; // rethrow
             }
-            if (database != null)
-            {
-                exportVpax.ExportDatabase(database);
-            }
-            exportVpax.Close();
         }
 
         public struct VpaxContent
