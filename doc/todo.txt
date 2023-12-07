@@ -1,0 +1,8 @@
+add report measures to consumer
+this will require to add a collection of TcdxExpressions with a enum type that will contain MXD or DAX (possibly extended in the future)
+Each expression will be tied to a Table/measure_name
+
+We should consider using the measure class from the vpax library since there are many more details we might need to complete the analysis.
+
+This might require to create a dependency from Vpax library, this might help by using DaxName instead of TcdxName
+
