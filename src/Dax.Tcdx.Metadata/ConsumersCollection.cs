@@ -23,6 +23,6 @@ namespace Dax.Tcdx.Metadata
         /// </summary>
         public Dictionary<string, TcdxName> ConsumersCollectionProperties { get; set; }
 
-        List<Consumer> Consumers { get; set; }
+        public List<Consumer> Consumers { get; set; }
     }
 }

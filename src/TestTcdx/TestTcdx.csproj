@@ -59,6 +59,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dax.Tcdx.Metadata\Dax.Tcdx.Metadata.csproj">
+      <Project>{131ca598-208b-47b0-8d92-5a42e772967c}</Project>
+      <Name>Dax.Tcdx.Metadata</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dax.Tcdx\Dax.Tcdx.csproj">
       <Project>{38947d6a-40b2-40ec-8a0a-5e9cc98dd375}</Project>
       <Name>Dax.Tcdx</Name>

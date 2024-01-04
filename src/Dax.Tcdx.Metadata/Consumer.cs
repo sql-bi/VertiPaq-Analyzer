@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dax.Tcdx.Metadata
 {
-    enum EnumConsumerType
+    public enum EnumConsumerType
     {
         Excel,
         PowerBIService,
@@ -25,13 +25,13 @@ namespace Dax.Tcdx.Metadata
             this.ConsumerType = EnumConsumerType.OtherConsumerType;
         }
         
-        EnumConsumerType ConsumerType { get; set; }
-        TcdxName HostName { get; set; }
-        TcdxName Container { get; set;}
-        TcdxName FileName { get; set; }
-        TcdxName Uri { get; set; }
-        DateTime UtcAcquisition { get; set; }
-        DateTime UtcModification { get; set; }
+        public EnumConsumerType ConsumerType { get; set; }
+        public TcdxName HostName { get; set; }
+        public TcdxName Container { get; set;}
+        public TcdxName FileName { get; set; }
+        public TcdxName Uri { get; set; }
+        public DateTime UtcAcquisition { get; set; }
+        public DateTime UtcModification { get; set; }
 
         public Dictionary<string, TcdxName> ConsumerProperties { get; set; }
         public List<Item> Items { get; set; }
