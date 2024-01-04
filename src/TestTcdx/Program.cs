@@ -16,12 +16,19 @@ namespace TestTcdx
 {
     class Program
     {
+        const string filePath = @"C:\temp\consumerscollectionandquerygroups.tcdx";
+        const string filePath1 = @"C:\temp\consumerscollectionandquerygroups1.tcdx";
 
         static void Main()
         {
             // for examples of tests see the project TestDaxModel
             ConsumersCollection c = BuildMockupConsumersCollection();
-            SerializeConsumersCollection(c);
+            QueryGroupsCollection g = BuildMockupQueryGroupsCollection();
+            SerializeAllTcdx(filePath, c, g);
+            TcdxTools.TcdxContent tcdx = TcdxTools.ImportTcdx(filePath);
+            ConsumersCollection c2 = tcdx.Consumers;
+            QueryGroupsCollection g2 = tcdx.QueryGroups;
+            SerializeAllTcdx(filePath1, c2, g2);
         }
 
         private static ConsumersCollection BuildMockupConsumersCollection()
@@ -39,16 +46,25 @@ namespace TestTcdx
             return consumers;
         }
 
-        private static void SerializeConsumersCollection(ConsumersCollection consumers)
+        private static QueryGroupsCollection BuildMockupQueryGroupsCollection()
         {
-            string path = @"C:\temp\consumerscollection.tcdx";
-            using (var stream = File.Open(path, FileMode.Create, FileAccess.ReadWrite)) {
-                TcdxTools.ExportTcdx(stream, consumers);
-            }
-
+            QueryGroupsCollection queryGroups = new QueryGroupsCollection();
+            QueryGroup queryGroup = new QueryGroup();
+            queryGroup.CorrelationId = "correlationId";
+            queryGroup.QueryGroupType = EnumQueryGroupType.ExtendedEvents;
+            // TODO add missing members
+            queryGroup.UtcStart = new DateTime(2023, 1, 4, 12, 30, 0, DateTimeKind.Utc);
+            queryGroup.UtcEnd = new DateTime(2023, 1, 4, 13, 0, 0, DateTimeKind.Utc);
+            queryGroups.QueryGroups.Add(queryGroup);
+            return queryGroups;
         }
 
+        private static void SerializeAllTcdx(string filePath, ConsumersCollection consumers, QueryGroupsCollection queryGroups)
+        {
+            using (var stream = File.Open(filePath, FileMode.Create, FileAccess.ReadWrite)) 
+            {
+                TcdxTools.ExportTcdx(stream, consumers, queryGroups);
+            }
+        }
     }
-
-
 }

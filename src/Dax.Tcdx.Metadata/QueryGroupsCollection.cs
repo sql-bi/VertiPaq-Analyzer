@@ -18,6 +18,6 @@ namespace Dax.Tcdx.Metadata
 
         public Dictionary<string, TcdxName> QueryGroupsCollectionProperties { get; set; }
 
-        List<QueryGroup> QueryGroups { get; set; }
+        public List<QueryGroup> QueryGroups { get; set; }
     }
 }

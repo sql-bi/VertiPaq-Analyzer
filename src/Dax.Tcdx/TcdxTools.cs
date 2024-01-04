@@ -8,11 +8,11 @@ namespace Dax.Tcdx.Tools
         /// <summary>
         /// Export to TDCX stream
         /// </summary>
-        public static void ExportTcdx(Stream stream, ConsumersCollection consumers)
+        public static void ExportTcdx(Stream stream, ConsumersCollection consumers, QueryGroupsCollection queryGroups)
         {
             using (ExportTcdx exportTcdx = new ExportTcdx(stream))
             {
-                ExportTcdxImpl(exportTcdx, consumers);
+                ExportTcdxImpl(exportTcdx, consumers, queryGroups);
             }
 
             stream.Position = 0L;
@@ -21,53 +21,49 @@ namespace Dax.Tcdx.Tools
         /// <summary>
         /// Export to TDCX file
         /// </summary>
-        public static void ExportTcdx(string path, ConsumersCollection consumers)
+        public static void ExportTcdx(string path, ConsumersCollection consumers, QueryGroupsCollection queryGroups)
         {
-            using (ExportTcdx exportVpax = new ExportTcdx(path))
+            using (ExportTcdx exportVpax = new ExportTcdx(path)) 
             {
-                ExportTcdxImpl(exportVpax, consumers);
+                ExportTcdxImpl(exportVpax, consumers, queryGroups);
             }
         }
-
-        internal static void ExportTcdxImpl(ExportTcdx exportTcdx, ConsumersCollection consumers)
+        internal static void ExportTcdxImpl(ExportTcdx exportTcdx, ConsumersCollection consumers, QueryGroupsCollection queryGroups)
         {
             if (consumers != null)
             {
                 exportTcdx.ExportConsumers(consumers);
+            }
+            if (queryGroups != null) 
+            {
+                exportTcdx.ExportQueryGroups(queryGroups);
             }
         }
 
         public struct TcdxContent
         {
             public ConsumersCollection Consumers;
+            public QueryGroupsCollection QueryGroups;
         }
 
-        /// <summary>
-        /// Import from VertiPaq Analyzer (VPAX) file
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static TcdxContent ImportTcdx(string path, bool importDatabase = true)
+        public static TcdxContent ImportTcdx(string path)
         {
             TcdxContent Content;
             using (ImportTcdx importTcdx = new ImportTcdx(path))
             {
                 Content.Consumers = importTcdx.ImportConsumers();
+                Content.QueryGroups = importTcdx.ImportQueryGroups();
             }
             return Content;
         }
 
-        /// <summary>
-        /// Import from VertiPaq Analyzer (VPAX) file stream
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static TcdxContent ImportTcdx(Stream stream, bool importDatabase = true)
+        public static TcdxContent ImportTcdx(Stream stream)
         {
             TcdxContent Content;
             using (ImportTcdx importTcdx = new ImportTcdx(stream))
             {
                 Content.Consumers = importTcdx.ImportConsumers();
+                Content.QueryGroups = importTcdx.ImportQueryGroups();
             }
             return Content;
         }

@@ -9,7 +9,7 @@ using System.Numerics;
 
 namespace Dax.Tcdx.Metadata
 {
-    enum EnumQueryGroupType
+    public enum EnumQueryGroupType
     {
         QueryAnalytics,
         Profiler,
@@ -18,9 +18,9 @@ namespace Dax.Tcdx.Metadata
     }
     public class QueryGroup
     {
-        public QueryGroup() 
+        public QueryGroup()
         {
-            this.QueryGroupProperties = new Dictionary<string, TcdxName>();   
+            this.QueryGroupProperties = new Dictionary<string, TcdxName>();
             this.Model = ModelDependency._dummyModelDependency;
             this.TableQueries = new Dictionary<TcdxName, int>();
             this.ColumnQueries = new Dictionary<TcdxName, int>();
@@ -33,11 +33,11 @@ namespace Dax.Tcdx.Metadata
         /// the correlation can be used to link the qeury group to a separate log file containing the queries, that are not to be 
         /// included into the tcdx file for privacy reasons
         /// </summary>
-        string CorrelationId { get; set; }
+        public string CorrelationId { get; set; }
 
-        EnumQueryGroupType QueryGroupType { get; set; }
+        public EnumQueryGroupType QueryGroupType { get; set; }
 
-        TcdxName QueryGroupName { get; set; }
+        public TcdxName QueryGroupName { get; set; }
 
 
         public Dictionary<string, TcdxName> QueryGroupProperties { get; set; }
@@ -54,7 +54,7 @@ namespace Dax.Tcdx.Metadata
         public Dictionary<TcdxName, int> MeasureQueries { get; set; }
 
         // token can be a column or a measure but it was not possible to distinguish them from the context
-        public Dictionary<TcdxName, int> TokenQueries{ get; set; }
+        public Dictionary<TcdxName, int> TokenQueries { get; set; }
 
         public long TotalExecTimeMilliseconds { get; set; }
         public int NumberOfQueries { get; set; }
