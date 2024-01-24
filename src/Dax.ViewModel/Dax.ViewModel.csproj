@@ -1,46 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <Nullable>disable</Nullable>
-    <NeutralLanguage>en-US</NeutralLanguage>
+    <TargetFrameworks>net462;netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
-
-    <!-- version numbers will be updated by build -->
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0</FileVersion>
-    <VersionPrefix>1.0.0</VersionPrefix>
-    <VersionSuffix>dev</VersionSuffix>
-
-    <Title>Dax.ViewModel</Title>
-    <Company>SQLBI</Company>
-    <!--Copyright>Copyright ©</Copyright-->
-    <Authors>Marco Russo</Authors>
-    <Product>VertiPaq Analyzer</Product>
-    <Description>ViewModel to display in a VertiPaq Analyzer viewer the Dax.Model data</Description>
-    <!--Summary>...</Summary-->
-    <PackageId>Dax.ViewModel</PackageId>
-    <PackageTags>VPAX;DAX;VERTIPAQ;ANALYZER</PackageTags>
-    <PackageIcon>package-icon.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/sql-bi/VertiPaq-Analyzer</RepositoryUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Deterministic>true</Deterministic>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE.md" Pack="true" PackagePath="\" />
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-    <None Include="..\..\package-icon.png" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
+  <PropertyGroup>
+    <Title>Dax.ViewModel</Title>
+    <Description>ViewModel to display in a VertiPaq Analyzer viewer the Dax.Model data</Description>
+    <PackageId>Dax.ViewModel</PackageId>
+  </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Dax.Metadata\Dax.Metadata.csproj" />
   </ItemGroup>
@@ -50,14 +20,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
-    <AssemblyTitle>Dax.ViewModel .NET Framework 4.6.1</AssemblyTitle>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
+    <AssemblyTitle>Dax.ViewModel .NET Framework 4.6.2</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <AssemblyTitle>Dax.ViewModel .NET Standard 2.0</AssemblyTitle>

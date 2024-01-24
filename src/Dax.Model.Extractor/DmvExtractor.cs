@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.OleDb;
-using Tom = Microsoft.AnalysisServices.Tabular;
+﻿using Dax.Model.Extractor.Data;
 using Microsoft.AnalysisServices.AdomdClient;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Linq;
+using Tom = Microsoft.AnalysisServices.Tabular;
 
 namespace Dax.Metadata.Extractor
 {
-    
+
     public class ExtractorException : Exception
     {
         public IDbConnection Connection { get; private set; }
@@ -31,25 +28,13 @@ namespace Dax.Metadata.Extractor
     {
         public int CommandTimeout { get; set; } = 0;
 
-        // protected AdomdConnection Connection { get; private set; }
         protected IDbConnection Connection { get; private set; }
 
         public Dax.Metadata.Model DaxModel { get; private set; }
 
         protected IDbCommand CreateCommand(string commandText)
         {
-            if (Connection is AdomdConnection)
-            {
-                return new AdomdCommand(commandText, Connection as AdomdConnection);
-            }
-            else if (Connection is OleDbConnection)
-            {
-                return new OleDbCommand(commandText, Connection as OleDbConnection);
-            }
-            else
-            {
-                throw new ExtractorException(Connection);
-            }
+            return Connection.CreateCommand(commandText);
         }
 
         public DmvExtractor(Dax.Metadata.Model daxModel, IDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
@@ -383,11 +368,27 @@ SELECT
     MEASURE_UNIQUE_NAME,
     [DESCRIPTION]
 FROM $SYSTEM.MDSCHEMA_MEASURES
-WHERE MEASURE_NAME <> '__Default measure'
+WHERE TRIM(MEASUREGROUP_NAME) <> ''
 ORDER BY MEASUREGROUP_NAME";
+            const string QUERY_FORMATSTRINGS = @"
+SELECT 
+    [ID] AS FORMAT_ID,
+    [Expression] AS FORMAT_STRING_EXPRESSION
+FROM $SYSTEM.TMSCHEMA_FORMAT_STRING_DEFINITIONS
+";
+            const string QUERY_MEASURESFORMATID = @"
+SELECT 
+    [FormatStringDefinitionID] AS FORMAT_ID,
+    [Name] AS MEASURE_NAME
+FROM $SYSTEM.TMSCHEMA_MEASURES
+WHERE [FormatStringDefinitionID] > 0
 
+";
+
+            Dictionary<string, string> formatStringExpressions = new Dictionary<string, string>();
             List<string> kpiInternalMeasures = new List<string>();
             ReadKpis();
+            ReadFormatStringExpressions();
             ProcessMeasures();
 
             void ReadKpis()
@@ -413,6 +414,56 @@ ORDER BY MEASUREGROUP_NAME";
                 }
             }
 
+            void ReadFormatStringExpressions()
+            {
+                Dictionary<long,string> mapExpressions = new Dictionary<long, string>();
+
+                // read all format string expressions into a dictionary
+                using var cmd = CreateCommand(QUERY_FORMATSTRINGS);
+                cmd.CommandTimeout = CommandTimeout;
+                try {
+                    using (var rdr = cmd.ExecuteReader()) {
+                        while (rdr.Read()) {
+                            long formatId = rdr.GetInt64(0);
+                            string formatStringExpression = rdr.GetValue(1)?.ToString() ?? string.Empty;
+                            if (formatId > 0 && !string.IsNullOrEmpty(formatStringExpression)) {
+                                mapExpressions.Add(formatId, formatStringExpression);
+                            }
+                        }
+                    }
+                }
+                catch (Exception) { 
+                    // we will get an error if the current server does not support dynamic format strings
+                    // we can just swallow this and go on as if no dynamic format strings are defined
+                }
+                // if there are no format string expressions exit here
+                if (mapExpressions.Count == 0) return;
+
+                try {
+                    // map the format string expressions to the measure names
+                    using (var cmdId = CreateCommand(QUERY_MEASURESFORMATID)) {
+                        cmdId.CommandTimeout = CommandTimeout;
+                        using (var rdr = cmdId.ExecuteReader()) {
+                            while (rdr.Read()) {
+                                long formatId = rdr.GetInt64(0);
+                                string measureName = rdr.GetValue(1)?.ToString() ?? string.Empty;
+                                if (formatId > 0 && !string.IsNullOrEmpty(measureName)) {
+                                
+                                    if (mapExpressions.ContainsKey(formatId)) {
+                                        formatStringExpressions.Add(measureName, mapExpressions[formatId]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // we will get an error if the current model has no dynamic format strings
+                    // we can just swallow this and go on as if no dynamic format strings are defined
+                }
+            }
+
             void ProcessMeasures()
             {
                 var cmd = CreateCommand(QUERY_MEASURES);
@@ -425,6 +476,7 @@ ORDER BY MEASUREGROUP_NAME";
                         string tableName = (rdr.GetValue(0) as string) ?? string.Empty;
                         string measureName = rdr.GetString(1);
                         int dataType = rdr.GetInt32(2);
+                        string formatStringExpression = formatStringExpressions.ContainsKey(measureName) ? formatStringExpressions[measureName] : string.Empty;
                         string measureExpression = rdr.GetValue(3)?.ToString() ?? string.Empty;
                         string defaultFormatString = rdr.GetValue(4)?.ToString() ?? string.Empty;
                         bool measureVisible = rdr.GetBoolean(5);
@@ -444,7 +496,8 @@ ORDER BY MEASUREGROUP_NAME";
                                 MeasureName = new DaxName(measureName),
                                 // dataType not set?
                                 MeasureExpression = new DaxExpression(measureExpression),
-                                FormatString = defaultFormatString, // TODO - this might change to DaxExpression with dynamic format strings
+                                FormatString = defaultFormatString, 
+                                FormatStringExpression = new DaxExpression(formatStringExpression),
                                 IsHidden = !measureVisible,
                                 DisplayFolder = new DaxNote(measureDisplayFolder), 
                                 Description = new DaxNote(measureDescription)
