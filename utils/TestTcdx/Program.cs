@@ -23,18 +23,20 @@ namespace TestTcdx
         static void Main()
         {
             // for examples of tests see the project TestDaxModel
+
+            VersionInfo versionInfo = new VersionInfo();
             List<Item> items = new List<Item>();
             Item pivot = CreateMockupPivot();
             Item powerBiVisual = CreateMockupPowerBiVisual();
             items.Add(pivot);
             items.Add(powerBiVisual);
-            ConsumersCollection c = BuildMockupConsumersCollection(items);
-            QueryGroupsCollection g = BuildMockupQueryGroupsCollection(items);
-            SerializeAllTcdx(filePath, c, g);
+            ConsumersCollection consumerCollection1 = BuildMockupConsumersCollection(items);
+            QueryGroupsCollection queryGroup1 = BuildMockupQueryGroupsCollection(items);
+            SerializeAllTcdx(filePath, versionInfo, consumerCollection1, queryGroup1);
             TcdxTools.TcdxContent tcdx = TcdxTools.ImportTcdx(filePath);
-            ConsumersCollection c2 = tcdx.Consumers;
-            QueryGroupsCollection g2 = tcdx.QueryGroups;
-            SerializeAllTcdx(filePath1, c2, g2);
+            ConsumersCollection consumerCollection2 = tcdx.Consumers;
+            QueryGroupsCollection queryGroup2 = tcdx.QueryGroups;
+            SerializeAllTcdx(filePath1, versionInfo, consumerCollection2, queryGroup2);
         }
 
         private static ConsumersCollection BuildMockupConsumersCollection(List<Item> items)
@@ -160,11 +162,11 @@ namespace TestTcdx
             return visual;
         }
 
-        private static void SerializeAllTcdx(string filePath, ConsumersCollection consumers, QueryGroupsCollection queryGroups)
+        private static void SerializeAllTcdx(string filePath, VersionInfo versionInfo, ConsumersCollection consumers, QueryGroupsCollection queryGroups)
         {
             using (var stream = File.Open(filePath, FileMode.Create, FileAccess.ReadWrite)) 
             {
-                TcdxTools.ExportTcdx(stream, consumers, queryGroups);
+                TcdxTools.ExportTcdx(stream, versionInfo, consumers, queryGroups);
             }
         }
     }

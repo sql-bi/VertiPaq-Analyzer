@@ -26,6 +26,25 @@ namespace Dax.Tcdx
         {
             this.Package.Close();
         }
+        public void ExportVersionInfo(VersionInfo versionInfo)
+        {
+            Uri uriModel = PackUriHelper.CreatePartUri(new Uri(TcdxFormat.VERSIONINFO, UriKind.Relative));
+            using (TextWriter tw = new StreamWriter(this.Package.CreatePart(uriModel, "application/json", CompressionOption.Maximum).GetStream(), Encoding.UTF8)) {
+                tw.Write(
+                    JsonConvert.SerializeObject(
+                        versionInfo,
+                        Formatting.Indented,
+                        new JsonSerializerSettings
+                        {
+                            PreserveReferencesHandling = PreserveReferencesHandling.All,
+                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                        }
+                    )
+                );
+                tw.Close();
+            }
+        }
+
         public void ExportConsumers(ConsumersCollection consumers)
         {
             Uri uriModel = PackUriHelper.CreatePartUri(new Uri(TcdxFormat.CONSUMERS, UriKind.Relative));

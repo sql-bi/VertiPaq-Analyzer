@@ -20,6 +20,7 @@ namespace Dax.Tcdx.Tests
 
             var tcdxContent = TcdxTools.ImportTcdx(tcdxPath);
 
+            Assert.NotNull(tcdxContent.VersionInfo);
             Assert.NotNull(tcdxContent.Consumers);
             Assert.NotNull(tcdxContent.QueryGroups);
         }
@@ -31,6 +32,7 @@ namespace Dax.Tcdx.Tests
             using var stream = File.OpenRead(tcdxPath);
             var tcdxContent = TcdxTools.ImportTcdx(stream);
 
+            Assert.NotNull(tcdxContent.VersionInfo);
             Assert.NotNull(tcdxContent.Consumers);
             Assert.NotNull(tcdxContent.QueryGroups);
         }
@@ -44,7 +46,7 @@ namespace Dax.Tcdx.Tests
                     var daxModel = TcdxTools.ImportTcdx(tcdxPath).DaxModel;
                     var tomDatabase = DeserializeDatabase(bimPath, CompatibilityMode.Unknown);
 
-                    Assert.Equal(tomVersion, daxModel.Version);
+                    Assert.Equal(tomVersion, daxModel.VersionInfo);
                     Assert.Equal(tomDatabase.CompatibilityLevel, daxModel.CompatibilityLevel);
                     Assert.Equal(tomDatabase.Model.Tables.Count, daxModel.Tables.Count);
                     Assert.Equal(tomDatabase.Model.Relationships.Count, daxModel.Relationships.Count);

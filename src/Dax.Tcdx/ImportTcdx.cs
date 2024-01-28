@@ -44,6 +44,11 @@ namespace Dax.Tcdx
             }
         }
 
+        public VersionInfo ImportVersionInfo()
+        {
+            return DeserializePackageContent<VersionInfo>(TcdxFormat.VERSIONINFO);
+        }
+
         public ConsumersCollection ImportConsumers()
         {
             return DeserializePackageContent<ConsumersCollection>(TcdxFormat.CONSUMERS);

@@ -3,6 +3,14 @@ Title: Tcdx format
 ---
 
 classDiagram
+    class VersionInfo {
+        string TcdxVersion
+        string TcdxLibVersion
+        string ExtractorApp
+        string ExtractorAppVersion
+        string ExtractorLib
+        string ExtractorLibVersion
+    }
     class ConsumersCollection {
         Dictionary~string_TcdxName~ ConsumerCollectionProperties
         List~Consumer~ Consumers
