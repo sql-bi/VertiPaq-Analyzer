@@ -59,12 +59,16 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dax.Tcdx.Metadata\Dax.Tcdx.Metadata.csproj">
-      <Project>{131ca598-208b-47b0-8d92-5a42e772967c}</Project>
+    <ProjectReference Include="..\..\src\Dax.Metadata\Dax.Metadata.csproj">
+      <Project>{58943fc4-75d3-4435-a51e-caefe1e69faa}</Project>
+      <Name>Dax.Metadata</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Dax.Tcdx.Metadata\Dax.Tcdx.Metadata.csproj">
+      <Project>{c68d5250-1a40-48ed-9372-99076dddf736}</Project>
       <Name>Dax.Tcdx.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dax.Tcdx\Dax.Tcdx.csproj">
-      <Project>{38947d6a-40b2-40ec-8a0a-5e9cc98dd375}</Project>
+    <ProjectReference Include="..\..\src\Dax.Tcdx\Dax.Tcdx.csproj">
+      <Project>{4ff988b5-9f04-4859-a7b7-70c501b73ce4}</Project>
       <Name>Dax.Tcdx</Name>
     </ProjectReference>
   </ItemGroup>

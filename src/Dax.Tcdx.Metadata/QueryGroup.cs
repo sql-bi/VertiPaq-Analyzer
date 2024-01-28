@@ -22,10 +22,10 @@ namespace Dax.Tcdx.Metadata
         {
             this.QueryGroupProperties = new Dictionary<string, TcdxName>();
             this.Model = ModelDependency._dummyModelDependency;
-            this.TableQueries = new Dictionary<TcdxName, int>();
-            this.ColumnQueries = new Dictionary<TcdxName, int>();
-            this.MeasureQueries = new Dictionary<TcdxName, int>();
-            this.TokenQueries = new Dictionary<TcdxName, int>();
+            this.TableQueries = new Dictionary<string, int>();
+            this.ColumnQueries = new Dictionary<string, int>();
+            this.MeasureQueries = new Dictionary<string, int>();
+            this.TokenQueries = new Dictionary<string, int>();
             this.QueryGroupType = EnumQueryGroupType.OtherQueryGroupType;
         }
 
@@ -49,12 +49,12 @@ namespace Dax.Tcdx.Metadata
         public Item Item { get; set; }
 
         // counters of numbner of queries where the table, column, measure or token are referred
-        public Dictionary<TcdxName, int> TableQueries { get; set; }
-        public Dictionary<TcdxName, int> ColumnQueries { get; set; }
-        public Dictionary<TcdxName, int> MeasureQueries { get; set; }
+        public Dictionary<string, int> TableQueries { get; set; }
+        public Dictionary<string, int> ColumnQueries { get; set; }
+        public Dictionary<string, int> MeasureQueries { get; set; }
 
         // token can be a column or a measure but it was not possible to distinguish them from the context
-        public Dictionary<TcdxName, int> TokenQueries { get; set; }
+        public Dictionary<string, int> TokenQueries { get; set; }
 
         public long TotalExecTimeMilliseconds { get; set; }
         public int NumberOfQueries { get; set; }
