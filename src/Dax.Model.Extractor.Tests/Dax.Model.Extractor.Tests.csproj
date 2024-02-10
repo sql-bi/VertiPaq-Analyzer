@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>net462;netcoreapp3.1;net6.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <!-- It's ok if a test target has exited support. Disable NETSSDK1138 warning -->
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
