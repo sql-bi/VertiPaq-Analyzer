@@ -32,6 +32,9 @@ namespace Dax.Metadata
         /// LVersion of the library that manages the model info 
         /// </summary>
         public string DaxModelLibVersion { get; set; }
+        public string ObfuscatorDictionaryId { get; set; }
+        public string ObfuscatorLib { get; set; }
+        public string ObfuscatorLibVersion { get; set; }
 
         public DaxName ServerName { get; set; }
         public DaxName ModelName { get; set; }
