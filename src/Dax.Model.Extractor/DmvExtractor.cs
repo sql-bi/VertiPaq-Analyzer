@@ -1,4 +1,5 @@
 ﻿using Dax.Model.Extractor.Data;
+using Microsoft.AnalysisServices;
 using Microsoft.AnalysisServices.AdomdClient;
 using System;
 using System.Collections.Generic;
@@ -368,7 +369,7 @@ SELECT
     MEASURE_UNIQUE_NAME,
     [DESCRIPTION]
 FROM $SYSTEM.MDSCHEMA_MEASURES
-WHERE MEASURE_NAME <> '__Default measure'
+WHERE TRIM(MEASUREGROUP_NAME) <> ''
 ORDER BY MEASUREGROUP_NAME";
             const string QUERY_FORMATSTRINGS = @"
 SELECT 
@@ -1099,6 +1100,10 @@ FROM $SYSTEM.DISCOVER_CALC_DEPENDENCY
             catch (AdomdErrorResponseException ex)
             {
                 // We ignore errors accessing this DMV
+                Debug.WriteLine($"Ignored error in DISCOVER_CALC_DEPENDENCY: {ex.Message}");
+            }
+            catch (AmoException ex)
+            {
                 Debug.WriteLine($"Ignored error in DISCOVER_CALC_DEPENDENCY: {ex.Message}");
             }
         }

@@ -32,6 +32,9 @@ namespace Dax.Metadata
         /// LVersion of the library that manages the model info 
         /// </summary>
         public string DaxModelLibVersion { get; set; }
+        public string ObfuscatorDictionaryId { get; set; }
+        public string ObfuscatorLib { get; set; }
+        public string ObfuscatorLibVersion { get; set; }
 
         public DaxName ServerName { get; set; }
         public DaxName ModelName { get; set; }
@@ -99,7 +102,7 @@ namespace Dax.Metadata
 
         // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
         [JsonIgnore]
-        public static readonly string CurrentDaxModelVersion = new Version(1, 3, 0).ToString(3);
+        public static readonly string CurrentDaxModelVersion = new Version(1, 4, 0).ToString(3);
 
         public Model(string extractorLib, string extractorLibVersion, string extractorApp = null, string extractorAppVersion = null) : this()
         {

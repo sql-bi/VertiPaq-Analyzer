@@ -9,7 +9,7 @@ namespace Dax.Metadata
     [JsonConverter(typeof(DaxNameJsonConverter))]
     public class DaxName
     {
-        public string Name { get; }
+        public string Name { get; set; }
 
         public DaxName( string name )
         {
