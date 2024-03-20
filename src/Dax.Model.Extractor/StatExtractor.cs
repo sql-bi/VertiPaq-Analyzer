@@ -21,32 +21,44 @@ namespace Dax.Metadata.Extractor
             return Connection.CreateCommand(commandText);
         }
 
-        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false )
+        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             StatExtractor extractor = new StatExtractor(daxModel, connection);
-            extractor.LoadTableStatistics(analyzeDirectQuery);
-            extractor.LoadColumnStatistics(analyzeDirectQuery);
-            extractor.LoadRelationshipStatistics(sampleRows, analyzeDirectQuery);
+            extractor.LoadTableStatistics(analyzeDirectQuery, analyzeDirectLake);
+            extractor.LoadColumnStatistics(analyzeDirectQuery, analyzeDirectLake);
+            extractor.LoadRelationshipStatistics(sampleRows, analyzeDirectQuery, analyzeDirectLake);
 
             // Update ExtractionDate
             extractor.DaxModel.ExtractionDate = DateTime.UtcNow;
         }
 
-        public void LoadRelationshipStatistics(int sampleRows = 0,bool analyzeDirectQuery = false)
+        public void LoadRelationshipStatistics(int sampleRows = 0,bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             // Maximum number of invalid keys used for extraction through SAMPLE, use TOPNSKIP or TOPN otherwise
             const int MAX_KEYS_FOR_SAMPLE = 1000;
 
             // only get relationship stats if the relationship has an ID
-            var relationshipList = DaxModel.Relationships.Where(r => r.Dmv1200RelationshipId != 0).ToList();
+            var relationshipList = DaxModel.Relationships.Where(r => r.Dmv1200RelationshipId != 0)
+                .Where(rel =>
+                    // we are analyzing DQ and both columns are in a table with DQ partitions
+                    (analyzeDirectQuery && ((rel.FromColumn.Table.HasDirectQueryPartitions) || (rel.ToColumn.Table.HasDirectQueryPartitions)))
+
+                    // or we are analyzing DL and either column is in a table with DL partitions
+                    || (analyzeDirectLake >= DirectLakeExtractionMode.Referenced && ((rel.FromColumn.Table.HasDirectLakePartitions) || (rel.ToColumn.Table.HasDirectLakePartitions))
+
+                    // or if both columns are resident in memory
+                    || (rel.FromColumn.IsResident && rel.ToColumn.IsResident)
+
+                    // or neither table has DQ or DL partitions
+                    || ((!rel.FromColumn.Table.HasDirectQueryPartitions) && (!rel.ToColumn.Table.HasDirectQueryPartitions) &&
+                        (!rel.FromColumn.Table.HasDirectLakePartitions) && (!rel.ToColumn.Table.HasDirectLakePartitions))
+                    )
+                ).ToList();
+
             var loopRelationships = relationshipList.SplitList(10);
             #region Statistics
-            foreach (var relationshipSetComplete in loopRelationships)
+            foreach (var relationshipSet in loopRelationships)
             {
-                var relationshipSet = 
-                    relationshipSetComplete
-                    .Where(rel => analyzeDirectQuery || ((!rel.FromColumn.Table.HasDirectQueryPartitions) && (!rel.ToColumn.Table.HasDirectQueryPartitions)))
-                    .ToList();
                 // Skip EVALUATE if no valid relationships are found
                 if (!relationshipSet.Any()) continue;
 
@@ -169,12 +181,12 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
             #endregion
         }
 
-        public void LoadTableStatistics( bool analyzeDirectQuery = false )
+        public void LoadTableStatistics( bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             // only get table stats if the table has more than 1 user created column 
             // (every table has a RowNumber column so we only want tables with more than 1 column)
             var tableList = DaxModel.Tables
-                .Where( t => t.Columns.Count > 1 && (analyzeDirectQuery || !t.HasDirectQueryPartitions) )
+                .Where( t => t.Columns.Count > 1 && (analyzeDirectQuery || !t.HasDirectQueryPartitions) && (analyzeDirectLake >= DirectLakeExtractionMode.ResidentOnly || !t.HasDirectLakePartitions) )
                 .Select(t => t).ToList();
             var loopTables = tableList.SplitList(50);
             foreach ( var tableSet in loopTables ) {
@@ -223,13 +235,20 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
         {
             return originalName.Replace("\"", "\"\"");
         }
-        public void LoadColumnStatistics(bool analyzeDirectQuery = false)
+        public void LoadColumnStatistics(bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             var allColumns = 
                 (from t in DaxModel.Tables
-                 where t.Columns.Count > 1 && (analyzeDirectQuery || !t.HasDirectQueryPartitions)
+                 // skip direct query tables if the analyzeDirectQuery is false
+                 where t.Columns.Count > 1 && (analyzeDirectQuery || !t.HasDirectQueryPartitions)   
                      from c in t.Columns
                      where c.State == "Ready"
+                        // only include the column if the table does not have Direct Lake partitions or if they are resident or if analyzeDirectLake is true
+                        && (!t.HasDirectLakePartitions 
+                            || (analyzeDirectLake >= DirectLakeExtractionMode.ResidentOnly && c.IsResident) 
+                            || (analyzeDirectLake >= DirectLakeExtractionMode.Referenced && c.IsReferenced )
+                            || (analyzeDirectLake == DirectLakeExtractionMode.Full)
+                            )
                      select c).ToList();
             var loopColumns = allColumns.SplitList(50); // no more than 9999
             foreach ( var columnSet in loopColumns ) {

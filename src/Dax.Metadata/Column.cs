@@ -111,5 +111,8 @@ namespace Dax.Metadata
                 cs.Column = this;
             }
         }
+
+        [JsonIgnore]
+        public bool IsResident => ColumnSegments.Any(s => s.IsResident??true);  // if IsResident is null this is an import model
     }
 }

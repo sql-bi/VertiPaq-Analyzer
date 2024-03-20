@@ -41,7 +41,9 @@ namespace Dax.Metadata.Extractor
         public DmvExtractor(Dax.Metadata.Model daxModel, IDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
             Connection = connection;
-            Connection.Open();
+
+            // if the connection is not already open, then open it
+            if (Connection.State != ConnectionState.Open) Connection.Open();
 
             // Validate databaseName
             var compatibilityLevel = daxModel.CompatibilityLevel; // assume the default obtained by TOM if any, or unknown/0 otherwise

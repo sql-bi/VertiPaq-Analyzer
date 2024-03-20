@@ -8,7 +8,7 @@ using Microsoft.PowerBI.Api.Models;
 
 namespace TestWpfPowerBI.Model
 {
-    public delegate IEnumerable<TreeViewPbiItem> GetChildrenDelegate(IEventAggregator eventAggregator);
+    public delegate IEnumerable<TreeViewPbiItem> GetChildrenDelegate(TreeViewPbiItem item, IEventAggregator eventAggregator);
 
     public abstract class TreeViewPbiItem : PropertyChangedBase
     {
@@ -22,13 +22,14 @@ namespace TestWpfPowerBI.Model
         }
 
         public abstract string Name { get; }
-
+        public abstract Guid Id { get; }
+        private IEnumerable<TreeViewPbiItem> _children;
         // private IEnumerable<TreeViewPbiItem> _children;
         public IEnumerable<TreeViewPbiItem> Children {
             get {
-                IEnumerable<TreeViewPbiItem> _children = null;
+                //IEnumerable<TreeViewPbiItem> _children = null;
                 if (_children == null && _getChildren != null)
-                { _children = _getChildren.Invoke(_eventAggregator); }
+                { _children = _getChildren.Invoke(this, _eventAggregator); }
                 return _children;
             }
         }
@@ -44,9 +45,11 @@ namespace TestWpfPowerBI.Model
 
         public override string Name { get { return Group.Name; } }
 
+        public override Guid Id => Group.Id;
+
         public Group Group { get; set; }
 
-        // public IList<TreeViewPbiItem> Datasets { get { GetChildrenDelegate()}
+        public IList<TreeViewPbiItem> Datasets { get; set; }
     }
 
     public class TreeViewPbiDataset : TreeViewPbiItem
@@ -58,7 +61,7 @@ namespace TestWpfPowerBI.Model
         }
 
         public override string Name { get { return Dataset.Name; } }
-
+        public override Guid Id => Guid.Parse(Dataset.Id);
         public Dataset Dataset { get; set; }
     }
 
@@ -71,6 +74,8 @@ namespace TestWpfPowerBI.Model
         }
 
         public override string Name { get; }
+
+        public override Guid Id => Guid.Empty;
 
         public Dataset Dataset { get; set; }
     }

@@ -26,9 +26,9 @@ namespace TestWpfPowerBI.PowerBI
         {
             return Client.Groups.GetGroups().Value;
         }
-        public IList<Dataset> GetDatasets(Group group)
+        public IList<Dataset> GetDatasets(Guid groupId)
         {
-            return Client.Datasets.GetDatasetsInGroup(group.Id).Value;
+            return Client.Datasets.GetDatasetsInGroup(groupId).Value;
         }
         public IList<Dataset> GetDatasets()
         {
@@ -37,30 +37,27 @@ namespace TestWpfPowerBI.PowerBI
 
         internal class DynamicDatasets
         {
-            public DynamicDatasets( Group group )
+            private MetadataTools _parent;
+            public DynamicDatasets(MetadataTools parent)
             {
-                this.Group = group;
+                _parent = parent;
             }
 
-            public Group Group { get; }
-
-            public IEnumerable<TreeViewPbiItem> GetChildren(IEventAggregator eventAggregator)
+            public IEnumerable<TreeViewPbiItem> GetChildren(TreeViewPbiItem item, IEventAggregator eventAggregator)
             {
-                var datasets = Group?.Datasets;
+                
 
-                if (datasets != null)
-                {
-                    var pbiDatasets = 
-                        from d in datasets 
-                        select new TreeViewPbiDataset(d, null, eventAggregator);
-                    return pbiDatasets;
-                }
-                else
-                {
-                    var pbiDummyDatasets = new List<TreeViewPbiItem>();
-                    pbiDummyDatasets.Add(new TreeViewPbiDummy("Loading...", null, null));
-                    return pbiDummyDatasets;
-                }
+                //if (item.Children != null)
+                //{
+                    return from d in _parent.GetDatasets(item.Id) select new TreeViewPbiDataset(d,null,null)
+                           ;
+                //}
+                //else
+                //{
+                //    var pbiDummyDatasets = new List<TreeViewPbiItem>();
+                //    pbiDummyDatasets.Add(new TreeViewPbiDummy("Loading...", null, null));
+                //    return pbiDummyDatasets;
+                //}
             }
         }
         
@@ -69,7 +66,7 @@ namespace TestWpfPowerBI.PowerBI
         {
             var pbiGroups =
                 from g in Client.Groups.GetGroups().Value
-                select new TreeViewPbiGroup(g, (new DynamicDatasets(g)).GetChildren, eventAggregator);
+                select new TreeViewPbiGroup(g, (new DynamicDatasets(this)).GetChildren, eventAggregator);
             return pbiGroups.ToList();
         }
 

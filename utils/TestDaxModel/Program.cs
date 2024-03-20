@@ -9,6 +9,7 @@ using System.IO.Packaging;
 using System.IO;
 using Dax.Vpax.Tools;
 using TOM = Microsoft.AnalysisServices.Tabular;
+using Dax.Metadata.Extractor;
 
 // TODO
 // - Import from DMV 1100 (check for missing attributes?)
@@ -189,13 +190,16 @@ namespace TestDaxModel
             // const string serverName = @"http://localhost:9000/xmla";
             // const string databaseName = "Microsoft_SQLServer_AnalysisServices";
 
-            const string serverName = @"localhost\tab19";
-            const string databaseName = "Adventure Works";
+            //const string serverName = @"localhost\tab19";
+            //const string databaseName = "Adventure Works";
             // const string databaseName = "Adventure Works 2012 Tabular";
             // const string databaseName = "EnterpriseBI";
-            //const string serverName = "localhost:53406";
-            //const string databaseName = "84d819d1-e1b3-4c8a-b9f6-c34ac2d2aba2";
+            //const string serverName = "powerbi://api.powerbi.com/v1.0/myorg/FabricCAT%20BigDemoDB";
+            //const string databaseName = "QuerySpeedTesting";
 
+            const string serverName = "powerbi://api.powerbi.com/v1.0/myorg/dgosbell%20LH%20Tutorial";
+            const string databaseName = "wwilakehouse custom";
+            DirectLakeExtractionMode directLakeExtractionMode = DirectLakeExtractionMode.Full;
             //const string serverName = @"localhost\ctp22";
             //const string databaseName = "Contoso Base";
 
@@ -203,7 +207,7 @@ namespace TestDaxModel
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
             var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
-            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10, analyzeDirectQuery:true);
+            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10, analyzeDirectQuery:true, analyzeDirectLake: directLakeExtractionMode);
             Console.WriteLine(database.CompatibilityMode);
             //DumpReferencedColumns(daxModel);
             //DumpReferencedMeasures(daxModel);
@@ -226,7 +230,7 @@ namespace TestDaxModel
             Console.WriteLine($"   Table Count : {viewVpa.Tables.Count()}");
             Console.WriteLine($"   Column Count: {viewVpa.Columns.Count()}");
             Console.WriteLine($"   Relationships Count: {viewVpa.Relationships.Count()}");
-            string filename = pathOutput + databaseName + ".vpax";
+            string filename = $"{pathOutput}{databaseName}-{directLakeExtractionMode.ToString()}.vpax";
             Console.WriteLine("Saving {0}...", filename);
 
             // Save VPAX file
