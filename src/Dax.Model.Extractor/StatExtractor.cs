@@ -40,7 +40,7 @@ namespace Dax.Metadata.Extractor
             // only get relationship stats if the relationship has an ID
             var relationshipList = DaxModel.Relationships.Where(r => r.Dmv1200RelationshipId != 0)
                 .Where(rel =>
-                    // we are analyzing DQ and both columns are in a table with DQ partitions
+                    // we are analyzing DQ and either column is in a table with DQ partitions
                     (analyzeDirectQuery && ((rel.FromColumn.Table.HasDirectQueryPartitions) || (rel.ToColumn.Table.HasDirectQueryPartitions)))
 
                     // or we are analyzing DL and either column is in a table with DL partitions
