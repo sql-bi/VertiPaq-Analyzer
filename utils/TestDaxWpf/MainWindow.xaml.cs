@@ -43,7 +43,7 @@ namespace TestDaxWpf
             */
 
             // Extract Dax.Model from SSAS connection
-            var m = TestDaxModelHelper.GetDaxModel(@"localhost\tab17", "AdventureWorks");
+            var m = TestDaxModelHelper.GetDaxModel(@"localhost\tab19", "Adventure Works");
 
             var vm = new Dax.ViewModel.VpaModel(m);
             treeviewTables.DataContext = vm;

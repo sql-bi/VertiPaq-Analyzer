@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using Tom = Microsoft.AnalysisServices;
 
@@ -9,6 +10,17 @@ namespace Dax.Metadata.Extractor
     {
         public string Name { get; set; }
         public string Version { get; set; }
+    }
+
+    public enum DirectLakeExtractionMode
+    {
+
+        [Description("Only does a detailed scan of columns that are already in memory")]
+        ResidentOnly,
+        [Description("Only does a detailed scan of columns referenced by measures or relationships")]
+        Referenced,
+        [Description("Does a detailed scan of all columns forcing them to be paged into memory")]
+        Full
     }
 
     internal static class Util

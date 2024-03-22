@@ -31,7 +31,7 @@ namespace TestWpfPowerBI.Views
         {
             if (e.NewValue is TreeViewPbiGroup newTreeViewPbiGroup)
             {
-                SelectedGroup = newTreeViewPbiGroup.Group as Group;
+                SelectedGroup = newTreeViewPbiGroup;
                 SelectedDataset = null;
                 GroupChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -47,7 +47,7 @@ namespace TestWpfPowerBI.Views
         public event EventHandler DatasetChanged;
         public event EventHandler GroupExpanded;
 
-        public Group SelectedGroup { get; private set; }
+        public TreeViewPbiGroup SelectedGroup { get; private set; }
 
         public Dataset SelectedDataset { get; private set; }
 
@@ -68,7 +68,7 @@ namespace TestWpfPowerBI.Views
                 Log.Information("Unknown expanded event");
                 return;
             }
-            if (group?.Group.Datasets == null)
+            if (group?.Datasets == null)
             {
                 Log.Information($"Loading {group.Name} group");
                 GroupExpanded?.Invoke(this, new GroupExpandedEventArgs(group));

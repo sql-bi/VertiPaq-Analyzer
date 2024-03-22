@@ -280,7 +280,7 @@ namespace Dax.Metadata.Extractor
             return extractor.DaxModel;
         }
 
-        public static Dax.Metadata.Model GetDaxModel(string connectionString, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false)
+        public static Dax.Metadata.Model GetDaxModel(string connectionString, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             Tom.Server server = new Tom.Server();
             server.Connect(connectionString);
@@ -297,7 +297,7 @@ namespace Dax.Metadata.Extractor
 
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData) {
-                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery);
+                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
                 }
             }
             return daxModel;
@@ -334,7 +334,7 @@ namespace Dax.Metadata.Extractor
             return db ?? throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it.");
         }
 
-        public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false)
+        public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             Tom.Database db = GetDatabase(serverName, databaseName);
             Tom.Model tomModel = db.Model;
@@ -351,7 +351,12 @@ namespace Dax.Metadata.Extractor
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData)
                 {
-                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery );
+                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake );
+                }
+
+                // if we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
+                if (analyzeDirectLake > DirectLakeExtractionMode.ResidentOnly) {
+                    Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
                 }
             }
             return daxModel;

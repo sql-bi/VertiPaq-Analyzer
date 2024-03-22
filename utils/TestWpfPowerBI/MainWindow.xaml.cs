@@ -111,16 +111,16 @@ namespace TestWpfPowerBI
                     {
                         if (g.Group.IsOnDedicatedCapacity.Value == true) { 
                             DisplayStatus($"Loading datasets for group {g.Name}...");
-                            g.Group.Datasets = new BindableCollection<Dataset>(
-                                from d in PowerBI_Tools.GetDatasets(g.Group)
+                            g.Datasets = new BindableCollection<TreeViewPbiItem>(
+                                from d in PowerBI_Tools.GetDatasets(g.Group.Id)
                                 orderby d.Name
-                                select d
+                                select new TreeViewPbiDataset(d , null, null)
                             );
                         }
                     }
                     groups =
                         from g in groups
-                        where g.Group.Datasets?.Count > 0
+                        where g.Datasets?.Count > 0
                         orderby g.Name
                         select g;
                     DisplayStatus($"Loaded {groups.Count()} groups.", 3000);
@@ -191,10 +191,10 @@ namespace TestWpfPowerBI
                 await Task.Run(() =>
                 {
                     DisplayStatus($"Loading datasets for group {selectedGroup.Name}...");
-                    selectedGroup.Datasets = new BindableCollection<Dataset>(
-                            from d in PowerBI_Tools.GetDatasets(selectedGroup)
+                    selectedGroup.Datasets = new BindableCollection<TreeViewPbiItem>(
+                            from d in PowerBI_Tools.GetDatasets(selectedGroup.Group.Id)
                             orderby d.Name
-                            select d
+                            select new TreeViewPbiDataset(d, null, null)
                         );
                     DisplayStatus();
                 });
@@ -290,7 +290,7 @@ namespace TestWpfPowerBI
         {
             foreach ( var g in PbiMetadataTreeBinding.PbiGroups)
             {
-                foreach (var d in g.Group.Datasets)
+                foreach (var d in g.Datasets)
                 {
                     if (d.Name == datasetName) 
                         return g.Group;
@@ -352,16 +352,16 @@ namespace TestWpfPowerBI
             if (expandedGroup == null) return;
             Log.Information($"Group:{expandedGroup.Name}");
 
-            var _group = expandedGroup.Group;
+            var _group = expandedGroup;
             if (_group.Datasets == null)
             {
                 await Task.Run(() =>
                 {
                     DisplayStatus($"Loading datasets for group {_group.Name}...");
-                    _group.Datasets = new BindableCollection<Dataset>(
-                            from d in PowerBI_Tools.GetDatasets(_group)
+                    _group.Datasets = new BindableCollection<TreeViewPbiItem>(
+                            from d in PowerBI_Tools.GetDatasets(_group.Group.Id)
                             orderby d.Name
-                            select d
+                            select new TreeViewPbiDataset(d,null,null)
                         );
 
                     // Enforce refresh? Not working...

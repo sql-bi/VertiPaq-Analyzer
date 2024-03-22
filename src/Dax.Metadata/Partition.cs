@@ -39,7 +39,8 @@ namespace Dax.Metadata
             DirectQuery = 1,
             Default = 2,
             Push = 3,
-            Dual = 4
+            Dual = 4,
+            DirectLake = 5
         }
 
         public Partition(Table table)
