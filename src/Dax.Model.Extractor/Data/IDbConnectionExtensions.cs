@@ -1,5 +1,4 @@
-﻿using Dax.Metadata.Extractor;
-using Microsoft.AnalysisServices.AdomdClient;
+﻿using Microsoft.AnalysisServices.AdomdClient;
 using System.Data;
 using System.Data.OleDb;
 

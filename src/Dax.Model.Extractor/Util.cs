@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Tom = Microsoft.AnalysisServices;
 
-namespace Dax.Metadata.Extractor
+namespace Dax.Model.Extractor
 {
     internal class ExtractorInfo
     {

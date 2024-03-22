@@ -1,6 +1,6 @@
 namespace Dax.Vpax.Tests
 {
-    using Dax.Metadata.Extractor;
+    using Dax.Model.Extractor;
     using Dax.Vpax.Tools;
     using Microsoft.AnalysisServices;
     using System;
