@@ -106,12 +106,8 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
             {
                 var loopInvalidRelationships = relationshipList.Where(r => r.InvalidRows > 0).ToList().SplitList(10);
                 #region Details
-                foreach (var relationshipSetComplete in loopInvalidRelationships)
+                foreach (var relationshipSet in loopInvalidRelationships)
                 {
-                    var relationshipSet =
-                        relationshipSetComplete
-                        .Where(rel => analyzeDirectQuery || ((!rel.FromColumn.Table.HasDirectQueryPartitions) && (!rel.ToColumn.Table.HasDirectQueryPartitions)))
-                        .ToList();
                     // Skip EVALUATE if no valid relationships are found
                     if (!relationshipSet.Any()) continue;
 

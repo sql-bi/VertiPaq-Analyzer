@@ -296,8 +296,13 @@ namespace Dax.Metadata.Extractor
                 Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
 
                 // Populate statistics by querying the data model
-                if (readStatisticsFromData) {
+                if (readStatisticsFromData)
+                {
                     Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
+
+                    // if we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
+                    if (analyzeDirectLake > DirectLakeExtractionMode.ResidentOnly)
+                        Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
                 }
             }
             return daxModel;
@@ -351,12 +356,11 @@ namespace Dax.Metadata.Extractor
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData)
                 {
-                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake );
-                }
+                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
 
-                // if we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
-                if (analyzeDirectLake > DirectLakeExtractionMode.ResidentOnly) {
-                    Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
+                    // if we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
+                    if (analyzeDirectLake > DirectLakeExtractionMode.ResidentOnly)
+                        Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
                 }
             }
             return daxModel;
