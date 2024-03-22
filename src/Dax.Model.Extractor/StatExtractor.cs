@@ -1,9 +1,10 @@
-﻿using Dax.Model.Extractor.Data;
+﻿using Dax.Metadata;
+using Dax.Model.Extractor.Data;
 using System;
 using System.Data;
 using System.Linq;
 
-namespace Dax.Metadata.Extractor
+namespace Dax.Model.Extractor
 {
     public class StatExtractor
     {

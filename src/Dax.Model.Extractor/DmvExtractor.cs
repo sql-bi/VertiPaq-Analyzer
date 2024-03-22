@@ -1,6 +1,5 @@
-﻿using Dax.Model.Extractor.Data;
-using Microsoft.AnalysisServices;
-using Microsoft.AnalysisServices.AdomdClient;
+﻿using Dax.Metadata;
+using Dax.Model.Extractor.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using Tom = Microsoft.AnalysisServices.Tabular;
 
-namespace Dax.Metadata.Extractor
+namespace Dax.Model.Extractor
 {
 
     public class ExtractorException : Exception
@@ -67,7 +66,7 @@ namespace Dax.Metadata.Extractor
 
         public static void PopulateFromDmv(Dax.Metadata.Model daxModel, IDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
         {
-            Dax.Metadata.Extractor.DmvExtractor de = new Dax.Metadata.Extractor.DmvExtractor(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
+            var de = new DmvExtractor(daxModel, connection, serverName, databaseName, extractorApp, extractorVersion);
             de.PopulateModel();
             de.PopulateTables();
             de.PopulatePartitions();
@@ -1099,12 +1098,12 @@ FROM $SYSTEM.DISCOVER_CALC_DEPENDENCY
                     }
                 }
             }
-            catch (AdomdErrorResponseException ex)
+            catch (Microsoft.AnalysisServices.AdomdClient.AdomdErrorResponseException ex)
             {
                 // We ignore errors accessing this DMV
                 Debug.WriteLine($"Ignored error in DISCOVER_CALC_DEPENDENCY: {ex.Message}");
             }
-            catch (AmoException ex)
+            catch (Microsoft.AnalysisServices.AmoException ex)
             {
                 Debug.WriteLine($"Ignored error in DISCOVER_CALC_DEPENDENCY: {ex.Message}");
             }

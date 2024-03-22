@@ -1,10 +1,11 @@
-﻿using Microsoft.AnalysisServices.AdomdClient;
+﻿using Dax.Metadata;
+using Microsoft.AnalysisServices.AdomdClient;
 using System;
 using System.Data.OleDb;
 using System.Linq;
 using Tom = Microsoft.AnalysisServices.Tabular;
 
-namespace Dax.Metadata.Extractor
+namespace Dax.Model.Extractor
 {
     public class TomExtractor
     {
@@ -289,20 +290,21 @@ namespace Dax.Metadata.Extractor
             string databaseName = database.Name;
             string serverName = GetDataSource(connectionString);
 
-            Model daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
+            var daxModel = TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
 
-            using (AdomdConnection connection = new(connectionString)) {
+            using (AdomdConnection connection = new(connectionString))
+            {
                 // Populate statistics from DMV
-                Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
+                DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
 
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData)
                 {
-                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
+                    StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
 
                     // if we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
                     if (analyzeDirectLake > DirectLakeExtractionMode.ResidentOnly)
-                        Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
+                        DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
                 }
             }
             return daxModel;
@@ -344,23 +346,23 @@ namespace Dax.Metadata.Extractor
             Tom.Database db = GetDatabase(serverName, databaseName);
             Tom.Model tomModel = db.Model;
 
-            Model daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
+            var daxModel = TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
 
             string connectionString = GetConnectionString(serverName, databaseName);
 
             using (AdomdConnection connection = new(connectionString))
             {
                 // Populate statistics from DMV
-                Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
+                DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
 
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData)
                 {
-                    Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
+                    StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
 
                     // if we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
                     if (analyzeDirectLake > DirectLakeExtractionMode.ResidentOnly)
-                        Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
+                        DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
                 }
             }
             return daxModel;

@@ -1,6 +1,5 @@
 ﻿namespace Dax.Model.Extractor.Tests
 {
-    using Dax.Metadata.Extractor;
     using Microsoft.AnalysisServices;
     using System.IO;
     using TOM = Microsoft.AnalysisServices.Tabular;
