@@ -26,6 +26,10 @@ namespace Dax.Metadata
         /// </summary>
         public string ExtractorLibVersion { get; set; }
         /// <summary>
+        /// Specifies settings used by the extractor
+        /// </summary>
+        public ExtractorSettings ExtractorSettings { get; set; }
+        /// <summary>
         /// Library that manages the model info (e.g. Dax.Model)
         /// </summary>
         public string DaxModelLib { get; set; }
@@ -96,6 +100,7 @@ namespace Dax.Metadata
 
         public Model()
         {
+            ExtractorSettings = new();
             this.Tables = new List<Table>();
             this.Relationships = new List<Relationship>();
             this.Roles = new List<Role>();

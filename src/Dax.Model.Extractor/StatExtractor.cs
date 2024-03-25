@@ -24,6 +24,12 @@ namespace Dax.Model.Extractor
 
         public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
+            // TODO: Remove this code and use the ExtractorSettings as a parameter.
+            daxModel.ExtractorSettings.StatisticsEnabled = true;
+            daxModel.ExtractorSettings.DirectQueryMode = analyzeDirectQuery ? DirectQueryExtractionMode.Full : DirectQueryExtractionMode.None;
+            daxModel.ExtractorSettings.DirectLakeMode = analyzeDirectLake;
+            daxModel.ExtractorSettings.ReferentialIntegrityViolationSamples = sampleRows;
+
             StatExtractor extractor = new StatExtractor(daxModel, connection);
             extractor.LoadTableStatistics(analyzeDirectQuery, analyzeDirectLake);
             extractor.LoadColumnStatistics(analyzeDirectQuery, analyzeDirectLake);

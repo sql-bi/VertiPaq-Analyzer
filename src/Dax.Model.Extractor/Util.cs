@@ -12,17 +12,6 @@ namespace Dax.Model.Extractor
         public string Version { get; set; }
     }
 
-    public enum DirectLakeExtractionMode
-    {
-
-        [Description("Only does a detailed scan of columns that are already in memory")]
-        ResidentOnly,
-        [Description("Only does a detailed scan of columns referenced by measures or relationships")]
-        Referenced,
-        [Description("Does a detailed scan of all columns forcing them to be paged into memory")]
-        Full
-    }
-
     internal static class Util
     {
         public static ExtractorInfo GetExtractorInfo(object extractorInstance)
