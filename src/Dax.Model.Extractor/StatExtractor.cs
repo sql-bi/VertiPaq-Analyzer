@@ -22,6 +22,8 @@ namespace Dax.Model.Extractor
             return Connection.CreateCommand(commandText);
         }
 
+        // UpdateStatisticsModel has been marked as obsolete because its usage may require rerunning the DMVs for models with DirectLake partitions. Since this logic should be handled by the library, we may consider removing it from the public APIs in a future release.
+        [Obsolete("This method may produce incomplete results if used on a model with DirectLake partitions and DirectLakeExtractionMode parameter set to anything other than ResidentOnly. Use TomExtractor.GetDaxModel instead.")]
         public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             // TODO: Remove this code and use the ExtractorSettings as a parameter.

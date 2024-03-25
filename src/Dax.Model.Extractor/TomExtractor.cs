@@ -300,7 +300,9 @@ namespace Dax.Model.Extractor
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData)
                 {
+#pragma warning disable CS0618 // Type or member is obsolete
                     StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
+#pragma warning restore CS0618 // Type or member is obsolete
 
                     // If model has any DL partitions and we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
                     if (analyzeDirectLake > DirectLakeExtractionMode.ResidentOnly && daxModel.HasDirectLakePartitions())
@@ -358,7 +360,9 @@ namespace Dax.Model.Extractor
                 // Populate statistics by querying the data model
                 if (readStatisticsFromData)
                 {
+#pragma warning disable CS0618 // Type or member is obsolete
                     StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
+#pragma warning restore CS0618 // Type or member is obsolete
 
                     // If model has any DL partitions and we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
                     if (analyzeDirectLake > DirectLakeExtractionMode.ResidentOnly && daxModel.HasDirectLakePartitions())
