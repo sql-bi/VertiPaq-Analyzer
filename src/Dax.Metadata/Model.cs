@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Dax.Metadata
 {
@@ -193,5 +194,13 @@ namespace Dax.Metadata
             return result;
         }
         */
+    }
+
+    public static class ModelExtensions
+    {
+        public static bool HasDirectLakePartitions(this Model model)
+        {
+            return model.Tables.Any((t) => t.HasDirectLakePartitions);
+        }
     }
 }
