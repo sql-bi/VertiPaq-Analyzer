@@ -108,7 +108,7 @@ namespace Dax.Metadata
 
         // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
         [JsonIgnore]
-        public static readonly string CurrentDaxModelVersion = new Version(1, 4, 0).ToString(3);
+        public static readonly string CurrentDaxModelVersion = new Version(1, 5, 0).ToString(3);
 
         public Model(string extractorLib, string extractorLibVersion, string extractorApp = null, string extractorAppVersion = null) : this()
         {
