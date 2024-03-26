@@ -26,11 +26,11 @@ namespace Dax.Model.Extractor
         [Obsolete("This method may produce incomplete results if used on a model with DirectLake partitions and DirectLakeExtractionMode parameter set to anything other than ResidentOnly. Use TomExtractor.GetDaxModel instead.")]
         public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
-            // TODO: Remove this code and use the ExtractorSettings as a parameter.
-            daxModel.ExtractorSettings.StatisticsEnabled = true;
-            daxModel.ExtractorSettings.DirectQueryMode = analyzeDirectQuery ? DirectQueryExtractionMode.Full : DirectQueryExtractionMode.None;
-            daxModel.ExtractorSettings.DirectLakeMode = analyzeDirectLake;
-            daxModel.ExtractorSettings.ReferentialIntegrityViolationSamples = sampleRows;
+            // TODO: Remove after rafactoring the code to use ExtractorSettings: ExtractorProperties as a parameter
+            daxModel.ExtractorProperties.StatisticsEnabled = true;
+            daxModel.ExtractorProperties.DirectQueryMode = analyzeDirectQuery ? DirectQueryExtractionMode.Full : DirectQueryExtractionMode.None;
+            daxModel.ExtractorProperties.DirectLakeMode = analyzeDirectLake;
+            //daxModel.ExtractorProperties.ReferentialIntegrityViolationSamples = sampleRows;
 
             StatExtractor extractor = new StatExtractor(daxModel, connection);
             extractor.LoadTableStatistics(analyzeDirectQuery, analyzeDirectLake);

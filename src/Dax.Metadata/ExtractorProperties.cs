@@ -1,20 +1,13 @@
 ﻿namespace Dax.Metadata;
 
-using Newtonsoft.Json;
 using System.ComponentModel;
 
-public sealed class ExtractorSettings
+public sealed class ExtractorProperties
 {
     /// <summary>
     /// Specifies whether to enable statistics collection from the data instead of relying on the the DMVs. The result is more accurate statistics, but it can be slower.
     /// </summary>
     public bool StatisticsEnabled { get; set; }
-
-    /// <remarks>
-    /// This settings only applies when <see cref="StatisticsEnabled"/> is <see langword="true"/>.
-    /// </remarks>
-    [JsonIgnore] // Ignored in JSON serialization because RI violation values are not serialized
-    public int ReferentialIntegrityViolationSamples { get; set; }
 
     /// <remarks>
     /// This settings only applies when <see cref="StatisticsEnabled"/> is <see langword="true"/>.
