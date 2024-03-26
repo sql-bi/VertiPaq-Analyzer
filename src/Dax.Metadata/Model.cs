@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Dax.Metadata
 {
@@ -24,6 +25,10 @@ namespace Dax.Metadata
         /// Version of the library that extracts the model info 
         /// </summary>
         public string ExtractorLibVersion { get; set; }
+        /// <summary>
+        /// Specifies settings used by the extractor
+        /// </summary>
+        public ExtractorProperties ExtractorProperties { get; set; }
         /// <summary>
         /// Library that manages the model info (e.g. Dax.Model)
         /// </summary>
@@ -95,6 +100,7 @@ namespace Dax.Metadata
 
         public Model()
         {
+            ExtractorProperties = new();
             this.Tables = new List<Table>();
             this.Relationships = new List<Relationship>();
             this.Roles = new List<Role>();
@@ -102,7 +108,7 @@ namespace Dax.Metadata
 
         // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
         [JsonIgnore]
-        public static readonly string CurrentDaxModelVersion = new Version(1, 4, 0).ToString(3);
+        public static readonly string CurrentDaxModelVersion = new Version(1, 5, 0).ToString(3);
 
         public Model(string extractorLib, string extractorLibVersion, string extractorApp = null, string extractorAppVersion = null) : this()
         {
@@ -193,5 +199,13 @@ namespace Dax.Metadata
             return result;
         }
         */
+    }
+
+    public static class ModelExtensions
+    {
+        public static bool HasDirectLakePartitions(this Model model)
+        {
+            return model.Tables.Any((t) => t.HasDirectLakePartitions);
+        }
     }
 }

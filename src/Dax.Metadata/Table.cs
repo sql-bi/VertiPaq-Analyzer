@@ -54,9 +54,9 @@ namespace Dax.Metadata
         public bool HasDirectQueryPartitions { 
             get {
                 foreach (var partition in Partitions) {
-                    if (partition.Mode == Partition.PartitionMode.DirectQuery || partition.Mode == Partition.PartitionMode.Dual ) 
+                    if (partition.Mode == Partition.PartitionMode.DirectQuery || partition.Mode == Partition.PartitionMode.Dual)
                         return true;
-                    if (partition.Mode == Partition.PartitionMode.Default && (this.Model.DefaultMode == Partition.PartitionMode.DirectQuery || this.Model.DefaultMode == Partition.PartitionMode.Dual )) 
+                    if (partition.Mode == Partition.PartitionMode.Default && (this.Model.DefaultMode == Partition.PartitionMode.DirectQuery || this.Model.DefaultMode == Partition.PartitionMode.Dual))
                         return true;
                 }
                 return false;
@@ -66,7 +66,7 @@ namespace Dax.Metadata
         public bool HasDirectLakePartitions {
             get {
                 foreach (var partition in Partitions) {
-                    if ( partition.Mode == Partition.PartitionMode.DirectLake)
+                    if (partition.Mode == Partition.PartitionMode.DirectLake)
                         return true;
                     if (partition.Mode == Partition.PartitionMode.Default && (this.Model.DefaultMode == Partition.PartitionMode.DirectLake))
                         return true;

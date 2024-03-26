@@ -11,7 +11,7 @@ namespace Dax.Model.Extractor
         protected Dax.Metadata.Model DaxModel { get; private set; }
         protected IDbConnection Connection { get; private set; }
         protected int CommandTimeout { get; private set; } = 0;
-        public StatExtractor (Dax.Metadata.Model daxModel, IDbConnection connection )
+        private StatExtractor(Dax.Metadata.Model daxModel, IDbConnection connection)
         {
             this.DaxModel = daxModel;
             this.Connection = connection;
@@ -22,8 +22,16 @@ namespace Dax.Model.Extractor
             return Connection.CreateCommand(commandText);
         }
 
+        // UpdateStatisticsModel has been marked as obsolete because its usage may require rerunning the DMVs for models with DirectLake partitions. Since this logic should be handled by the library, we may consider removing it from the public APIs in a future release.
+        [Obsolete("This method may produce incomplete results if used on a model with DirectLake partitions and DirectLakeExtractionMode parameter set to anything other than ResidentOnly. Use TomExtractor.GetDaxModel instead.")]
         public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
+            // TODO: Remove after rafactoring the code to use ExtractorSettings: ExtractorProperties as a parameter
+            daxModel.ExtractorProperties.StatisticsEnabled = true;
+            daxModel.ExtractorProperties.DirectQueryMode = analyzeDirectQuery ? DirectQueryExtractionMode.Full : DirectQueryExtractionMode.None;
+            daxModel.ExtractorProperties.DirectLakeMode = analyzeDirectLake;
+            //daxModel.ExtractorProperties.ReferentialIntegrityViolationSamples = sampleRows;
+
             StatExtractor extractor = new StatExtractor(daxModel, connection);
             extractor.LoadTableStatistics(analyzeDirectQuery, analyzeDirectLake);
             extractor.LoadColumnStatistics(analyzeDirectQuery, analyzeDirectLake);
@@ -33,7 +41,7 @@ namespace Dax.Model.Extractor
             extractor.DaxModel.ExtractionDate = DateTime.UtcNow;
         }
 
-        public void LoadRelationshipStatistics(int sampleRows = 0,bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
+        private void LoadRelationshipStatistics(int sampleRows = 0,bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             // Maximum number of invalid keys used for extraction through SAMPLE, use TOPNSKIP or TOPN otherwise
             const int MAX_KEYS_FOR_SAMPLE = 1000;
@@ -178,7 +186,7 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
             #endregion
         }
 
-        public void LoadTableStatistics( bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
+        private void LoadTableStatistics( bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             // only get table stats if the table has more than 1 user created column 
             // (every table has a RowNumber column so we only want tables with more than 1 column)
@@ -232,7 +240,7 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
         {
             return originalName.Replace("\"", "\"\"");
         }
-        public void LoadColumnStatistics(bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
+        private void LoadColumnStatistics(bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
         {
             var allColumns = 
                 (from t in DaxModel.Tables
