@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.OleDb;
-using Newtonsoft.Json;
-using System.IO.Packaging;
-using System.IO;
+﻿using Dax.Metadata;
+using Dax.Model.Extractor;
 using Dax.Vpax.Tools;
+using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Linq;
 using TOM = Microsoft.AnalysisServices.Tabular;
-using Dax.Metadata.Extractor;
 
 // TODO
 // - Import from DMV 1100 (check for missing attributes?)
@@ -38,10 +34,10 @@ namespace TestDaxModel
 
             var server = new TOM.Server();
             server.Connect($"Provider=MSOLAP;Data Source={serverName};Initial Catalog={databaseName};");
-            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(server.Databases[databaseName].Model, "TestDaxModel", "0.2");
+            var daxModel = TomExtractor.GetDaxModel(server.Databases[databaseName].Model, "TestDaxModel", "0.2");
             var tomConnection = new Dax.Model.Extractor.Data.TomConnection(server, databaseName);
-            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, tomConnection, serverName, databaseName, "TestDaxModel", "0.2");
-            Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, tomConnection, sampleRows: 100);
+            DmvExtractor.PopulateFromDmv(daxModel, tomConnection, serverName, databaseName, "TestDaxModel", "0.2");
+            StatExtractor.UpdateStatisticsModel(daxModel, tomConnection, sampleRows: 100);
         }
 
         static void TestExportStream()
@@ -59,12 +55,12 @@ namespace TestDaxModel
             //
             // Get Dax.Model object from the SSAS engine
             //
-            Dax.Metadata.Model model = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, applicationName, applicationVersion);
+            Dax.Metadata.Model model = TomExtractor.GetDaxModel(serverName, databaseName, applicationName, applicationVersion);
 
             //
             // Get TOM model from the SSAS engine
             //
-            TOM.Database database = includeTomModel ? Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName) : null;
+            TOM.Database database = includeTomModel ? TomExtractor.GetDatabase(serverName, databaseName) : null;
 
             // 
             // Create VertiPaq Analyzer views
@@ -105,12 +101,12 @@ namespace TestDaxModel
             //
             // Get Dax.Model object from the SSAS engine
             //
-            Dax.Metadata.Model model = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, applicationName, applicationVersion);
+            Dax.Metadata.Model model = TomExtractor.GetDaxModel(serverName, databaseName, applicationName, applicationVersion);
 
             //
             // Get TOM model from the SSAS engine
             //
-            TOM.Database database = includeTomModel ? Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName) : null;
+            TOM.Database database = includeTomModel ? TomExtractor.GetDatabase(serverName, databaseName) : null;
 
             // 
             // Create VertiPaq Analyzer views
@@ -138,8 +134,8 @@ namespace TestDaxModel
             var conn = new System.Data.OleDb.OleDbConnection(connStr);
 
             Dax.Metadata.Model m = new Dax.Metadata.Model();
-            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
-            Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(m, conn, 10);
+            DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            StatExtractor.UpdateStatisticsModel(m, conn, 10);
             DumpRelationships(m);
         }
         static void TestPbiShared()
@@ -165,7 +161,7 @@ namespace TestDaxModel
             //Console.WriteLine("Connection open");
 
             Dax.Metadata.Model m = new Dax.Metadata.Model();
-            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
         }
         static void TestPbiShared_2022()
         {
@@ -179,7 +175,7 @@ namespace TestDaxModel
             conn.Open();
 
             Dax.Metadata.Model m = new Dax.Metadata.Model();
-            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
         }
         static void GenericTest()
         {
@@ -206,8 +202,8 @@ namespace TestDaxModel
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model {0}:{1}", serverName, databaseName);
-            var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(serverName, databaseName);
-            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10, analyzeDirectQuery:true, analyzeDirectLake: directLakeExtractionMode);
+            var database = TomExtractor.GetDatabase(serverName, databaseName);
+            var daxModel = TomExtractor.GetDaxModel(serverName, databaseName, "TestDaxModel", "0.2", true, 10, analyzeDirectQuery:true, analyzeDirectLake: directLakeExtractionMode);
             Console.WriteLine(database.CompatibilityMode);
             //DumpReferencedColumns(daxModel);
             //DumpReferencedMeasures(daxModel);
@@ -274,8 +270,8 @@ namespace TestDaxModel
             const string pathOutput = @"c:\temp\";
 
             Console.WriteLine("Getting model for connectionString {0}", connectionString);
-            var database = Dax.Metadata.Extractor.TomExtractor.GetDatabase(connectionString);
-            var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(connectionString, "TestDaxModel", "0.2", true, 10, analyzeDirectQuery: true);
+            var database = TomExtractor.GetDatabase(connectionString);
+            var daxModel = TomExtractor.GetDaxModel(connectionString, "TestDaxModel", "0.2", true, 10, analyzeDirectQuery: true);
             Console.WriteLine(database.CompatibilityMode);
             //DumpReferencedColumns(daxModel);
             //DumpReferencedMeasures(daxModel);
