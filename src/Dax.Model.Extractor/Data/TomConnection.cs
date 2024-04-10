@@ -33,34 +33,29 @@ namespace Dax.Model.Extractor.Data
         {
         }
 
-        #region Methods and properties that throw a NotImplementedException
+        public ConnectionState State => Server.GetConnectionState(false);
 
         public string ConnectionString {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get { return Server.ConnectionString; }
+            set { throw new InvalidOperationException(); }
         }
+        public int ConnectionTimeout => Server.ConnectionInfo.Timeout;
 
-        public int ConnectionTimeout {
-            get { throw new NotImplementedException(); }
-        }
-
-        public ConnectionState State {
-            get { throw new NotImplementedException(); }
-        }
+        #region Methods and properties that throw a NotSupportedException
 
         public IDbTransaction BeginTransaction()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public IDbTransaction BeginTransaction(IsolationLevel il)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void ChangeDatabase(string databaseName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         #endregion

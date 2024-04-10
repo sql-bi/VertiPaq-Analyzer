@@ -13,7 +13,7 @@ namespace Dax.Model.Extractor.Data
                 AdomdConnection adomdConnection => new AdomdCommand(commandText, adomdConnection),
                 OleDbConnection oledbConnection => new OleDbCommand(commandText, oledbConnection),
                 TomConnection tomConnection => new TomCommand(commandText, tomConnection),
-                _ => throw new ExtractorException(connection),
+                _ => connection.CreateCommand(commandText)
             };
         }
     }
