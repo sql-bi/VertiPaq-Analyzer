@@ -1,0 +1,25 @@
+name: release-vpax-cli
+on:
+  workflow_dispatch:
+env:
+  PROJECT: Dax.Vpax.CLI
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: nbgv
+      uses: dotnet/nbgv@v0.4
+      id: nbgv
+      with:
+        path: src/${{ env.PROJECT }}
+    - name: dotnet pack
+      run: dotnet pack 'src/${{ env.PROJECT }}/${{ env.PROJECT }}.csproj' -c Release -o .
+    - shell: bash
+      name: nuget push
+      run: dotnet nuget push './${{ env.PROJECT }}.${{ steps.nbgv.outputs.NuGetPackageVersion }}.nupkg' -k "$NUGET_API_KEY" -s https://api.nuget.org/v3/index.json
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
