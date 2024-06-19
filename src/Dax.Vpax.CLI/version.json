@@ -5,7 +5,7 @@
     "semVer": 2
   },
   "publicReleaseRefSpec": [
-    "^refs/heads/main"
+    "^refs/heads/master"
   ],
   "pathFilters": [
     "./"
