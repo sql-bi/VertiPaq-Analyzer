@@ -40,7 +40,6 @@
 
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
     <None Include="..\..\LICENSE.md" Pack="true" PackagePath="\" Visible="false" />
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
     <None Include="..\..\package-icon.png" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 

@@ -13,6 +13,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Dax.Metadata\Dax.Metadata.csproj" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
   <PropertyGroup>
