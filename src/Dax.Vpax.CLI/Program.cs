@@ -10,10 +10,9 @@ internal sealed class Program
 
     private static RootCommand Build()
     {
-        var command = new RootCommand("VertiPaq-Analyzer CLI")
-        {
-            ExportCommand.GetCommand()
-        };
+        var command = new RootCommand("VertiPaq-Analyzer CLI");
+        command.Name = "vpax"; // Name must match <ToolCommandName> in csproj
+        command.AddCommand(ExportCommand.GetCommand());
         return command;
     }
 }
