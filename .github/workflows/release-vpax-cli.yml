@@ -5,6 +5,7 @@ env:
   PROJECT: Dax.Vpax.CLI
 jobs:
   release:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
     - name: checkout
