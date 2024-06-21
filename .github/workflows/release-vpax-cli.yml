@@ -19,8 +19,14 @@ jobs:
         path: src/${{ env.PROJECT }}
     - name: dotnet pack
       run: dotnet pack 'src/${{ env.PROJECT }}/${{ env.PROJECT }}.csproj' -c Release -o .
-    - shell: bash
-      name: nuget push
+    - name: nuget push
       run: dotnet nuget push './${{ env.PROJECT }}.${{ steps.nbgv.outputs.NuGetPackageVersion }}.nupkg' -k "$NUGET_API_KEY" -s https://api.nuget.org/v3/index.json
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+    - name: create release
+      run: |
+        PRERELEASE_FLAG=$([[ "${{ steps.nbgv.outputs.PrereleaseVersion }}" != "" ]] && echo "--prerelease" || echo "")
+        gh release create ${{ env.RELEASE_TAG }} --title ${{ env.RELEASE_TAG }} --target $GITHUB_SHA --generate-notes --draft $PRERELEASE_FLAG
+      env:
+        RELEASE_TAG: ${{ env.PROJECT }}_${{ steps.nbgv.outputs.NuGetPackageVersion }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
