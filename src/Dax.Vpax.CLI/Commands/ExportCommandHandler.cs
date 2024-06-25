@@ -16,7 +16,7 @@ internal sealed class ExportCommandHandler : ICommandHandler
         // TODO: forward cancellation token to vertipaq-analyzer extractor
         var cancellationToken = context.GetCancellationToken();
         var extractorAppName = ThisAssembly.AssemblyName;
-        var extractorAppVersion = ThisAssembly.AssemblyFileVersion;
+        var extractorAppVersion = ThisAssembly.AssemblyInformationalVersion;
 
         var path = context.ParseResult.GetValueForArgument(PathArgument);
         var connectionString = context.ParseResult.GetValueForArgument(ConnectionStringArgument);
