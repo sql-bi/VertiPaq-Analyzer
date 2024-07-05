@@ -322,8 +322,8 @@ namespace TestWpfPowerBI
             Dax.Metadata.Model m = new Dax.Metadata.Model();
             // NOTE: groupName is the serverName in the arguments
             //       datasetName is the databaseName in the arguments
-            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, groupName, datasetName, "Test", "0.1");
-            Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(m, conn, 4);
+            Dax.Model.Extractor.DmvExtractor.PopulateFromDmv(m, conn, groupName, datasetName, "Test", "0.1");
+            Dax.Model.Extractor.StatExtractor.UpdateStatisticsModel(m, conn, 4);
             return new Dax.ViewModel.VpaModel(m);
         }
 

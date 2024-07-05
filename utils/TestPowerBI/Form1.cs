@@ -221,7 +221,7 @@ namespace TestPowerBI
             //Console.WriteLine("Connection open");
 
             Dax.Metadata.Model m = new Dax.Metadata.Model();
-            Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
+            Dax.Model.Extractor.DmvExtractor.PopulateFromDmv(m, conn, serverName, databaseName, "Test", "0.1");
 
             Dax.Vpax.Tools.VpaxTools.ExportVpax(@"c:\temp\" + name + ".vpax",m);
         }
