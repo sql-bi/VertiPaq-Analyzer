@@ -34,7 +34,9 @@ namespace Dax.Model.Extractor
 
         protected IDbCommand CreateCommand(string commandText)
         {
-            return Connection.CreateCommand(commandText);
+            var command = Connection.CreateCommand();
+            command.CommandText = commandText;
+            return command;
         }
 
         public DmvExtractor(Dax.Metadata.Model daxModel, IDbConnection connection, string serverName, string databaseName, string extractorApp, string extractorVersion)
