@@ -1,5 +1,5 @@
 ﻿using System.CommandLine;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace Dax.Vpax.CLI.Commands;
 
@@ -11,12 +11,14 @@ internal static class ExportCommandOptions
         parse: (result) =>
         {
             var connectionString = result.Tokens.Single().Value;
+            {
+                var builder = new DbConnectionStringBuilder(useOdbcRules: false);
+                builder.ConnectionString = connectionString;
 
-            var builder = new OleDbConnectionStringBuilder(connectionString);
-            if (!builder.ContainsKey("Initial Catalog"))
-                result.ErrorMessage = "The connection string does not contain the 'Initial Catalog' property.";
-
-            return connectionString;
+                if (!builder.ContainsKey("Initial Catalog"))
+                    result.ErrorMessage = "The connection string does not contain the 'Initial Catalog' property.";
+            }
+            return connectionString; // always return the original value
         });
 
     public static readonly Argument<string> PathArgument = new(

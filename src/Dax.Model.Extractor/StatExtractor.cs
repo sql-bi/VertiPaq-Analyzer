@@ -19,7 +19,9 @@ namespace Dax.Model.Extractor
 
         protected IDbCommand CreateCommand(string commandText)
         {
-            return Connection.CreateCommand(commandText);
+            var command = Connection.CreateCommand();
+            command.CommandText = commandText;
+            return command;
         }
 
         // UpdateStatisticsModel has been marked as obsolete because its usage may require rerunning the DMVs for models with DirectLake partitions. Since this logic should be handled by the library, we may consider removing it from the public APIs in a future release.

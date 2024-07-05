@@ -60,17 +60,17 @@ namespace TestDaxWpf
                 server.Connect(serverName);
                 Microsoft.AnalysisServices.Database db = server.Databases[databaseName];
                 Microsoft.AnalysisServices.Tabular.Model tomModel = db.Model;
-                var daxModel = Dax.Metadata.Extractor.TomExtractor.GetDaxModel(tomModel, "TestDaxModel", "0.1");
+                var daxModel = Dax.Model.Extractor.TomExtractor.GetDaxModel(tomModel, "TestDaxModel", "0.1");
 
                 var connectionString = GetConnectionString(serverName, databaseName);
 
                 using (var connection = new AdomdConnection(connectionString)) {
                     // Populate statistics from DMV
-                    Dax.Metadata.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, "TestDaxModel", "0.1");
+                    Dax.Model.Extractor.DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, "TestDaxModel", "0.1");
 
                     // Populate statistics by querying the data model
                     if (readStatisticsFromData) {
-                        Dax.Metadata.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, 10);
+                        Dax.Model.Extractor.StatExtractor.UpdateStatisticsModel(daxModel, connection, 10);
                     }
                 }
                 return daxModel;

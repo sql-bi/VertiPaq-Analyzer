@@ -1,7 +1,10 @@
 ﻿using Dax.Metadata;
+using Dax.Model.Extractor.Data;
 using Microsoft.AnalysisServices.AdomdClient;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Data.OleDb;
+using System.Data.Common;
+using System.Globalization;
 using System.Linq;
 using Tom = Microsoft.AnalysisServices.Tabular;
 
@@ -288,7 +291,7 @@ namespace Dax.Model.Extractor
             var database = GetDatabase(connectionString);
             Tom.Model tomModel = database.Model;
             string databaseName = database.Name;
-            string serverName = GetDataSource(connectionString);
+            string serverName = ConnectionStringUtils.GetDataSource(connectionString);
 
             var daxModel = TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
 
@@ -312,18 +315,6 @@ namespace Dax.Model.Extractor
             return daxModel;
         }
 
-        private static string GetDataSource(string connectionString)
-        {
-            var builder = new OleDbConnectionStringBuilder(connectionString);
-            return builder.DataSource;
-        }
-
-        private static string GetInitialCatalog(string connectionString)
-        {
-            var builder = new OleDbConnectionStringBuilder(connectionString);
-            builder.TryGetValue("Initial Catalog", out object initialCatalog);
-            return initialCatalog.ToString();
-        }
         public static Tom.Database GetDatabase(string serverName, string databaseName)
         {
             Tom.Server server = new();
@@ -337,7 +328,7 @@ namespace Dax.Model.Extractor
         {
             Tom.Server server = new();
             server.Connect(connectionString);
-            var databaseName = GetInitialCatalog(connectionString);
+            var databaseName = ConnectionStringUtils.GetInitialCatalog(connectionString);
             Tom.Database db = server.Databases.FindByName(databaseName);
             // if db is null either it does not exist or we do not have admin rights to it
             return db ?? throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it.");
@@ -350,7 +341,7 @@ namespace Dax.Model.Extractor
 
             var daxModel = TomExtractor.GetDaxModel(tomModel, applicationName, applicationVersion);
 
-            string connectionString = GetConnectionString(serverName, databaseName);
+            string connectionString = ConnectionStringUtils.GetConnectionString(serverName, databaseName);
 
             using (AdomdConnection connection = new(connectionString))
             {
@@ -370,23 +361,6 @@ namespace Dax.Model.Extractor
                 }
             }
             return daxModel;
-        }
-
-        private static string GetConnectionString(string dataSourceOrConnectionString, string databaseName)
-        {
-            OleDbConnectionStringBuilder csb = new();
-            try
-            {
-                csb.ConnectionString = dataSourceOrConnectionString;
-            }
-            catch
-            {
-                // Assume servername
-                csb.Provider = "MSOLAP";
-                csb.DataSource = dataSourceOrConnectionString;
-            }
-            csb["Initial Catalog"] = databaseName;
-            return csb.ConnectionString;
         }
     }
 }
