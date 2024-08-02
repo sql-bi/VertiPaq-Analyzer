@@ -25,10 +25,10 @@ jobs:
             6.0.x
           global-json-file: global.json
       - name: restore
-        run: dotnet restore VertiPaq-Analyzer.slnf
+        run: dotnet restore VertiPaq-Analyzer.sln
       - name: build
-        run: dotnet build VertiPaq-Analyzer.slnf --configuration Release --no-restore
+        run: dotnet build VertiPaq-Analyzer.sln --configuration Release --no-restore
       - name: test
-        run: dotnet test VertiPaq-Analyzer.slnf --configuration Release --no-build --verbosity normal
+        run: dotnet test VertiPaq-Analyzer.sln --configuration Release --no-build --verbosity normal
       - name: pack
-        run: dotnet pack VertiPaq-Analyzer.slnf --configuration Release --no-build --no-restore --verbosity normal
+        run: dotnet pack VertiPaq-Analyzer.sln --configuration Release --no-build --no-restore --verbosity normal

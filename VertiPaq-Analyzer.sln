@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{1F7A4D70-8CF0-4EE7-8E5B-053C09F4CA4A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Metadata", "src\Dax.Metadata\Dax.Metadata.csproj", "{58943FC4-75D3-4435-A51E-CAEFE1E69FAA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Model.Extractor", "src\Dax.Model.Extractor\Dax.Model.Extractor.csproj", "{CA1BF698-7BD1-4529-A36D-E9DBA5BE4B8D}"
@@ -20,14 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Model.Extractor.Tests", "src\Dax.Model.Extractor.Tests\Dax.Model.Extractor.Tests.csproj", "{D6CA44D3-C324-4B7E-97E3-D5688997A297}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Vpax.Tests", "src\Dax.Vpax.Tests\Dax.Vpax.Tests.csproj", "{CF873E93-AE2F-4A25-A71C-A68EB876C7A0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDaxModel", "utils\TestDaxModel\TestDaxModel.csproj", "{05F7D96E-0910-48FE-9F2E-205A079C4760}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDaxWpf", "utils\TestDaxWpf\TestDaxWpf.csproj", "{49931A12-0090-4533-9805-9A317A099985}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPowerBI", "utils\TestPowerBI\TestPowerBI.csproj", "{41C00525-D3EA-403D-B1BF-4055244F57C9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWpfPowerBI", "utils\TestWpfPowerBI\TestWpfPowerBI.csproj", "{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,31 +57,9 @@ Global
 		{CF873E93-AE2F-4A25-A71C-A68EB876C7A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF873E93-AE2F-4A25-A71C-A68EB876C7A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF873E93-AE2F-4A25-A71C-A68EB876C7A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05F7D96E-0910-48FE-9F2E-205A079C4760}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05F7D96E-0910-48FE-9F2E-205A079C4760}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05F7D96E-0910-48FE-9F2E-205A079C4760}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05F7D96E-0910-48FE-9F2E-205A079C4760}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49931A12-0090-4533-9805-9A317A099985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49931A12-0090-4533-9805-9A317A099985}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49931A12-0090-4533-9805-9A317A099985}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49931A12-0090-4533-9805-9A317A099985}.Release|Any CPU.Build.0 = Release|Any CPU
-		{41C00525-D3EA-403D-B1BF-4055244F57C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{41C00525-D3EA-403D-B1BF-4055244F57C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{41C00525-D3EA-403D-B1BF-4055244F57C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{41C00525-D3EA-403D-B1BF-4055244F57C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{05F7D96E-0910-48FE-9F2E-205A079C4760} = {1F7A4D70-8CF0-4EE7-8E5B-053C09F4CA4A}
-		{49931A12-0090-4533-9805-9A317A099985} = {1F7A4D70-8CF0-4EE7-8E5B-053C09F4CA4A}
-		{41C00525-D3EA-403D-B1BF-4055244F57C9} = {1F7A4D70-8CF0-4EE7-8E5B-053C09F4CA4A}
-		{F40F1ED3-FF9C-4C6F-AE86-6E9DAD6DD122} = {1F7A4D70-8CF0-4EE7-8E5B-053C09F4CA4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BF417AA2-7521-408B-A3F5-A20CC760AE6E}
