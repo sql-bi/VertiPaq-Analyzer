@@ -1,7 +1,9 @@
 <Project>
   <PropertyGroup>
     <Nullable>disable</Nullable>
-    <LangVersion>Latest</LangVersion>
+    <LangVersion>12</LangVersion>
+    <AnalysisMode>all</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
   <PropertyGroup>
