@@ -1,10 +1,10 @@
 @ECHO OFF
 SETLOCAL
 
-dotnet restore VertiPaq-Analyzer.slnf || GOTO :error
-dotnet build   VertiPaq-Analyzer.slnf || GOTO :error
-dotnet test    VertiPaq-Analyzer.slnf || GOTO :error
-dotnet pack    VertiPaq-Analyzer.slnf || GOTO :error
+dotnet restore VertiPaq-Analyzer.sln || GOTO :error
+dotnet build   VertiPaq-Analyzer.sln || GOTO :error
+dotnet test    VertiPaq-Analyzer.sln || GOTO :error
+dotnet pack    VertiPaq-Analyzer.sln || GOTO :error
 
 GOTO :EOF
 :error
