@@ -9,21 +9,6 @@ using Tom = Microsoft.AnalysisServices.Tabular;
 
 namespace Dax.Model.Extractor
 {
-
-    public class ExtractorException : Exception
-    {
-        public IDbConnection Connection { get; private set; }
-        public string DatabaseName { get; private set; }
-        public ExtractorException( IDbConnection connection, string databaseName )
-        {
-            Connection = connection;
-            DatabaseName = databaseName;
-        }
-        public ExtractorException(IDbConnection connection)
-        {
-            Connection = connection;
-        }
-    }
     public class DmvExtractor
     {
         public int CommandTimeout { get; set; } = 0;
