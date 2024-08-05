@@ -6,10 +6,15 @@ using Tom = Microsoft.AnalysisServices;
 
 namespace Dax.Model.Extractor
 {
-    internal class ExtractorInfo
+    internal sealed class ExtractorInfo
     {
-        public string Name { get; set; }
-        public string Version { get; set; }
+        public ExtractorInfo()
+        {
+            
+        }
+
+        public string Name { get; }
+        public string Version { get; }
     }
 
     internal static class Util

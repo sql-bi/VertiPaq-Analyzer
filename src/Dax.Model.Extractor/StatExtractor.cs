@@ -1,8 +1,7 @@
-﻿using Dax.Metadata;
-using Dax.Model.Extractor.Data;
-using System;
+﻿using System;
 using System.Data;
 using System.Linq;
+using Dax.Metadata;
 
 namespace Dax.Model.Extractor
 {
@@ -12,6 +11,11 @@ namespace Dax.Model.Extractor
         /// The default number of rows processed at a time during column statistics analysis.
         /// </summary>
         public const int DefaultColumnBatchSize = 50;
+
+        /// <summary>
+        /// The default number of rows to sample for referential integrity violation analysis.
+        /// </summary>
+        public const int DefaultReferentialIntegrityViolationSamples = 0;
 
         protected Dax.Metadata.Model DaxModel { get; private set; }
         protected IDbConnection Connection { get; private set; }

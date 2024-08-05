@@ -4,11 +4,11 @@ using System.Globalization;
 
 namespace Dax.Model.Extractor.Data
 {
-    public static class ConnectionStringUtils
+    internal static class ConnectionStringUtils
     {
-        public static string GetDataSource(string connectionString) => GetValue(connectionString, ConnectionStringKeywords.DataSource);
+        public static string GetDataSource(string connectionString, bool throwIfNotFound = false) => GetValue(connectionString, ConnectionStringKeywords.DataSource, throwIfNotFound);
 
-        public static string GetInitialCatalog(string connectionString) => GetValue(connectionString, ConnectionStringKeywords.InitialCatalog);
+        public static string GetInitialCatalog(string connectionString, bool throwIfNotFound = false) => GetValue(connectionString, ConnectionStringKeywords.InitialCatalog, throwIfNotFound);
 
         public static string GetConnectionString(string serverNameOrConnectionString, string databaseName)
         {
@@ -25,13 +25,16 @@ namespace Dax.Model.Extractor.Data
             return builder.ConnectionString;
         }
 
-        private static string GetValue(string connectionString, string keyword)
+        private static string GetValue(string connectionString, string keyword, bool throwIfNotFound)
         {
             var builder = new DbConnectionStringBuilder(useOdbcRules: false);
             builder.ConnectionString = connectionString;
 
-            if (builder.TryGetValue(keyword, out object value))
+            if (builder.TryGetValue(keyword, out var value))
                 return ((IConvertible)value).ToString(CultureInfo.InvariantCulture);
+
+            if (throwIfNotFound)
+                throw new ArgumentException($"Connection string does not contain the '{keyword}' keyword.", nameof(connectionString));
 
             return string.Empty; // default to empty string to keep the result consistent with the OleDbConnectionStringBuilder
         }
