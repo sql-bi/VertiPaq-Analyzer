@@ -1,4 +1,5 @@
-﻿using System.CommandLine.Invocation;
+﻿using System.CommandLine;
+using System.CommandLine.Invocation;
 using System.CommandLine.IO;
 using Dax.Metadata;
 using Dax.Model.Extractor;
@@ -23,6 +24,9 @@ internal sealed class ExportCommandHandler : ICommandHandler
         var overwrite = context.ParseResult.GetValueForOption(OverwriteOption);
         var excludeTom = context.ParseResult.GetValueForOption(ExcludeTomOption);
         var excludeVpa = context.ParseResult.GetValueForOption(ExcludeVpaOption);
+        var directQueryMode = context.ParseResult.GetValueForOption(DirectQueryModeOption);
+        var directLakeMode = context.ParseResult.GetValueForOption(DirectLakeModeOption);
+        var columnBatchSize = context.ParseResult.GetValueForOption(ColumnBatchSizeOption);
 
         using var vpaxStream = new MemoryStream();
 
@@ -34,9 +38,10 @@ internal sealed class ExportCommandHandler : ICommandHandler
                 applicationName: extractorAppName,
                 applicationVersion: extractorAppVersion,
                 readStatisticsFromData: true,
-                sampleRows: 0, // RI violation sampling is not applicable to VPAX files
-                analyzeDirectQuery: true,
-                analyzeDirectLake: DirectLakeExtractionMode.Full
+                sampleRows: 0, // not applicable for VPAX export
+                analyzeDirectQuery: directQueryMode != DirectQueryExtractionMode.None,
+                analyzeDirectLake: directLakeMode,
+                statsColumnBatchSize: columnBatchSize
                 );
 
             var vpaModel = excludeVpa ? null : new ViewVpaExport.Model(daxModel);

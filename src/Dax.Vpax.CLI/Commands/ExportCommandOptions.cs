@@ -1,4 +1,6 @@
-﻿using System.CommandLine;
+﻿using Dax.Metadata;
+using Dax.Model.Extractor;
+using System.CommandLine;
 using System.Data.Common;
 
 namespace Dax.Vpax.CLI.Commands;
@@ -43,4 +45,27 @@ internal static class ExportCommandOptions
         getDefaultValue: () => false,
         description: "Exclude the VPA model (DaxVpaView.json) from the export"
         );
+
+    public static readonly Option<DirectQueryExtractionMode> DirectQueryModeOption = new(
+        name: "--direct-query-mode",
+        getDefaultValue: () => DirectQueryExtractionMode.Full,
+        description: "Direct Query extraction mode"
+        );
+
+    public static readonly Option<DirectLakeExtractionMode> DirectLakeModeOption = new(
+        name: "--direct-lake-mode",
+        getDefaultValue: () => DirectLakeExtractionMode.Full,
+        description: "Direct Lake extraction mode"
+        );
+
+    public static readonly Option<int> ColumnBatchSizeOption = new(
+        name: "--column-batch-size",
+        getDefaultValue: () => StatExtractor.DefaultColumnBatchSize,
+        description: "Number of rows processed at a time during column statistics analysis"
+        );
+
+    //static ExportCommandOptions()
+    //{
+    //    //ExtractorDirectLakeMode.FromAmong();
+    //}
 }

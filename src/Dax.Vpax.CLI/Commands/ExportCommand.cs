@@ -14,8 +14,12 @@ internal static class ExportCommand
             PathArgument,
             ConnectionStringArgument,
             OverwriteOption,
+            // advanced options
             ExcludeTomOption,
-            ExcludeVpaOption
+            ExcludeVpaOption,
+            DirectQueryModeOption,
+            DirectLakeModeOption,
+            ColumnBatchSizeOption,
         };
         command.Handler = s_handler;
         return command;
