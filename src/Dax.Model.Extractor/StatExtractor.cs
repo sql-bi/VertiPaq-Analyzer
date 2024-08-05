@@ -33,6 +33,9 @@ namespace Dax.Model.Extractor
         [Obsolete("This method may produce incomplete results if used on a model with DirectLake partitions and DirectLakeExtractionMode parameter set to anything other than ResidentOnly. Use TomExtractor.GetDaxModel instead.")]
         public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly, int columnBatchSize = DefaultColumnBatchSize)
         {
+            if (columnBatchSize < 1)
+                throw new ArgumentException("Column batch size must be greater than zero.", nameof(columnBatchSize));
+
             // TODO: Remove after rafactoring the code to use ExtractorSettings: ExtractorProperties as a parameter
             daxModel.ExtractorProperties.StatisticsEnabled = true;
             daxModel.ExtractorProperties.DirectQueryMode = analyzeDirectQuery ? DirectQueryExtractionMode.Full : DirectQueryExtractionMode.None;
