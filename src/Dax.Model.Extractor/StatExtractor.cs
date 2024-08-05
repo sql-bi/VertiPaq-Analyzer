@@ -8,6 +8,11 @@ namespace Dax.Model.Extractor
 {
     public class StatExtractor
     {
+        /// <summary>
+        /// The default number of rows processed at a time during column statistics analysis.
+        /// </summary>
+        public const int DefaultColumnBatchSize = 50;
+
         protected Dax.Metadata.Model DaxModel { get; private set; }
         protected IDbConnection Connection { get; private set; }
         protected int CommandTimeout { get; private set; } = 0;
@@ -26,7 +31,7 @@ namespace Dax.Model.Extractor
 
         // UpdateStatisticsModel has been marked as obsolete because its usage may require rerunning the DMVs for models with DirectLake partitions. Since this logic should be handled by the library, we may consider removing it from the public APIs in a future release.
         [Obsolete("This method may produce incomplete results if used on a model with DirectLake partitions and DirectLakeExtractionMode parameter set to anything other than ResidentOnly. Use TomExtractor.GetDaxModel instead.")]
-        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
+        public static void UpdateStatisticsModel(Dax.Metadata.Model daxModel, IDbConnection connection, int sampleRows = 0, bool analyzeDirectQuery = false , DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly, int columnBatchSize = DefaultColumnBatchSize)
         {
             // TODO: Remove after rafactoring the code to use ExtractorSettings: ExtractorProperties as a parameter
             daxModel.ExtractorProperties.StatisticsEnabled = true;
@@ -36,7 +41,7 @@ namespace Dax.Model.Extractor
 
             StatExtractor extractor = new StatExtractor(daxModel, connection);
             extractor.LoadTableStatistics(analyzeDirectQuery, analyzeDirectLake);
-            extractor.LoadColumnStatistics(analyzeDirectQuery, analyzeDirectLake);
+            extractor.LoadColumnStatistics(analyzeDirectQuery, analyzeDirectLake, columnBatchSize);
             extractor.LoadRelationshipStatistics(sampleRows, analyzeDirectQuery, analyzeDirectLake);
 
             // Update ExtractionDate
@@ -242,7 +247,7 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
         {
             return originalName.Replace("\"", "\"\"");
         }
-        private void LoadColumnStatistics(bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
+        private void LoadColumnStatistics(bool analyzeDirectQuery, DirectLakeExtractionMode analyzeDirectLake, int columnBatchSize)
         {
             var allColumns = 
                 (from t in DaxModel.Tables
@@ -257,7 +262,7 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
                             || (analyzeDirectLake == DirectLakeExtractionMode.Full)
                             )
                      select c).ToList();
-            var loopColumns = allColumns.SplitList(50); // no more than 9999
+            var loopColumns = allColumns.SplitList(columnBatchSize); // no more than 9999
             foreach ( var columnSet in loopColumns ) {
                 var idString = 0;
                 var dax = "EVALUATE ";
