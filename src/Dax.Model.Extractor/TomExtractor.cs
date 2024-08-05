@@ -284,7 +284,7 @@ namespace Dax.Model.Extractor
             return extractor.DaxModel;
         }
 
-        public static Dax.Metadata.Model GetDaxModel(string connectionString, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
+        public static Dax.Metadata.Model GetDaxModel(string connectionString, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly, int statsColumnBatchSize = StatExtractor.DefaultColumnBatchSize)
         {
             Tom.Server server = new Tom.Server();
             server.Connect(connectionString);
@@ -304,7 +304,7 @@ namespace Dax.Model.Extractor
                 if (readStatisticsFromData)
                 {
 #pragma warning disable CS0618 // Type or member is obsolete
-                    StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
+                    StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake, statsColumnBatchSize);
 #pragma warning restore CS0618 // Type or member is obsolete
 
                     // If model has any DL partitions and we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
@@ -334,7 +334,7 @@ namespace Dax.Model.Extractor
             return db ?? throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it.");
         }
 
-        public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly)
+        public static Dax.Metadata.Model GetDaxModel(string serverName, string databaseName, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly, int statsColumnBatchSize = StatExtractor.DefaultColumnBatchSize)
         {
             Tom.Database db = GetDatabase(serverName, databaseName);
             Tom.Model tomModel = db.Model;
@@ -352,7 +352,7 @@ namespace Dax.Model.Extractor
                 if (readStatisticsFromData)
                 {
 #pragma warning disable CS0618 // Type or member is obsolete
-                    StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake);
+                    StatExtractor.UpdateStatisticsModel(daxModel, connection, sampleRows, analyzeDirectQuery, analyzeDirectLake, statsColumnBatchSize);
 #pragma warning restore CS0618 // Type or member is obsolete
 
                     // If model has any DL partitions and we have forced all columns into memory then re-run the DMVs to update the data with the new values after everything has been transcoded.
