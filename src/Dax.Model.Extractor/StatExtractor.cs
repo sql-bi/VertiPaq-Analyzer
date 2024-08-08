@@ -257,7 +257,7 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
                  // skip direct query tables if the analyzeDirectQuery is false
                  where t.Columns.Count > 1 && (analyzeDirectQuery || !t.HasDirectQueryPartitions)   
                      from c in t.Columns
-                     where c.State == "Ready"
+                     where c.State == "Ready" && !c.IsRowNumber && c.GroupByColumns.Count == 0
                         // only include the column if the table does not have Direct Lake partitions or if they are resident or if analyzeDirectLake is true
                         && (!t.HasDirectLakePartitions 
                             || (analyzeDirectLake >= DirectLakeExtractionMode.ResidentOnly && c.IsResident) 
@@ -269,14 +269,12 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
             foreach ( var columnSet in loopColumns ) {
                 var idString = 0;
                 var dax = "EVALUATE ";
-                int validColumns = columnSet.Where(c => !c.IsRowNumber).Count();
                 //only union if there is more than 1 column in the columnSet
-                if (validColumns > 1) { dax += "UNION("; } 
+                if (columnSet.Count > 1) { dax += "UNION("; } 
                 dax += string.Join(",", columnSet
-                    .Where(c => !c.IsRowNumber && c.GroupByColumns.Count == 0 )
                     .Select(c => $"\n    ROW(\"Table\", \"{idString++:0000}{EmbedNameInString(c.Table.TableName.Name)}\", \"Column\", \"{idString++:0000}{EmbedNameInString(c.ColumnName.Name)}\", \"Cardinality\", {DistinctCountExpression(c)})").ToList());
                 //only close the union call if there is more than 1 column in the columnSet
-                if (validColumns > 1) { dax += ")"; }
+                if (columnSet.Count > 1) { dax += ")"; }
 
                 var cmd = CreateCommand(dax);
                 cmd.CommandTimeout = CommandTimeout;
