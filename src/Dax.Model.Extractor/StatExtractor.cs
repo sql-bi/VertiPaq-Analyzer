@@ -237,9 +237,10 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
 
         private static string DistinctCountExpression(Column column)
         {
-            return column.GroupByColumns.Count == 0 
-                ? $"DISTINCTCOUNT({EscapeColumnName(column)})"
-                : $"COUNTROWS(ALLNOBLANKROW({EscapeColumnName(column)}))";
+            // We always use COUNTROWS(ALLNOBLANKROW(t[c])) instead of DISTINCTCOUNT(t[c]) because it is compatible with GroupByColumns settings, such as Fields Parameters. 
+            // COUNTROWS(ALLNOBLANKROW()) always reads the list of values from the attribute hierarchy (when AvailableInMDX=true) or queries the table if the hierarchy is not available (when AvailableInMDX=false)
+
+            return $"COUNTROWS(ALLNOBLANKROW({EscapeColumnName(column)}))";
         }
 
         private static string EscapeColumnName(Column column)
@@ -257,7 +258,7 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
                  // skip direct query tables if the analyzeDirectQuery is false
                  where t.Columns.Count > 1 && (analyzeDirectQuery || !t.HasDirectQueryPartitions)   
                      from c in t.Columns
-                     where c.State == "Ready" && !c.IsRowNumber && c.GroupByColumns.Count == 0
+                     where c.State == "Ready" && !c.IsRowNumber
                         // only include the column if the table does not have Direct Lake partitions or if they are resident or if analyzeDirectLake is true
                         && (!t.HasDirectLakePartitions 
                             || (analyzeDirectLake >= DirectLakeExtractionMode.ResidentOnly && c.IsResident) 
