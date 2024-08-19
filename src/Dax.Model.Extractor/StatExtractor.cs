@@ -257,7 +257,7 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
                  // skip direct query tables if the analyzeDirectQuery is false
                  where t.Columns.Count > 1 && (analyzeDirectQuery || !t.HasDirectQueryPartitions)   
                      from c in t.Columns
-                     where c.State == "Ready" && !c.IsRowNumber && c.GroupByColumns.Count == 0
+                     where c.State == "Ready" && !c.IsRowNumber
                         // only include the column if the table does not have Direct Lake partitions or if they are resident or if analyzeDirectLake is true
                         && (!t.HasDirectLakePartitions 
                             || (analyzeDirectLake >= DirectLakeExtractionMode.ResidentOnly && c.IsResident) 
