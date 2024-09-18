@@ -13,11 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.ViewVpaExport", "src\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Vpax", "src\Dax.Vpax\Dax.Vpax.csproj", "{D12894AE-3693-411C-A2A3-4109D2DBC4B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Metadata.Tests", "src\Dax.Metadata.Tests\Dax.Metadata.Tests.csproj", "{705EDB3D-10CC-4D3E-B85D-78CB23924E44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Metadata.Tests", "tests\Dax.Metadata.Tests\Dax.Metadata.Tests.csproj", "{705EDB3D-10CC-4D3E-B85D-78CB23924E44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Model.Extractor.Tests", "src\Dax.Model.Extractor.Tests\Dax.Model.Extractor.Tests.csproj", "{D6CA44D3-C324-4B7E-97E3-D5688997A297}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Model.Extractor.Tests", "tests\Dax.Model.Extractor.Tests\Dax.Model.Extractor.Tests.csproj", "{D6CA44D3-C324-4B7E-97E3-D5688997A297}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Vpax.Tests", "src\Dax.Vpax.Tests\Dax.Vpax.Tests.csproj", "{CF873E93-AE2F-4A25-A71C-A68EB876C7A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Vpax.Tests", "tests\Dax.Vpax.Tests\Dax.Vpax.Tests.csproj", "{CF873E93-AE2F-4A25-A71C-A68EB876C7A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

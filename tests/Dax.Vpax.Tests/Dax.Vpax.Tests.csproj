@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dax.Model.Extractor\Dax.Model.Extractor.csproj" />
-    <ProjectReference Include="..\Dax.Vpax\Dax.Vpax.csproj" />
+    <ProjectReference Include="..\..\src\Dax.Model.Extractor\Dax.Model.Extractor.csproj" />
+    <ProjectReference Include="..\..\src\Dax.Vpax\Dax.Vpax.csproj" />
   </ItemGroup>
 
   <ItemGroup>
