@@ -16,22 +16,16 @@
     <Company>SQLBI</Company>
     <Authors>Marco Russo</Authors>
     <Product>VertiPaq Analyzer</Product>
-    <!--Summary>...</Summary-->
-    <!--Copyright>Copyright ©</Copyright-->
     <PackageTags>VPAX;DAX;VERTIPAQ;ANALYZER</PackageTags>
     <PackageIcon>package-icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/sql-bi/VertiPaq-Analyzer</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>master</RepositoryBranch>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <!--Package Validation-->
-    <!--EnablePackageValidation>true</EnablePackageValidation-->
-    <!--PackageValidationBaselineVersion>1.2.15</PackageValidationBaselineVersion-->  
+    <DebugType>embedded</DebugType>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources> 
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">

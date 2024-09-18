@@ -14,16 +14,15 @@
   
   <PropertyGroup>
     <IsPackable>true</IsPackable>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>vpax</ToolCommandName>
     <PackageId>Dax.Vpax.CLI</PackageId>
     <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer/tree/master/src/Dax.Vpax.CLI</PackageProjectUrl>
     <Title>VertiPaq Analyzer CLI</Title>
     <Description>VertiPaq Analyzer Command Line Tool</Description>
-    <DebugType>embedded</DebugType>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <!-- override IncludeSymbols from Directory.Build.props -->
-    <IncludeSymbols>false</IncludeSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>vpax</ToolCommandName>
   </PropertyGroup>
 
   <ItemGroup>

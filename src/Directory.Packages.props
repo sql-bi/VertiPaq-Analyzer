@@ -13,7 +13,6 @@
     <PackageVersion Include="Microsoft.AnalysisServices.NetCore.retail.amd64" Version="$(MicrosoftAnalysisServicesVersion)" />
     <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient.retail.amd64" Version="$(MicrosoftAnalysisServicesVersion)" />
     <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="$(MicrosoftAnalysisServicesVersion)" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="System.IO.Packaging" Version="6.0.0" />
   </ItemGroup>

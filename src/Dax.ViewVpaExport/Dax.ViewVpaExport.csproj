@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
-    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>Dax.ViewVpaExport</PackageId>
+    <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer/tree/master/src/Dax.ViewVpaExport</PackageProjectUrl>
     <Title>Dax.ViewVpaExport</Title>
     <Description>Views over Dax.Model data to support export in a VertiPaq Analyzer file</Description>
-    <PackageId>Dax.ViewVpaExport</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +22,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
