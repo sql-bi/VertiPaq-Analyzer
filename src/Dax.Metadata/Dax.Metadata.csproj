@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
-    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>Dax.Metadata</PackageId>
+    <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer/tree/master/src/Dax.Metadata</PackageProjectUrl>
     <Title>Dax.Metadata</Title>
     <Description>Tabular model object model including statistics from DMV and data distribution for VertiPaq Analyzer and other tools</Description>
-    <PackageId>Dax.Metadata</PackageId>
   </PropertyGroup>
 
   <PropertyGroup>

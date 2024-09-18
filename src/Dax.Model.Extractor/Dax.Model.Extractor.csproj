@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;netcoreapp3.1;net6.0</TargetFrameworks>
-    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>Dax.Model.Extractor</PackageId>
+    <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer/tree/master/src/Dax.Model.Extractor</PackageProjectUrl>
     <Title>Dax.Model.Extractor</Title>
     <Description>Populate a Dax.Model extracting data from TOM and Analysis Services</Description>
-    <PackageId>Dax.Model.Extractor</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

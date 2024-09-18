@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;netcoreapp3.1;net6.0</TargetFrameworks>
-    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>Dax.Vpax</PackageId>
+    <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer/tree/master/src/Dax.Vpax</PackageProjectUrl>
     <Title>Dax.Vpax</Title>
     <Description>Save and load VPAX files</Description>
-    <PackageId>Dax.Vpax</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

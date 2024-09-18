@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
-    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>Dax.ViewModel</PackageId>
+    <PackageProjectUrl>https://github.com/sql-bi/VertiPaq-Analyzer/tree/master/src/Dax.ViewModel</PackageProjectUrl>
     <Title>Dax.ViewModel</Title>
     <Description>ViewModel to display in a VertiPaq Analyzer viewer the Dax.Model data</Description>
-    <PackageId>Dax.ViewModel</PackageId>
   </PropertyGroup>
   
   <ItemGroup>
