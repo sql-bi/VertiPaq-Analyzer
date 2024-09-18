@@ -10,7 +10,7 @@
     <!-- Global Package References -->
     <GlobalPackageReference Include="coverlet.collector" Version="6.0.0" />
     <!-- Pinned dependency required to test out-of-support target frameworks -->
-    <GlobalPackageReference Include="xunit.runner.visualstudio" Version="[2.4.5]" />
+    <GlobalPackageReference Include="xunit.runner.visualstudio" Version="[2.8.2]" />
   </ItemGroup>
 
 </Project>
