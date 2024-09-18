@@ -1,0 +1,16 @@
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageVersion Include="xunit" Version="2.6.6" />
+    <!-- Global Package References -->
+    <GlobalPackageReference Include="coverlet.collector" Version="6.0.0" />
+    <!-- Pinned dependency required to test out-of-support target frameworks -->
+    <GlobalPackageReference Include="xunit.runner.visualstudio" Version="[2.4.5]" />
+  </ItemGroup>
+
+</Project>

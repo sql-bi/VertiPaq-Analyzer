@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Dax.Model.Extractor\Dax.Model.Extractor.csproj" />
+    <ProjectReference Include="..\..\src\Dax.Vpax\Dax.Vpax.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="_data\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

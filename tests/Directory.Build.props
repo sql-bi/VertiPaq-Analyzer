@@ -1,0 +1,16 @@
+<Project>
+
+  <PropertyGroup>
+    <TargetFrameworks>net462;netcoreapp3.1;net6.0</TargetFrameworks>
+    <Nullable>disable</Nullable>
+    <LangVersion>12.0</LangVersion>
+    <!-- It's ok if a test target has exited support. Disable NETSSDK1138 warning -->
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+  </ItemGroup>
+
+</Project>

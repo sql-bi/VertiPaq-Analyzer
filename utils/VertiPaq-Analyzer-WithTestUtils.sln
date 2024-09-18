@@ -15,11 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWpfPowerBI", "TestWpfPo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Metadata", "..\src\Dax.Metadata\Dax.Metadata.csproj", "{E6041BDA-DCA0-4EF4-85CE-799BD763D5FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Metadata.Tests", "..\src\Dax.Metadata.Tests\Dax.Metadata.Tests.csproj", "{4E775D58-05B1-4FDE-A25C-001A3B5D1B8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Metadata.Tests", "..\tests\Dax.Metadata.Tests\Dax.Metadata.Tests.csproj", "{4E775D58-05B1-4FDE-A25C-001A3B5D1B8B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Model.Extractor", "..\src\Dax.Model.Extractor\Dax.Model.Extractor.csproj", "{1E17B04F-9FCB-459A-9368-78639ED37FD4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Model.Extractor.Tests", "..\src\Dax.Model.Extractor.Tests\Dax.Model.Extractor.Tests.csproj", "{416BA3AB-6CD4-4167-AD5A-EC4CC657E606}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Model.Extractor.Tests", "..\tests\Dax.Model.Extractor.Tests\Dax.Model.Extractor.Tests.csproj", "{416BA3AB-6CD4-4167-AD5A-EC4CC657E606}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.ViewModel", "..\src\Dax.ViewModel\Dax.ViewModel.csproj", "{E7571992-F457-4683-846F-B7C0CAA1BFC5}"
 EndProject
@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.ViewVpaExport", "..\src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Vpax", "..\src\Dax.Vpax\Dax.Vpax.csproj", "{7ED1E91E-D9E9-4C13-926F-4BD0BFE63615}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Vpax.Tests", "..\src\Dax.Vpax.Tests\Dax.Vpax.Tests.csproj", "{E06BCFE7-479F-4208-B6E8-2CC7A4B1D738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dax.Vpax.Tests", "..\tests\Dax.Vpax.Tests\Dax.Vpax.Tests.csproj", "{E06BCFE7-479F-4208-B6E8-2CC7A4B1D738}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

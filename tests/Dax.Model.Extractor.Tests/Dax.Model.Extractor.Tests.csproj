@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Dax.Model.Extractor\Dax.Model.Extractor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Dax.Vpax.Tests\_data\Contoso.bim" Link="_data\Contoso.bim">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Dax.Vpax.Tests\_data\Vaccini.bim" Link="_data\Vaccini.bim">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

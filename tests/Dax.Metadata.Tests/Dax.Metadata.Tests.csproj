@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Dax.Metadata\Dax.Metadata.csproj" />
+    <ProjectReference Include="..\..\src\Dax.Vpax\Dax.Vpax.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Dax.Vpax.Tests\_data\Contoso.vpax" Link="_data\Contoso.vpax">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Dax.Vpax.Tests\_data\Vaccini.vpax" Link="_data\Vaccini.vpax">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
