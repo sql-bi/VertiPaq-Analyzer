@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <MicrosoftAnalysisServicesVersion>19.77.0</MicrosoftAnalysisServicesVersion>
+    <MicrosoftAnalysisServicesVersion>19.79.1.1</MicrosoftAnalysisServicesVersion>
   </PropertyGroup>
 
   <ItemGroup>
