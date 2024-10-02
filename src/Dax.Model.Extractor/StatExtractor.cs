@@ -91,10 +91,10 @@ namespace Dax.Model.Extractor
 CALCULATETABLE (
 ROW( 
     ""RelationshipId"", {rel.Dmv1200RelationshipId},
-    ""MissingKeys"", DISTINCTCOUNT ( {EscapeColumnName(rel.FromColumn)} ),
+    ""MissingKeys"", {DistinctCountExpression(rel.FromColumn)},
     ""InvalidRows"", COUNTROWS({EscapeTableName(rel.FromColumn.Table)})
 ),
-ISBLANK( {EscapeColumnName(rel.ToColumn)} ),
+{IsBlankExpression(rel.ToColumn)},
 USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToColumn)} )
 )").ToArray());
                 //             ""Column"", ""{EmbedNameInString(rel.FromColumn.ColumnName.Name)}"", 
@@ -138,11 +138,11 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
                         relationshipSet.Select(rel => (rel.MissingKeys > sampleRows && rel.MissingKeys <= MAX_KEYS_FOR_SAMPLE) ?
 $@"CALCULATETABLE ( 
 SELECTCOLUMNS ( 
-    SAMPLE ( {sampleRows}, DISTINCT ( {EscapeColumnName(rel.FromColumn)} ), {EscapeColumnName(rel.FromColumn)}, ASC ), 
+    SAMPLE ( {sampleRows}, {DistinctExpression(rel.FromColumn)}, {EscapeColumnName(rel.FromColumn)}, ASC ), 
     ""RelationshipId"", {rel.Dmv1200RelationshipId}, 
     ""MissingValue"", {EscapeColumnName(rel.FromColumn)} 
 ),
-ISBLANK( {EscapeColumnName(rel.ToColumn)} ),
+{IsBlankExpression(rel.ToColumn)},
 USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToColumn)} )
 )"
 : (DaxModel.CompatibilityLevel >= 1200) ?
@@ -155,7 +155,7 @@ $@"CALCULATETABLE (
     ""RelationshipId"", {rel.Dmv1200RelationshipId}, 
     ""MissingValue"", {EscapeColumnName(rel.FromColumn)} 
 ))),
-ISBLANK( {EscapeColumnName(rel.ToColumn)} ),
+{IsBlankExpression(rel.ToColumn)},
 USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToColumn)} )
 )"
 :
@@ -237,15 +237,51 @@ USERELATIONSHIP( {EscapeColumnName(rel.FromColumn)}, {EscapeColumnName(rel.ToCol
 
         private static string DistinctCountExpression(Column column)
         {
-            // We always use COUNTROWS(ALLNOBLANKROW(t[c])) instead of DISTINCTCOUNT(t[c]) because it is compatible with GroupByColumns settings, such as Fields Parameters. 
-            // COUNTROWS(ALLNOBLANKROW()) always reads the list of values from the attribute hierarchy (when AvailableInMDX=true) or queries the table if the hierarchy is not available (when AvailableInMDX=false)
+            var columnName = EscapeColumnName(column);
 
-            return $"COUNTROWS(ALLNOBLANKROW({EscapeColumnName(column)}))";
+            if (column.GroupByColumns.Count == 0) {
+                return $"DISTINCTCOUNT({columnName})";
+            }
+            else {
+                // COUNTROWS(ALLNOBLANKROW(t[c])) is compatible with GroupByColumns settings like Fields Parameters because it always retrieves the list of
+                // values from the attribute hierarchy (when AvailableInMDX=true), or queries the table if the hierarchy is unavailable (AvailableInMDX=false).
+                return $"COUNTROWS(ALLNOBLANKROW({columnName}))";
+            }
         }
 
+        private static string DistinctExpression(Column column)
+        {
+            var columnName = EscapeColumnName(column);
+
+            if (column.GroupByColumns.Count == 0) {
+                return $"DISTINCT({columnName})";
+            }
+            else {
+                var groupingColumnNames = string.Join(", ", column.GroupByColumns.Select((cn) => EscapeColumnName(column.Table, cn)));
+                var tableName = EscapeTableName(column.Table);
+                return $"DISTINCT(SELECTCOLUMNS(SUMMARIZE({tableName}, {columnName}, {groupingColumnNames}), {columnName}))";
+            }
+        }
+
+        private static string IsBlankExpression(Column column)
+        {
+            var columnName = EscapeColumnName(column);
+
+            if (column.GroupByColumns.Count == 0) {
+                return $"ISBLANK({columnName})";
+            }
+            else {
+                var groupingColumnNames = string.Join(", ", column.GroupByColumns.Select((cn) => EscapeColumnName(column.Table, cn)));
+                return $"FILTER(ALL({columnName}, {groupingColumnNames}), ISBLANK({columnName}))";
+            }
+        }
         private static string EscapeColumnName(Column column)
         {
-            return $"{EscapeTableName(column.Table)}[{column.ColumnName.Name.Replace("]", "]]")}]";
+            return EscapeColumnName(column.Table, column.ColumnName);
+        }
+        private static string EscapeColumnName(Table table, DaxName columnName)
+        {
+            return $"{EscapeTableName(table)}[{columnName.Name.Replace("]", "]]")}]";
         }
         private static string EmbedNameInString(string originalName)
         {
