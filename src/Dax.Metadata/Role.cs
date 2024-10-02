@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using System.Diagnostics;
 
 namespace Dax.Metadata
 {
+    [DebuggerDisplay("{RoleName.Name,nq}")]
     public class Role
     {
         [JsonIgnore]

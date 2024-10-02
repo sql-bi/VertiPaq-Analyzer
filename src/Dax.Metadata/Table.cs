@@ -2,9 +2,11 @@
 using System.Linq;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using System.Diagnostics;
 
 namespace Dax.Metadata
 {
+    [DebuggerDisplay("{TableName.Name,nq}")]
     [JsonObject(IsReference =true)]
     public class Table
     {

@@ -2,9 +2,11 @@
 using System.Linq;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using System.Diagnostics;
 
 namespace Dax.Metadata
 {
+    [DebuggerDisplay("{Table.TableName.Name,nq}[{ColumnName.Name,nq}]")]
     public class Column
     {
         public Column(Table table) : this()

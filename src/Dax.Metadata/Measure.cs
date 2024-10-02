@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Dax.Metadata
 {
+    [DebuggerDisplay("{MeasureName.Name,nq}")]
     public class Measure
     {
         public Table Table { get; set; }

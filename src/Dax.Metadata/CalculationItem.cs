@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Diagnostics;
 
 namespace Dax.Metadata
 {
+    [DebuggerDisplay("{ItemName.Name,nq}")]
     public class CalculationItem
     {
         public CalculationItem(CalculationGroup calculationGroup) : this()
