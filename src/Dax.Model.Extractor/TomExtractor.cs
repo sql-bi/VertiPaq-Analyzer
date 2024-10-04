@@ -123,7 +123,8 @@ namespace Dax.Model.Extractor
                 TableType = isCalculatedTable ? Table.TableSourceType.CalculatedTable.ToString() :
                        (isCalculationGroup ? Table.TableSourceType.CalculationGroup.ToString() : null),
                 Description = new  DaxNote(table.Description),
-                IsDateTable = (table.DataCategory == Microsoft.AnalysisServices.DimensionType.Time.ToString())
+                IsDateTable = (table.DataCategory == Microsoft.AnalysisServices.DimensionType.Time.ToString()),
+                DefaultDetailRowsExpression = DaxExpression.GetExpression(table.DefaultDetailRowsDefinition?.Expression),
             };
             if (daxTable.IsDateTable == false)
             {
