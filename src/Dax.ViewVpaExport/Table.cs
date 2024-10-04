@@ -31,5 +31,6 @@ namespace Dax.ViewVpaExport
         public long RelationshipsSize { get { return this._Table.RelationshipsSize; } }
         public long UserHierarchiesSize { get { return this._Table.UserHierarchiesSize; } }
         public bool IsReferenced { get { return this._Table.IsReferenced; } }
+        public string DefaultDetailRowsExpression { get { return this._Table.DefaultDetailRowsExpression?.Expression; } }
     }
 }

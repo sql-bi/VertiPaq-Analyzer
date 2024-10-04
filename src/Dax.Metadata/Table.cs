@@ -36,6 +36,7 @@ namespace Dax.Metadata
         public bool IsLocalDateTable { get; set; }
         public bool IsTemplateDateTable { get; set; }
         public DaxExpression TableExpression { get; set; }
+        public DaxExpression DefaultDetailRowsExpression { get; set; }
         public long RowsCount { get; set; }
         public long ReferentialIntegrityViolationCount { get; set; }
         public CalculationGroup CalculationGroup { get; set; }
