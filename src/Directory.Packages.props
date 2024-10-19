@@ -8,7 +8,7 @@
     <PackageVersion Include="Microsoft.AnalysisServices" Version="19.84.10" />
     <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient" Version="19.84.10" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="System.IO.Packaging" Version="[6.0.0, 7.0.0)" />
+    <PackageVersion Include="System.IO.Packaging" Version="6.0.1" />
   </ItemGroup>
 
 </Project>
