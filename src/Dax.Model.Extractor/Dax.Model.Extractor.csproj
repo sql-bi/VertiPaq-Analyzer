@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;netcoreapp3.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>net472;netcoreapp3.1;net6.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -26,8 +26,8 @@
     <PackageReference Include="Microsoft.AnalysisServices.AdomdClient" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
-    <AssemblyTitle>Dax.Model.Extractor .NET Framework 4.6.2</AssemblyTitle>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
+    <AssemblyTitle>Dax.Model.Extractor .NET Framework 4.7.2</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <AssemblyTitle>Dax.Model.Extractor .NET Core 3.1</AssemblyTitle>

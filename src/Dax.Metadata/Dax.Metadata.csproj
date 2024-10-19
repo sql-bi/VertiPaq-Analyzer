@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>net472;netstandard2.0;netcoreapp3.1;net6.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,8 +21,8 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
-    <AssemblyTitle>Dax.Metadata .NET Framework 4.6.2</AssemblyTitle>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472'">
+    <AssemblyTitle>Dax.Metadata .NET Framework 4.7.2</AssemblyTitle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <AssemblyTitle>Dax.Metadata .NET Standard 2.0</AssemblyTitle>
