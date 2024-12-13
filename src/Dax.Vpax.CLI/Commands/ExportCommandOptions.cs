@@ -1,9 +1,4 @@
-﻿using Dax.Metadata;
-using Dax.Model.Extractor;
-using System.CommandLine;
-using System.Data.Common;
-
-namespace Dax.Vpax.CLI.Commands;
+﻿namespace Dax.Vpax.CLI.Commands;
 
 internal static class ExportCommandOptions
 {

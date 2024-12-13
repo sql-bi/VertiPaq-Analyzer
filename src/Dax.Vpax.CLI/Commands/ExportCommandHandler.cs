@@ -1,10 +1,4 @@
-﻿using System.CommandLine;
-using System.CommandLine.Invocation;
-using System.CommandLine.IO;
-using Dax.Metadata;
-using Dax.Model.Extractor;
-using Dax.Vpax.Tools;
-using static Dax.Vpax.CLI.Commands.ExportCommandOptions;
+﻿using static Dax.Vpax.CLI.Commands.ExportCommandOptions;
 
 namespace Dax.Vpax.CLI.Commands;
 

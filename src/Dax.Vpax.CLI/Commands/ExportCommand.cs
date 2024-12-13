@@ -1,5 +1,4 @@
-﻿using System.CommandLine;
-using static Dax.Vpax.CLI.Commands.ExportCommandOptions;
+﻿using static Dax.Vpax.CLI.Commands.ExportCommandOptions;
 
 namespace Dax.Vpax.CLI.Commands;
 

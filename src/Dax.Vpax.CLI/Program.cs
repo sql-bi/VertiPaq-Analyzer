@@ -1,7 +1,4 @@
-﻿using System.CommandLine;
-using Dax.Vpax.CLI.Commands;
-
-namespace Dax.Vpax.CLI;
+﻿namespace Dax.Vpax.CLI;
 
 internal sealed class Program
 {

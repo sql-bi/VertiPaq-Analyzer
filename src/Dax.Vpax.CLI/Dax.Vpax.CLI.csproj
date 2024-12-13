@@ -4,8 +4,7 @@
     <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
-    <LangVersion>10.0</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>12.0</LangVersion>
     <AnalysisMode>all</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
     <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>

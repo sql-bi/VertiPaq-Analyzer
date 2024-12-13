@@ -1,0 +1,12 @@
+﻿global using Dax.Metadata;
+global using Dax.Model.Extractor;
+global using Dax.Vpax.CLI.Commands;
+global using Dax.Vpax.Tools;
+global using System;
+global using System.CommandLine;
+global using System.CommandLine.Invocation;
+global using System.CommandLine.IO;
+global using System.Data.Common;
+global using System.IO;
+global using System.Linq;
+global using System.Threading.Tasks;
