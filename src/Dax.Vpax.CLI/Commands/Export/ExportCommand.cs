@@ -1,6 +1,6 @@
-﻿using static Dax.Vpax.CLI.Commands.ExportCommandOptions;
+﻿using static Dax.Vpax.CLI.Commands.Export.ExportCommandOptions;
 
-namespace Dax.Vpax.CLI.Commands;
+namespace Dax.Vpax.CLI.Commands.Export;
 
 internal static class ExportCommand
 {
