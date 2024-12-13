@@ -2,11 +2,9 @@
 
 namespace Dax.Vpax.CLI.Commands.Export;
 
-internal sealed class ExportCommandHandler : ICommandHandler
+internal sealed class ExportCommandHandler : CommandHandler
 {
-    public int Invoke(InvocationContext context) => throw new NotSupportedException("Use InvokeAsync instead.");
-
-    public async Task<int> InvokeAsync(InvocationContext context)
+    public override async Task<int> InvokeAsync(InvocationContext context)
     {
         // TODO: forward cancellation token to vertipaq-analyzer extractor
         var cancellationToken = context.GetCancellationToken();

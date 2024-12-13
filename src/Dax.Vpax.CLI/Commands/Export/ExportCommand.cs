@@ -2,25 +2,22 @@
 
 namespace Dax.Vpax.CLI.Commands.Export;
 
-internal static class ExportCommand
+internal sealed class ExportCommand : Command
 {
-    private static readonly ExportCommandHandler s_handler = new();
+    public static ExportCommand Instance { get; } = new ExportCommand();
 
-    internal static Command GetCommand()
+    private ExportCommand()
+        : base(name: "export", description: "Export a VPAX file from a tabular model")
     {
-        var command = new Command("export", "Export a VPAX file from a tabular model")
-        {
-            PathArgument,
-            ConnectionStringArgument,
-            OverwriteOption,
-            // advanced options
-            ExcludeTomOption,
-            ExcludeVpaOption,
-            DirectQueryModeOption,
-            DirectLakeModeOption,
-            ColumnBatchSizeOption,
-        };
-        command.Handler = s_handler;
-        return command;
+        AddArgument(PathArgument);
+        AddArgument(ConnectionStringArgument);
+        AddOption(OverwriteOption);
+        AddOption(ExcludeTomOption);
+        AddOption(ExcludeVpaOption);
+        AddOption(DirectQueryModeOption);
+        AddOption(DirectLakeModeOption);
+        AddOption(ColumnBatchSizeOption);
+
+        Handler = new ExportCommandHandler();
     }
 }

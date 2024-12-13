@@ -1,15 +1,19 @@
-﻿namespace Dax.Vpax.CLI;
+﻿using System.CommandLine.Builder;
+using System.CommandLine.Parsing;
+
+namespace Dax.Vpax.CLI;
 
 internal sealed class Program
 {
     public static async Task<int> Main(string[] args)
         => await Build().InvokeAsync(args).ConfigureAwait(false);
 
-    private static RootCommand Build()
+    private static Parser Build()
     {
-        var command = new RootCommand("VertiPaq-Analyzer CLI");
-        command.Name = "vpax"; // Name must match <ToolCommandName> in csproj
-        command.AddCommand(ExportCommand.GetCommand());
-        return command;
+        var command = new RootVpaxCommand();
+        var builder = new CommandLineBuilder(command);
+        _ = builder.UseVpaxDefaults();
+
+        return builder.Build();
     }
 }
