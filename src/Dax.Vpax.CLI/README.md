@@ -2,9 +2,11 @@
 
 This is a .NET tool that provides CLI access to [VertiPaq-Analyzer](https://github.com/sql-bi/VertiPaq-Analyzer) functions.
 
-Operations supported by this tool are:
+Commands supported by this tool are:
 
-- Export a VPAX file from a tabular model.
+- `export`  to export a VPAX file from a tabular model
+- `browse`  to browse metadata of a tabular model in a VPAX package file __[Experimental]__
+- `package` to manage a VPAX package file __[Experimental]__
 
 ## How to install the tool
 
