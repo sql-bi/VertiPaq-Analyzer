@@ -43,7 +43,7 @@ internal sealed class BrowseTableCommandHandler : CommandHandler
         var modelSize = model.Tables.Sum((t) => t.TableSize);
         var tables = query.ToArray();
 
-        foreach (var t in query)
+        foreach (var t in tables)
         {
             var style = t.IsHidden() ? new Style(foreground: Color.Grey) : Style.Plain;
             var sizePercentage = (double)t.TableSize / modelSize;

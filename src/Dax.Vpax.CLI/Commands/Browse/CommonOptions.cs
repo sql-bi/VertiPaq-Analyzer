@@ -2,7 +2,7 @@
 
 internal static class CommonOptions
 {
-    private static string[] OrderByColumns => new[] {"c", "cardinality", "n", "name", "s", "size" };
+    private static string[] OrderByColumns => ["c", "cardinality", "n", "name", "s", "size"];
 
     public static readonly Option<bool> ExcludeHiddenOption = new(
         name: "--exclude-hidden",

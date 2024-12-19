@@ -2,8 +2,8 @@
 
 internal sealed class UserSession
 {
-    private static readonly string FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".vpax", "cli-session.json");
-    private static readonly JsonSerializerOptions JsonOptions = new()
+    private static readonly string s_filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".vpax", "cli-session.json");
+    private static readonly JsonSerializerOptions s_jsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
@@ -12,8 +12,8 @@ internal sealed class UserSession
     {
         UserSession? session = null;
 
-        if (File.Exists(FilePath))
-            session = JsonSerializer.Deserialize<UserSession>(json: File.ReadAllText(FilePath), JsonOptions);
+        if (File.Exists(s_filePath))
+            session = JsonSerializer.Deserialize<UserSession>(json: File.ReadAllText(s_filePath), s_jsonOptions);
 
         return session ?? new UserSession();
     }
@@ -24,8 +24,8 @@ internal sealed class UserSession
 
     public void Save()
     {
-        _ = Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
-        File.WriteAllText(FilePath, JsonSerializer.Serialize(this, JsonOptions));
+        _ = Directory.CreateDirectory(Path.GetDirectoryName(s_filePath)!);
+        File.WriteAllText(s_filePath, JsonSerializer.Serialize(this, s_jsonOptions));
     }
 }
 

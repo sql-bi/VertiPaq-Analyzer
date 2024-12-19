@@ -34,7 +34,7 @@ internal sealed class BrowseModelCommandHandler : CommandHandler
             .AddRow("[yellow]Last Process[/]", model.LastProcessed.ToString("o", CultureInfo.InvariantCulture))
             .AddRow("[yellow]Last Update[/]", model.LastUpdate.ToString("o", CultureInfo.InvariantCulture))
             .AddRow("[yellow]Tables[/]", model.Tables.Count.ToString())
-            .AddRow("[yellow]Columns[/]", model.Tables.SelectMany((t) => t.Columns).Where(c => !c.IsRowNumber).Count().ToString())
+            .AddRow("[yellow]Columns[/]", model.Tables.SelectMany((t) => t.Columns).Count(c => !c.IsRowNumber).ToString())
             .AddRow("[yellow]Size (in memory)[/]", model.Tables.Sum((t) => t.TableSize).ToSizeString());
 
         return table;
