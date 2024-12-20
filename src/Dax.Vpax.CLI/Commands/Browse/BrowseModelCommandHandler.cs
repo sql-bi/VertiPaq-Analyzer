@@ -1,6 +1,4 @@
-﻿using Spectre.Console;
-
-namespace Dax.Vpax.CLI.Commands.Browse;
+﻿namespace Dax.Vpax.CLI.Commands.Browse;
 
 internal sealed class BrowseModelCommandHandler : CommandHandler
 {

@@ -8,12 +8,13 @@ internal sealed class PackageExtractCommand : Command
         : base(name: "extract", description: "Extract all files from a VPAX package")
     {
         AddArgument(PackageExtractCommandOptions.PathArgument);
-        AddOption(Commands.CommonOptions.PathOption);
+        AddOption(CommonOptions.PathOption);
         AddOption(PackageExtractCommandOptions.OverwriteOption);
 
         Handler = new PackageExtractCommandHandler();
     }
 }
+
 internal static class PackageExtractCommandOptions
 {
     public static readonly Argument<DirectoryInfo> PathArgument = new(

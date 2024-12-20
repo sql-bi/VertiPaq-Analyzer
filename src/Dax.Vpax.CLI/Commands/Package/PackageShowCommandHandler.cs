@@ -1,6 +1,4 @@
-﻿using Spectre.Console;
-
-namespace Dax.Vpax.CLI.Commands.Package;
+﻿namespace Dax.Vpax.CLI.Commands.Package;
 
 internal sealed class PackageShowCommandHandler : CommandHandler
 {

@@ -1,6 +1,4 @@
-﻿using Dax.Vpax.CLI.Commands.Package;
-
-namespace Dax.Vpax.CLI.Commands.Browse;
+﻿namespace Dax.Vpax.CLI.Commands.Browse;
 
 internal sealed class BrowseColumnCommand : Command
 {
