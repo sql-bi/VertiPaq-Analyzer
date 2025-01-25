@@ -1,4 +1,6 @@
-﻿namespace Dax.Vpax.CLI.Commands.Package;
+﻿using static Dax.Vpax.CLI.Commands.Package.PackageShowCommandOptions;
+
+namespace Dax.Vpax.CLI.Commands.Package;
 
 internal sealed class PackageShowCommand : Command
 {
@@ -7,8 +9,19 @@ internal sealed class PackageShowCommand : Command
     private PackageShowCommand()
         : base(name: "show", description: "Show details of a VPAX package file")
     {
-        AddOption(Commands.CommonOptions.PathOption);
+        AddOption(VpaxOption);
 
         Handler = new PackageShowCommandHandler();
     }
+}
+
+internal static class PackageShowCommandOptions
+{
+    public static readonly Option<FileInfo> VpaxOption = new(
+        name: "--vpax",
+        description: "Path to the VPAX file"
+        )
+    {
+        IsRequired = true,
+    };
 }

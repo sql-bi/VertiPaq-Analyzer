@@ -8,6 +8,11 @@ internal sealed class BrowseTableCommand : Command
         : base(name: "table", description: "Display table information")
     {
         AddAlias("t");
+        AddOption(CommonOptions.VpaxOption);
+        AddOption(CommonOptions.ExcludeHiddenOption);
+        AddOption(CommonOptions.OrderByOption);
+        AddOption(CommonOptions.TopOption);
+
         Handler = new BrowseTableCommandHandler();
     }
 }

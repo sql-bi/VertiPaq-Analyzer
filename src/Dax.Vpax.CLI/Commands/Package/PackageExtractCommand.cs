@@ -21,7 +21,7 @@ internal static class PackageExtractCommandOptions
 {
     public static readonly Option<FileInfo> VpaxOption = new(
         name: "--vpax",
-        description: "Path to the VPAX file."
+        description: "Path to the VPAX file"
         )
     {
         IsRequired = true,
@@ -29,7 +29,7 @@ internal static class PackageExtractCommandOptions
 
     public static readonly Option<DirectoryInfo> OutputOption = new(
         name: "--output",
-        description: "Path for the output directory. If not specified, the VPAX directory will be used."
+        description: "Path for the output directory. If not specified, the VPAX directory will be used"
         );
 
     public static readonly Option<bool> OverwriteOption = new(

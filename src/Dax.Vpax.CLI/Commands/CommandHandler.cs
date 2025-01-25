@@ -2,44 +2,24 @@
 
 internal abstract class CommandHandler : ICommandHandler
 {
+    public const int ErrorPackageInvalid = 1001;
+
     public int Invoke(InvocationContext context) => throw new NotSupportedException("Use InvokeAsync instead.");
+
     public abstract Task<int> InvokeAsync(InvocationContext context);
 
-    protected FileInfo? GetCurrentPackage(InvocationContext context)
+    protected static Metadata.Model? GetModel(InvocationContext context, FileInfo vpax)
     {
-        var path = context.ParseResult.GetValueForOption(CommonOptions.PathOption) ?? UserSession.GetPackagePath();
-        if (path is null)
+        var model = AnsiConsole.Status().AutoRefresh(true).Spinner(Spinner.Known.Default).Start("[yellow]Loading VPAX file...[/]", (context) =>
         {
-            AnsiConsole.MarkupLine($"[red]No package set. Use `vpax package set` to set a package.[/]");
-            context.ExitCode = 2;
-            return null;
-        }
-        var file = new FileInfo(path);
-        if (!file.Exists)
-        {
-            AnsiConsole.MarkupLine($"[red]Package file does not exist or is not accessible. [[{path}]][/]");
-            context.ExitCode = 3;
-            return null;
-        }
-        return file;
-    }
-
-    protected Metadata.Model? GetCurrentModel(InvocationContext context)
-    {
-        var file = GetCurrentPackage(context);
-        if (file is null)
-            return null;
-
-        var model = AnsiConsole.Status().AutoRefresh(true).Spinner(Spinner.Known.Default).Start<Metadata.Model>("[yellow]Loading VPAX package...[/]", (context) =>
-        {
-            var content = VpaxTools.ImportVpax(file.FullName, importDatabase: false);
+            var content = VpaxTools.ImportVpax(vpax.FullName, importDatabase: false);
             return content.DaxModel;
         });
 
         if (model is null)
         {
-            AnsiConsole.MarkupLine($"[red]Package does not contain {VpaxFormat.DAXMODEL}. Verify the package and try again.[/]");
-            context.ExitCode = 3;
+            AnsiConsole.MarkupLine($"[red]VPAX file does not contain {VpaxFormat.DAXMODEL}. Verify the package and try again.[/]");
+            context.ExitCode = ErrorPackageInvalid;
             return null;
         }
 
