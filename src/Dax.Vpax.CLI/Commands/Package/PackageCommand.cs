@@ -8,8 +8,6 @@ internal sealed class PackageCommand : Command
         : base(name: "package", description: "(Experimental) Manage a VPAX package file")
     {
         AddCommand(PackageExtractCommand.Instance);
-        AddCommand(PackageSetCommand.Instance);
         AddCommand(PackageShowCommand.Instance);
-        AddCommand(PackageUnsetCommand.Instance);
     }
 }
