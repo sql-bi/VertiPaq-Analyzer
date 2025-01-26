@@ -11,12 +11,12 @@ internal sealed class ExportCommand : Command
     {
         AddArgument(PathArgument);
         AddArgument(ConnectionStringArgument);
-        AddOption(OverwriteOption);
-        AddOption(ExcludeTomOption);
-        AddOption(ExcludeVpaOption);
+        AddOption(ColumnBatchSizeOption);
         AddOption(DirectQueryModeOption);
         AddOption(DirectLakeModeOption);
-        AddOption(ColumnBatchSizeOption);
+        AddOption(ExcludeTomOption);
+        AddOption(ExcludeVpaOption);
+        AddOption(OverwriteOption);
 
         Handler = new ExportCommandHandler();
     }

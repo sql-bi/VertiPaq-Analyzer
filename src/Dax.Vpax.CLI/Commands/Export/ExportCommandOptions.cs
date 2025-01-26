@@ -2,6 +2,11 @@
 
 internal static class ExportCommandOptions
 {
+    public static readonly Argument<string> PathArgument = new(
+        name: "path",
+        description: "Path to write the VPAX file"
+        );
+
     public static readonly Argument<string> ConnectionStringArgument = new(
         name: "connection-string",
         description: "Connection string to the tabular model",
@@ -18,27 +23,10 @@ internal static class ExportCommandOptions
             return connectionString; // always return the original value
         });
 
-    public static readonly Argument<string> PathArgument = new(
-        name: "path",
-        description: "Path to write the VPAX file"
-        );
-
-    public static readonly Option<bool> OverwriteOption = new(
-        name: "--overwrite",
-        getDefaultValue: () => false,
-        description: "Overwrite the VPAX file if it already exists"
-        );
-
-    public static readonly Option<bool> ExcludeTomOption = new(
-        name: "--exclude-bim",
-        getDefaultValue: () => false,
-        description: "Exclude the BIM model (Model.bim) from the export"
-        );
-
-    public static readonly Option<bool> ExcludeVpaOption = new(
-        name: "--exclude-vpa",
-        getDefaultValue: () => false,
-        description: "Exclude the VPA model (DaxVpaView.json) from the export"
+    public static readonly Option<int> ColumnBatchSizeOption = new(
+        name: "--column-batch-size",
+        getDefaultValue: () => StatExtractor.DefaultColumnBatchSize,
+        description: "Number of rows processed at a time during column statistics analysis"
         );
 
     public static readonly Option<DirectQueryExtractionMode> DirectQueryModeOption = new(
@@ -53,10 +41,22 @@ internal static class ExportCommandOptions
         description: "Direct Lake extraction mode"
         );
 
-    public static readonly Option<int> ColumnBatchSizeOption = new(
-        name: "--column-batch-size",
-        getDefaultValue: () => StatExtractor.DefaultColumnBatchSize,
-        description: "Number of rows processed at a time during column statistics analysis"
+    public static readonly Option<bool> ExcludeTomOption = new(
+        name: "--exclude-bim",
+        getDefaultValue: () => false,
+        description: "Exclude the BIM model (Model.bim) from the export"
+        );
+
+    public static readonly Option<bool> ExcludeVpaOption = new(
+        name: "--exclude-vpa",
+        getDefaultValue: () => false,
+        description: "Exclude the VPA model (DaxVpaView.json) from the export"
+        );
+
+    public static readonly Option<bool> OverwriteOption = new(
+        name: "--overwrite",
+        getDefaultValue: () => false,
+        description: "Overwrite the VPAX file if it already exists"
         );
 
     //static ExportCommandOptions()

@@ -11,10 +11,5 @@ internal sealed class BrowseCommand : Command
         AddCommand(BrowseTableCommand.Instance);
         AddCommand(BrowseColumnCommand.Instance);
         AddCommand(BrowseRelationshipCommand.Instance);
-
-        AddGlobalOption(Commands.CommonOptions.PathOption);
-        AddGlobalOption(CommonOptions.ExcludeHiddenOption);
-        AddGlobalOption(CommonOptions.OrderByOption);
-        AddGlobalOption(CommonOptions.TopOption);
     }
 }

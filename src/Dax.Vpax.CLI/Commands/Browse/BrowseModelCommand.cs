@@ -8,6 +8,8 @@ internal sealed class BrowseModelCommand : Command
         : base(name: "model", description: "Display tabular model information")
     {
         AddAlias("m");
+        AddOption(CommonOptions.VpaxOption);
+
         Handler = new BrowseModelCommandHandler();
     }
 }

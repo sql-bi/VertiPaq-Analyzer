@@ -1,4 +1,4 @@
-﻿using Spectre.Console;
+﻿using static Dax.Vpax.CLI.Commands.Package.PackageShowCommandOptions;
 
 namespace Dax.Vpax.CLI.Commands.Package;
 
@@ -6,15 +6,13 @@ internal sealed class PackageShowCommandHandler : CommandHandler
 {
     public override Task<int> InvokeAsync(InvocationContext context)
     {
-        var file = GetCurrentPackage(context);
-        if (file is null)
-            return Task.FromResult(context.ExitCode);
+        var vpax = context.ParseResult.GetValueForOption(VpaxOption)!;
 
         var grid = new Grid()
             .AddColumns(1)
-            .AddRow(GetProperties(file))
+            .AddRow(GetProperties(vpax))
             .AddEmptyRow()
-            .AddRow(GetContent(file));
+            .AddRow(GetContent(vpax));
 
         AnsiConsole.Write(new Panel(grid));
         return Task.FromResult(context.ExitCode);
