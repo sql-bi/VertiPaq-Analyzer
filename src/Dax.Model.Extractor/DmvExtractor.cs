@@ -337,7 +337,7 @@ ORDER BY DIMENSION_NAME";
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
                     string tableId = rdr.GetString(1);
-                    long rowsCount = rdr.GetInt64(2);
+                    long rowsCount = rdr.IsDBNull(2) ? 0L : rdr.GetInt64(2);
                     long referentialIntegrityViolationCount = rdr.GetInt64(3);
 
                     Table daxTable = GetDaxTable(tableName);
@@ -672,7 +672,7 @@ WHERE COLUMN_TYPE = 'BASIC_DATA'";
                     string columnDmv1100Id = rdr.GetString(1);
                     string columnName = rdr.GetString(2);
                     string dataType = rdr.GetString(3);
-                    long dictionarySize = (long)rdr.GetDecimal(4);
+                    long dictionarySize = rdr.IsDBNull(4) ? 0L : (long)rdr.GetDecimal(4);
                     long columnEncodingInt = rdr.GetInt64(5);
 
                     Column daxColumn = GetDaxColumn(tableName, columnName);
@@ -771,8 +771,8 @@ WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
                     string columnDmv1100Id = rdr.GetString(2);
                     long segmentNumber = rdr.GetInt64(3);
                     long tablePartitionNumber = rdr.GetInt64(4);
-                    long segmentRows = rdr.GetInt64(5);
-                    long usedSize = (long)rdr.GetDecimal(6);
+                    long segmentRows = rdr.IsDBNull(5) ? 0L : rdr.GetInt64(5);
+                    long usedSize = rdr.IsDBNull(6) ? 0L : (long)rdr.GetDecimal(6);
                     string compressionType = rdr.GetString(7);
                     long bitsCount = rdr.GetInt64(8);
                     long bookmarkBitsCount = rdr.GetInt64(9);
