@@ -342,7 +342,13 @@ ORDER BY DIMENSION_NAME";
 
                     Table daxTable = GetDaxTable(tableName);
                     daxTable.SetDmv1100TableId(tableId);
+
+                    // RowsCount is also extracted from StatsExtractor. We assign it only if its current value is zero (default, unassigned, or an empty table).  
+                    // This prevents the more accurate value from StatsExtractor from being overwritten by the less precise value from DmvExtractor when DmvExtractor is called after StatsExtractor.  
+                    // Currently, this may happen for models with DirectLake partitions and DirectLakeExtractionMode > ResidentOnly (see GetDaxModel() implementation).
+                    if (daxTable.RowsCount == 0)
                     daxTable.RowsCount = rowsCount;
+
                     daxTable.ReferentialIntegrityViolationCount = referentialIntegrityViolationCount;
                 }
             }
@@ -714,6 +720,11 @@ ORDER BY TABLE_ID";
                     long columnCardinality = rdr.GetInt64(2);
 
                     Column daxColumn = GetDaxColumnDmv1100Id(tableName, columnDmv1100Id);
+
+                    // ColumnCardinality is also extracted from StatsExtractor. We assign it only if its current value is zero (default, unassigned, or an empty column).  
+                    // This prevents the more accurate value from StatsExtractor from being overwritten by the less precise value from DmvExtractor when DmvExtractor is called after StatsExtractor.  
+                    // Currently, this may happen for models with DirectLake partitions and DirectLakeExtractionMode > ResidentOnly (see GetDaxModel() implementation).
+                    if (daxColumn.ColumnCardinality == 0)
                     daxColumn.ColumnCardinality = columnCardinality;
                 }
             }
