@@ -286,9 +286,7 @@ namespace Dax.Model.Extractor
         }
 
         public static Dax.Metadata.Model GetDaxModel(string connectionString, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly, int statsColumnBatchSize = StatExtractor.DefaultColumnBatchSize)
-        {
-            Tom.Server server = new Tom.Server();
-            server.Connect(connectionString);
+        {   
             var database = GetDatabase(connectionString);
             Tom.Model tomModel = database.Model;
             string databaseName = database.Name;
