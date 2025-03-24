@@ -9,9 +9,10 @@ internal sealed class PackageExtractCommand : Command
     private PackageExtractCommand()
         : base(name: "extract", description: "Extract all files from a VPAX package")
     {
-        AddOption(VpaxOption);
-        AddOption(OutputOption);
-        AddOption(OverwriteOption);
+        AddAlias("e");
+        AddArgument(PackageExtractCommandOptions.PathArgument);
+        AddOption(CommonOptions.PathOption);
+        AddOption(PackageExtractCommandOptions.OverwriteOption);
 
         Handler = new PackageExtractCommandHandler();
     }

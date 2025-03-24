@@ -7,7 +7,10 @@ internal sealed class PackageCommand : Command
     private PackageCommand()
         : base(name: "package", description: "(Experimental) Manage a VPAX package file")
     {
+        AddCommand(PackageDeobfuscateCommand.Instance);
         AddCommand(PackageExtractCommand.Instance);
+        AddCommand(PackageObfuscateCommand.Instance);
+        AddCommand(PackageSetCommand.Instance);
         AddCommand(PackageShowCommand.Instance);
     }
 }
