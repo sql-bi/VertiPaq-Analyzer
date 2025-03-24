@@ -258,24 +258,6 @@ WHERE [CATALOG_NAME] = '{databaseName}'";
             return daxPartition;
         }
 
-        private ColumnSegment GetDaxColumnSegment(string tableName, string partitionName, string columnDmv1100Id, long segmentNumber, long tablePartitionNumber)
-        {
-            var daxColumn = GetDaxColumnDmv1100Id(tableName, columnDmv1100Id);
-            var daxPartition = GetDaxPartition(tableName, partitionName);
-            daxPartition.PartitionNumber = tablePartitionNumber;
-            var daxColumnSegment = daxColumn.ColumnSegments.FirstOrDefault(s => s.SegmentNumber == segmentNumber);
-            if (daxColumnSegment == null) {
-                daxColumnSegment = new Dax.Metadata.ColumnSegment(daxColumn, daxPartition)
-                {
-                    SegmentNumber = segmentNumber
-                };
-
-                daxColumn.ColumnSegments.Add(daxColumnSegment);
-            }
-
-            return daxColumnSegment;
-        }
-
         private ColumnHierarchy GetDaxColumnHierarchyDmv1100Id(string tableName, string columnDmv1100Id, string structureName, long tablePartitionNumber, long segmentNumber)
         {
             var daxColumn = GetDaxColumnDmv1100Id(tableName, columnDmv1100Id);
@@ -337,7 +319,7 @@ ORDER BY DIMENSION_NAME";
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
                     string tableId = rdr.GetString(1);
-                    long rowsCount = rdr.GetInt64(2);
+                    long rowsCount = rdr.IsDBNull(2) ? 0L : rdr.GetInt64(2);
                     long referentialIntegrityViolationCount = rdr.GetInt64(3);
 
                     Table daxTable = GetDaxTable(tableName);
@@ -672,7 +654,7 @@ WHERE COLUMN_TYPE = 'BASIC_DATA'";
                     string columnDmv1100Id = rdr.GetString(1);
                     string columnName = rdr.GetString(2);
                     string dataType = rdr.GetString(3);
-                    long dictionarySize = (long)rdr.GetDecimal(4);
+                    long dictionarySize = rdr.IsDBNull(4) ? 0L : (long)rdr.GetDecimal(4);
                     long columnEncodingInt = rdr.GetInt64(5);
 
                     Column daxColumn = GetDaxColumn(tableName, columnName);
@@ -733,6 +715,7 @@ ORDER BY TABLE_ID";
 
         protected void PopulateColumnsSegments()
         {
+            const long NULL_SEGMENT_NUMBER = long.MinValue;
             const string QUERY_COLUMNS_SEGMENTS_BASE = @"
 SELECT 
     DIMENSION_NAME AS TABLE_NAME, 
@@ -761,6 +744,12 @@ WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
             string QUERY_COLUMNS_SEGMENTS = string.Format(QUERY_COLUMNS_SEGMENTS_BASE, hasExtendedInfo ? QUERY_COLUMNS_SEGMENTS_EXTENDED : "");
             var cmd = CreateCommand(QUERY_COLUMNS_SEGMENTS);
             cmd.CommandTimeout = CommandTimeout;
+ 
+            // Column segments are leaf-level objects populated only by DmvExtractor (not StatsExtractor).  
+            // Since they contain no values from StatsExtractor, we can safely clear and repopulate them instead of updating existing segments.  
+            // This approach also ensures that null SegmentNumber values are handled by assigning a unique number based on the segment count in the column.
+            foreach (var column in DaxModel.Tables.SelectMany((t) => t.Columns))
+                column.ColumnSegments.Clear();
 
             using (var rdr = cmd.ExecuteReader())
             {
@@ -769,10 +758,10 @@ WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
                     string tableName = rdr.GetString(0);
                     string partitionName = rdr.GetString(1);
                     string columnDmv1100Id = rdr.GetString(2);
-                    long segmentNumber = rdr.GetInt64(3);
+                    long segmentNumber = rdr.IsDBNull(3) ? NULL_SEGMENT_NUMBER : rdr.GetInt64(3);
                     long tablePartitionNumber = rdr.GetInt64(4);
-                    long segmentRows = rdr.GetInt64(5);
-                    long usedSize = (long)rdr.GetDecimal(6);
+                    long segmentRows = rdr.IsDBNull(5) ? 0L : rdr.GetInt64(5);
+                    long usedSize = rdr.IsDBNull(6) ? 0L : (long)rdr.GetDecimal(6);
                     string compressionType = rdr.GetString(7);
                     long bitsCount = rdr.GetInt64(8);
                     long bookmarkBitsCount = rdr.GetInt64(9);
@@ -791,8 +780,12 @@ WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
                         if (!rdr.IsDBNull(14)) lastAccessed = rdr.GetDateTime(14);
                     }
 
-                    // Column daxColumn = GetDaxColumnDmv1100Id(tableName, columnDmv1100Id);
-                    ColumnSegment daxColumnSegment = GetDaxColumnSegment(tableName, partitionName, columnDmv1100Id, segmentNumber, tablePartitionNumber);
+                    var daxPartition = GetDaxPartition(tableName, partitionName);
+                    daxPartition.PartitionNumber = tablePartitionNumber;
+
+                    var daxColumn = GetDaxColumnDmv1100Id(tableName, columnDmv1100Id);
+                    var daxColumnSegment = new Dax.Metadata.ColumnSegment(daxColumn, daxPartition);
+                    daxColumnSegment.SegmentNumber = segmentNumber;
                     daxColumnSegment.BitsCount = bitsCount;
                     daxColumnSegment.BookmarkBitsCount = bookmarkBitsCount;
                     daxColumnSegment.CompressionType = compressionType;
@@ -803,9 +796,25 @@ WHERE RIGHT ( LEFT ( TABLE_ID, 2 ), 1 ) <> '$'";
                     daxColumnSegment.IsResident = isResident; 
                     daxColumnSegment.Temperature = temperature;
                     daxColumnSegment.LastAccessed = lastAccessed;
+                    daxColumn.ColumnSegments.Add(daxColumnSegment);
                 }
             }
 
+            // $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS.SEGMENT_NUMBER may be null for DirectLake partitions.  
+            // When null, we assign a unique identifier based on the segment's position in the column's segment list.  
+            // This is not deterministic, as the query may return segments in a different order across executions without
+            // an ORDER BY clause, which cannot be used because there are no columns that guarantee a stable sort order.  
+            // As a result, the same segment may receive different SegmentNumber values across extractions. 
+
+            foreach (var column in DaxModel.Tables.SelectMany(t => t.Columns))
+            {
+                if (column.ColumnSegments.Any((s) => s.SegmentNumber == NULL_SEGMENT_NUMBER))
+                {
+                    int segmentNumber = 0;
+                    foreach (var segment in column.ColumnSegments)
+                        segment.SegmentNumber = segmentNumber++;
+                }
+            }
         }
 
         private bool CheckExtendedColumnsSegmentInfo()
@@ -860,13 +869,19 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'H$'
                 while (rdr.Read()) {
                     string tableName = rdr.GetString(0);
                     string structureName = rdr.GetString(1);
-                    long segmentNumber = rdr.GetInt64(2);
+                    long? segmentNumber = rdr.IsDBNull(2) ? null : rdr.GetInt64(2);
                     long tablePartitionNumber = rdr.GetInt64(3);
-                    long usedSize = (long)rdr.GetDecimal(4);
+                    long usedSize = rdr.IsDBNull(4) ? 0L : (long)rdr.GetDecimal(4);
                     string columnHierarchyId = rdr.GetString(5);
                     string columnDmv1100Id = columnHierarchyId.Substring(columnHierarchyId.LastIndexOf('$') + 1);
 
-                    ColumnHierarchy daxColumnHierarchy = GetDaxColumnHierarchyDmv1100Id(tableName, columnDmv1100Id, structureName, tablePartitionNumber, segmentNumber);
+                    // $SYSTEM.DISCOVER_STORAGE_TABLE_COLUMN_SEGMENTS.SEGMENT_NUMBER and USED_SIZE may be NULL for DirectLake partitions.  
+                    // TODO: If SEGMENT_NUMBER is NULL, all rows are returned despite the 'AND SEGMENT_NUMBER = 0' predicate in the WHERE clause.  
+                    // If SEGMENT_NUMBER is NULL, force the segment number to zero to always create at least one ColumnHierarchy per StructureName.                 
+                    if (segmentNumber == null)
+                        segmentNumber = 0;
+
+                    ColumnHierarchy daxColumnHierarchy = GetDaxColumnHierarchyDmv1100Id(tableName, columnDmv1100Id, structureName, tablePartitionNumber, segmentNumber.Value);
                     daxColumnHierarchy.UsedSize = usedSize;
                 }
             }
