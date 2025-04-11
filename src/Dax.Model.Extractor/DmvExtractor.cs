@@ -35,6 +35,7 @@ namespace Dax.Model.Extractor
         protected IDbCommand CreateCommand(string commandText)
         {
             var command = Connection.CreateCommand();
+            command.CommandTimeout = CommandTimeout;
             command.CommandText = commandText;
             return command;
         }
@@ -78,6 +79,7 @@ namespace Dax.Model.Extractor
             de.PopulateUserHierarchies();
             de.PopulateRelationships();
             de.PopulateReferences();
+            de.PopulateFunctions();
         }
 
         protected bool CheckDatabaseNameCompatibilityLevel(ref string databaseName, ref int compatibilityLevel)
@@ -499,6 +501,46 @@ WHERE [FormatStringDefinitionID] > 0
                         }
                     }
                 }
+            }
+        }
+
+        private void PopulateFunctions()
+        {
+            const string QUERY =
+"""
+SELECT
+    [NAME],
+    [DESCRIPTION],
+    [EXPRESSION],
+    [ISHIDDEN]
+FROM
+    $SYSTEM.TMSCHEMA_FUNCTIONS
+""";
+            // TOFIX: assign the minimum required CL for this query to run
+            if (DaxModel.CompatibilityLevel < 2000) // Using 2000 for now – not a valid CL, just higher than 1608
+                return;
+
+            if (DaxModel.Functions.Count > 0)
+                return; // skip if already populated by TomExtractor
+
+            using var cmd = CreateCommand(QUERY);
+            using var rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                var name = rdr.GetString(0);
+                var description = rdr.IsDBNull(1) ? null : rdr.GetString(1);
+                var expression = rdr.IsDBNull(2) ? null : rdr.GetString(2);
+                var isHidden = rdr.GetBoolean(3);
+
+                DaxModel.Functions.Add(new Dax.Metadata.Function()
+                {
+                    Description = new DaxNote(description),
+                    FunctionExpression = Dax.Metadata.DaxExpression.GetExpression(expression),
+                    FunctionName = new Dax.Metadata.DaxName(name),
+                    IsHidden = isHidden,
+                    Model = DaxModel
+                }); 
             }
         }
 

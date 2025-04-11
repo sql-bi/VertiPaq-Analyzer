@@ -39,6 +39,9 @@ namespace Dax.Model.Extractor
                 AddRole(role);
             }
 
+            foreach (Tom.Function function in tomModel.Functions)
+                AddFunction(function);
+
             // Specific model properties
             DaxModel.DefaultMode = (Partition.PartitionMode)tomModel.DefaultMode;
             DaxModel.Culture = tomModel.Culture;
@@ -61,6 +64,19 @@ namespace Dax.Model.Extractor
 
             // Update ExtractionDate
             DaxModel.ExtractionDate = DateTime.UtcNow;
+        }
+
+        private void AddFunction(Tom.Function function)
+        {
+            Dax.Metadata.Function daxFunction = new()
+            {
+                Description = new DaxNote(function.Description),
+                FunctionExpression = Dax.Metadata.DaxExpression.GetExpression(function.Expression),
+                FunctionName = new Dax.Metadata.DaxName(function.Name),
+                IsHidden = function.IsHidden,
+                Model = DaxModel
+            };
+            DaxModel.Functions.Add(daxFunction);
         }
 
         private void AddRole( Tom.ModelRole role )
