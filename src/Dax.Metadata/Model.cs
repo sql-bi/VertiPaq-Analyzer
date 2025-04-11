@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Dax.Metadata
 {
@@ -87,6 +88,7 @@ namespace Dax.Metadata
         public List<Table> Tables { get; }
         public List<Relationship> Relationships { get; }
         public List<Role> Roles { get; }
+        public List<Function> Functions { get; }
 
         /// <summary>
         /// Default partition mode
@@ -104,6 +106,7 @@ namespace Dax.Metadata
             this.Tables = new List<Table>();
             this.Relationships = new List<Relationship>();
             this.Roles = new List<Role>();
+            this.Functions = new List<Function>();
         }
 
         // Manually update the version each time the DaxModel is modified - use https://semver.org/ specification
@@ -125,6 +128,14 @@ namespace Dax.Metadata
             this.DaxModelLib = modelAssemblyName.Name;
             this.DaxModelLibVersion = modelFileVersionInfo.ProductVersion; // e.g. CI build: 1.2.5-preview2+<git-commit-hash> , RELEASE build: 1.2.5
         }
+
+        [OnDeserialized]
+        internal void OnDeserializedMethod(StreamingContext context)
+        {
+            foreach (var f in Functions)
+                f.Model = this;
+        }
+
         /*
         public void PopulateColumnReferences()
         {
