@@ -74,6 +74,15 @@ namespace Dax.ViewVpaExport
             }
         }
 
+        public IEnumerable<CalculationGroup> CalculationGroups {
+            get {
+                return
+                    from t in this._Model.Tables
+                    where t.CalculationGroup != null
+                    select new CalculationGroup(t.CalculationGroup);
+            }
+        }
+
         public IEnumerable<CalculationItem> CalculationItems {
             get {
                 return
