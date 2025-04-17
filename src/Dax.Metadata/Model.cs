@@ -132,6 +132,16 @@ namespace Dax.Metadata
         [OnDeserialized]
         internal void OnDeserializedMethod(StreamingContext context)
         {
+            foreach (var t in Tables)
+                t.Model = this;
+
+            // TODO: Add the Model property to Relationship, as done for other top-level entities
+            //foreach (var r in Relationships)
+            //    r.Model = this;
+
+            foreach (var r in Roles)
+                r.Model = this;
+
             foreach (var f in Functions)
                 f.Model = this;
         }

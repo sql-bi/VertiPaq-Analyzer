@@ -27,7 +27,8 @@ namespace Dax.Metadata
             Partitions = new List<Partition>();
         }
 
-        public Model Model;
+        [JsonIgnore]
+        public Model Model { get; set; }
 
         public DaxName TableName { get; set; }
         public string TableType { get; set; }
@@ -204,7 +205,7 @@ namespace Dax.Metadata
         [OnDeserialized]
         internal void OnDeserializedMethod(StreamingContext context)
         {
-            foreach ( var c in Columns ) {
+            foreach (var c in Columns) {
                 c.Table = this;
             }
             foreach (var m in Measures) {
@@ -216,6 +217,9 @@ namespace Dax.Metadata
             foreach (var p in Partitions) {
                 p.Table = this;
             }
+
+            if (CalculationGroup != null)
+                CalculationGroup.Table = this;
         }
     }
 }

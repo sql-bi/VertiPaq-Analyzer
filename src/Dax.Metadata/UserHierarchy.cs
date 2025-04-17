@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Dax.Metadata
@@ -6,6 +7,7 @@ namespace Dax.Metadata
     [DebuggerDisplay("{HierarchyName.Name,nq}")]
     public class UserHierarchy
     {
+        [JsonIgnore]
         public Table Table { get; set; }
         public DaxName HierarchyName { get; set; }
         public bool IsHidden { get; set; }

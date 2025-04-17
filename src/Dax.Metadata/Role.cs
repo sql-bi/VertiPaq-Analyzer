@@ -9,7 +9,7 @@ namespace Dax.Metadata
     public class Role
     {
         [JsonIgnore]
-        public Model Model;
+        public Model Model { get; set; }
 
         public DaxName RoleName { get; set; }
         public List<TablePermission> TablePermissions { get; }
