@@ -23,6 +23,14 @@ namespace Dax.Metadata
 
         public List<CalculationItem> CalculationItems { get; }
 
+        public DaxExpression MultipleOrEmptySelectionExpression { get; set; }
+
+        public DaxExpression MultipleOrEmptySelectionFormatStringExpression { get; set; }
+
+        public DaxExpression NoSelectionExpression { get; set; }
+
+        public DaxExpression NoSelectionFormatStringExpression { get; set; }
+
         [OnDeserialized]
         internal void OnDeserializedMethod(StreamingContext context)
         {
