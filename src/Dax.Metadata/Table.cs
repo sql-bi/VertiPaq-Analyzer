@@ -27,7 +27,12 @@ namespace Dax.Metadata
             Partitions = new List<Partition>();
         }
 
-        [JsonIgnore]
+        // JsonIgnore for Model property was introduced in VAPX 1.11-preview2 but later commented out 
+        // to avoid breaking changes when the model was extracted using an earlier version of the library.
+        // This is due to the Model property not being set after deserialization. 
+        // See Metadata.Model.OnDeserializedMethod in https://github.com/sql-bi/VertiPaq-Analyzer/pull/200.
+        // Consider uncommenting in a future version.
+        //[JsonIgnore]
         public Model Model { get; set; }
 
         public DaxName TableName { get; set; }
