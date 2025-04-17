@@ -27,7 +27,7 @@ namespace Dax.ViewModel
         public bool IsHidden { get { return this.Column.IsHidden; } }
         public string Encoding { get { return this.Column.Encoding; } }
         public string TypeName { get { return this.Column.DataType; } }
-        public string ColumnExpression { get { return this.Column.ColumnExpression.ToString(); } }
+        public string ColumnExpression { get { return this.Column.ColumnExpression?.Expression; } }
 
         public string EncodingHint { get { return this.Column.EncodingHint; } }
         public bool IsAvailableInMDX { get { return this.Column.IsAvailableInMDX; } }
@@ -35,7 +35,7 @@ namespace Dax.ViewModel
         public bool IsNullable { get { return this.Column.IsNullable; } }
         public bool IsUnique { get { return this.Column.IsUnique; } }
         public bool KeepUniqueRows { get { return this.Column.KeepUniqueRows; } }
-        public string SortByColumnName { get { return this.Column.SortByColumnName.ToString(); } }
+        public string SortByColumnName { get { return this.Column.SortByColumnName?.Name; } }
         public string State { get { return this.Column.State; } }
         public bool IsRowNumber { get { return this.Column.IsRowNumber; } }
         public bool IsReferenced { get { return this.Column.IsReferenced; } }
