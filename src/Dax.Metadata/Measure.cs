@@ -1,10 +1,12 @@
-﻿using System.Diagnostics;
+﻿using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Dax.Metadata
 {
     [DebuggerDisplay("{MeasureName.Name,nq}")]
     public class Measure
     {
+        [JsonIgnore]
         public Table Table { get; set; }
         public DaxName MeasureName { get; set; }
         public DaxExpression MeasureExpression { get; set; }

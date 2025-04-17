@@ -29,6 +29,7 @@ WHERE LEFT ( TABLE_ID, 2 ) = 'H$'
         }
         private ColumnHierarchy() { }
 
+        [JsonIgnore]
         public Column Column { get; set; }
 
         public DaxName StructureName { get; set; }

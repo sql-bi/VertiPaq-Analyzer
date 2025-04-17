@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 
 namespace Dax.Metadata
@@ -47,6 +48,7 @@ namespace Dax.Metadata
         }
         private Partition() { }
 
+        [JsonIgnore]
         public Table Table { get; set; }
         public DaxName PartitionName { get; set; }
         public long PartitionNumber { get; set; }

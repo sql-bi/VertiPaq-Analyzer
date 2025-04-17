@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,7 @@ namespace Dax.Metadata
 
         private ColumnSegment() { }
 
+        [JsonIgnore]
         public Column Column { get; set; }
         public Partition Partition { get; set; }
         public long SegmentNumber { get; set; }

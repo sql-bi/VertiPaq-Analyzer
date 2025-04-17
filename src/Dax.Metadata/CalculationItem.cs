@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Dax.Metadata
 {
@@ -11,6 +12,7 @@ namespace Dax.Metadata
         }
         private CalculationItem() { }
 
+        [JsonIgnore]
         public CalculationGroup CalculationGroup { get; set; }
 
         public DaxName ItemName { get; set; }

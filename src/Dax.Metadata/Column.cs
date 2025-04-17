@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
@@ -20,6 +21,7 @@ namespace Dax.Metadata
             GroupByColumns = new List<DaxName>();
         }
 
+        [JsonIgnore]
         public Table Table { get; set; }
         public DaxName ColumnName { get; set; }
         public long ColumnCardinality { get; set; }
