@@ -182,9 +182,12 @@ namespace Dax.Model.Extractor
                 CalculationGroup calcGroup = new(daxTable)
                 {
                     Precedence = table.CalculationGroup.Precedence,
+                    Description = new DaxNote(table.CalculationGroup.Description),
                     MultipleOrEmptySelectionExpression = DaxExpression.GetExpression(table.CalculationGroup.MultipleOrEmptySelectionExpression?.Expression),
+                    MultipleOrEmptySelectionExpressionDescription = new DaxNote(table.CalculationGroup.MultipleOrEmptySelectionExpression?.Description),
                     MultipleOrEmptySelectionFormatStringExpression = DaxExpression.GetExpression(table.CalculationGroup.MultipleOrEmptySelectionExpression?.FormatStringDefinition?.Expression),
                     NoSelectionExpression = DaxExpression.GetExpression(table.CalculationGroup.NoSelectionExpression?.Expression),
+                    NoSelectionExpressionDescription = new DaxNote(table.CalculationGroup.NoSelectionExpression?.Description),
                     NoSelectionFormatStringExpression = DaxExpression.GetExpression(table.CalculationGroup.NoSelectionExpression?.FormatStringDefinition?.Expression),
                 };
                 foreach (Tom.CalculationItem calcItem in table.CalculationGroup.CalculationItems) {
