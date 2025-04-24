@@ -23,11 +23,17 @@ namespace Dax.Metadata
 
         public List<CalculationItem> CalculationItems { get; }
 
+        public DaxNote Description { get; set; }
+
         public DaxExpression MultipleOrEmptySelectionExpression { get; set; }
+
+        public DaxNote MultipleOrEmptySelectionExpressionDescription { get; set; }
 
         public DaxExpression MultipleOrEmptySelectionFormatStringExpression { get; set; }
 
         public DaxExpression NoSelectionExpression { get; set; }
+
+        public DaxNote NoSelectionExpressionDescription { get; set; }
 
         public DaxExpression NoSelectionFormatStringExpression { get; set; }
 
