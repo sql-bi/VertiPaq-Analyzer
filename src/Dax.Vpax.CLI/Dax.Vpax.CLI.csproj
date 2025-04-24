@@ -25,9 +25,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dax.Model.Extractor" Version="1.11.0-preview3" />
-    <PackageReference Include="Dax.ViewModel" Version="1.11.0-preview3" />
-    <PackageReference Include="Dax.Vpax" Version="1.11.0-preview3" />
+    <PackageReference Include="Dax.Model.Extractor" Version="1.11.0-preview4" />
+    <PackageReference Include="Dax.ViewModel" Version="1.11.0-preview4" />
+    <PackageReference Include="Dax.Vpax" Version="1.11.0-preview4" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.146" PrivateAssets="all" />
