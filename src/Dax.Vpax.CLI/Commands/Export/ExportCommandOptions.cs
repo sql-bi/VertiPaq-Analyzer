@@ -9,13 +9,20 @@ internal static class ExportCommandOptions
 
     public static readonly Argument<string> ConnectionStringArgument = new(
         name: "connection-string",
-        description: "Connection string to the tabular model",
+        description: "Connection string for the tabular model e.g. Provider=MSOLAP;Data Source=<SERVER>;Initial Catalog=<DATABASE>",
         parse: (result) =>
         {
             var connectionString = result.Tokens.Single().Value;
             {
                 var builder = new DbConnectionStringBuilder(useOdbcRules: false);
-                builder.ConnectionString = connectionString;
+                try
+                {
+                    builder.ConnectionString = connectionString;
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new ArgumentException($"Invalid connection string format. {ex.Message}", ex);
+                }
 
                 if (!builder.ContainsKey("Initial Catalog"))
                     result.ErrorMessage = "The connection string does not contain the 'Initial Catalog' property.";
