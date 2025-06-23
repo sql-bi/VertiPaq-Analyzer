@@ -1,10 +1,12 @@
 ﻿using Dax.Metadata;
 using Dax.Model.Extractor.Data;
 using Microsoft.AnalysisServices.AdomdClient;
-using Newtonsoft.Json.Linq;
+#if NET472
+using Adomd = Microsoft.AnalysisServices.AdomdClient;
+#else
+using Adomd = Microsoft.AnalysisServices;
+#endif
 using System;
-using System.Data.Common;
-using System.Globalization;
 using System.Linq;
 using Tom = Microsoft.AnalysisServices.Tabular;
 
@@ -308,9 +310,9 @@ namespace Dax.Model.Extractor
             return extractor.DaxModel;
         }
 
-        public static Dax.Metadata.Model GetDaxModel(string connectionString, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly, int statsColumnBatchSize = StatExtractor.DefaultColumnBatchSize)
+        public static Dax.Metadata.Model GetDaxModel(string connectionString, string applicationName, string applicationVersion, bool readStatisticsFromData = true, int sampleRows = 0, bool analyzeDirectQuery = false, DirectLakeExtractionMode analyzeDirectLake = DirectLakeExtractionMode.ResidentOnly, int statsColumnBatchSize = StatExtractor.DefaultColumnBatchSize, Microsoft.AnalysisServices.AccessToken accessToken = default(Microsoft.AnalysisServices.AccessToken), Func<Microsoft.AnalysisServices.AccessToken, Microsoft.AnalysisServices.AccessToken> onTokenExpired = null)
         {   
-            var database = GetDatabase(connectionString);
+            var database = GetDatabase(connectionString, accessToken, onTokenExpired);
             Tom.Model tomModel = database.Model;
             string databaseName = database.Name;
             string serverName = ConnectionStringUtils.GetDataSource(connectionString);
@@ -319,6 +321,18 @@ namespace Dax.Model.Extractor
 
             using (AdomdConnection connection = new(connectionString))
             {
+                // If an access token is provided, set it on the connection
+                if (!accessToken.Equals(default(Microsoft.AnalysisServices.AccessToken)))
+                {
+#if NET472
+                    // If we are using .NET Framework, we need to convert the access token to the Adomd.AccessToken type
+                    connection.AccessToken = new Adomd.AccessToken(accessToken.Token,accessToken.ExpirationTime, accessToken.UserContext);
+                    connection.OnAccessTokenExpired = OnTomTokenExpired(onTokenExpired);
+#else
+                    connection.AccessToken = accessToken;
+                    connection.OnAccessTokenExpired = onTokenExpired;    
+#endif
+                }
                 // Populate statistics from DMV
                 DmvExtractor.PopulateFromDmv(daxModel, connection, serverName, databaseName, applicationName, applicationVersion);
 
@@ -337,6 +351,25 @@ namespace Dax.Model.Extractor
             return daxModel;
         }
 
+#if NET472
+        /// <summary>   
+        /// This method is called when the access token expires to retrieve a new access token.
+        /// It converts the Adomd.AccessToken to Microsoft.AnalysisServices.AccessToken since the net472 version of the client library
+        /// defines the AccessToken class in the Microsoft.AnalysisServices.AdomdClient namespace. 
+        /// Unlike the netcore version which defines it in the Microsoft.AnalysisServices namespace.
+        /// </summary>
+
+        private static Func<Adomd.AccessToken, Adomd.AccessToken> OnTomTokenExpired(Func<Microsoft.AnalysisServices.AccessToken, Microsoft.AnalysisServices.AccessToken> onTokenExpired)
+        {
+            return (Adomd.AccessToken token) => {
+                // Convert the Adomd.AccessToken to Microsoft.AnalysisServices.AccessToken and refresh it
+                var tomToken = new Microsoft.AnalysisServices.AccessToken(token.Token, token.ExpirationTime, token.UserContext);
+                var newToken = onTokenExpired.Invoke(tomToken);
+                // return a new Adomd.AccessToken based on the refreshed token
+                return newToken.Equals(default(Adomd.AccessToken)) ? default(Adomd.AccessToken) : new Adomd.AccessToken(newToken.Token, newToken.ExpirationTime, newToken.UserContext);
+            };
+        }
+#endif
         public static Tom.Database GetDatabase(string serverName, string databaseName)
         {
             Tom.Server server = new();
@@ -346,9 +379,14 @@ namespace Dax.Model.Extractor
             return db ?? throw new ArgumentException($"The database '{databaseName}' could not be found. Either it does not exist or you do not have admin rights to it.");
         }
 
-        public static Tom.Database GetDatabase(string connectionString)
+        public static Tom.Database GetDatabase(string connectionString,Microsoft.AnalysisServices.AccessToken accessToken = default(Microsoft.AnalysisServices.AccessToken), Func<Microsoft.AnalysisServices.AccessToken, Microsoft.AnalysisServices.AccessToken> onTokenExpired = null)
         {
             Tom.Server server = new();
+            if (!accessToken.Equals(default(Microsoft.AnalysisServices.AccessToken)))
+            {
+                server.AccessToken = accessToken;
+                server.OnAccessTokenExpired = onTokenExpired;
+            }
             server.Connect(connectionString);
             var databaseName = ConnectionStringUtils.GetInitialCatalog(connectionString);
             Tom.Database db = server.Databases.FindByName(databaseName);
@@ -384,5 +422,7 @@ namespace Dax.Model.Extractor
             }
             return daxModel;
         }
+
+
     }
 }
