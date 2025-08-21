@@ -534,8 +534,8 @@ SELECT
 FROM
     $SYSTEM.TMSCHEMA_FUNCTIONS
 """;
-            // TOFIX: assign the minimum required CL for this query to run
-            if (DaxModel.CompatibilityLevel < 2000) // Using 2000 for now – not a valid CL, just higher than 1608
+            // Functions are supported only in compatibility levels 1702 and later
+            if (DaxModel.CompatibilityLevel < 1702)
                 return;
 
             if (DaxModel.Functions.Count > 0)
