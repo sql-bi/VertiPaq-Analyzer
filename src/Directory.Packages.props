@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="Microsoft.AnalysisServices" Version="19.90.0" />
-    <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient" Version="19.90.0" />
+    <PackageVersion Include="Microsoft.AnalysisServices" Version="19.103.2" />
+    <PackageVersion Include="Microsoft.AnalysisServices.AdomdClient" Version="19.103.2" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="System.IO.Packaging" Version="8.0.1" />
   </ItemGroup>
