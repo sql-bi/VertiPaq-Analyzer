@@ -25,6 +25,7 @@ namespace Dax.Metadata
             Measures = new List<Measure>();
             UserHierarchies = new List<UserHierarchy>();
             Partitions = new List<Partition>();
+            Calendars = new List<Calendar>();
         }
 
         // JsonIgnore for Model property was introduced in VAPX 1.11-preview2 but later commented out 
@@ -169,6 +170,7 @@ namespace Dax.Metadata
         public List<Measure> Measures { get; }
         public List<UserHierarchy> UserHierarchies { get; }
         public List<Partition> Partitions { get; }
+        public List<Calendar> Calendars { get; }
 
         public IEnumerable<TablePermission> GetTablePermissions()
         {
@@ -222,6 +224,8 @@ namespace Dax.Metadata
             foreach (var p in Partitions) {
                 p.Table = this;
             }
+            foreach (var calendar in Calendars)
+                calendar.Table = this;
 
             if (CalculationGroup != null)
                 CalculationGroup.Table = this;
