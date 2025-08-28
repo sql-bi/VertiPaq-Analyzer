@@ -178,6 +178,9 @@ namespace Dax.Model.Extractor
             foreach (Tom.Hierarchy hierarchy in table.Hierarchies) {
                 AddUserHierarchy(daxTable, hierarchy);
             }
+            foreach (Tom.Calendar calendar in table.Calendars) {
+                AddCalendar(daxTable, calendar);
+            }
 
             // Add calculation groups and calculation items
             if (table.CalculationGroup != null) {
@@ -239,6 +242,49 @@ namespace Dax.Model.Extractor
             }
             daxTable.UserHierarchies.Add(daxUserHierarchy);
         }
+
+        private void AddCalendar(Table daxTable, Tom.Calendar calendar)
+        {
+            Dax.Metadata.Calendar daxCalendar = new()
+            {
+                CalendarName = new DaxName(calendar.Name),
+                Description = new DaxNote(calendar.Description),
+                Table = daxTable
+            };
+
+            AddCalendarColumnGroups(daxTable, daxCalendar, calendar.CalendarColumnGroups);
+
+            daxTable.Calendars.Add(daxCalendar);
+
+            static void AddCalendarColumnGroups(Table daxTable, Dax.Metadata.Calendar daxCalendar, Tom.CalendarColumnGroupCollection calendarColumnGroups)
+            {
+                foreach (var group in calendarColumnGroups)
+                {
+                    if (group is Tom.TimeRelatedColumnGroup columnGroup)                        
+                    {
+                        daxCalendar.CalendarColumnGroups.Add(new Dax.Metadata.TimeRelatedColumnGroup
+                        {
+                            Calendar = daxCalendar,                  
+                            Columns = columnGroup.Columns.Select((tc) => daxTable.Columns.Single((dc) => dc.ColumnName.Name == tc.Name)).ToList(),
+                        });
+                    }
+                    else if (group is Tom.TimeUnitColumnAssociation columnAssociation)
+                    {
+                        daxCalendar.CalendarColumnGroups.Add(new Dax.Metadata.TimeUnitColumnAssociation
+                        {
+                            Calendar = daxCalendar,
+                            AssociatedColumns = columnAssociation.AssociatedColumns.Select((tc) => daxTable.Columns.Single((dc) => dc.ColumnName.Name == tc.Name)).ToList(),
+                            PrimaryColumn = daxTable.Columns.Single((dc) => dc.ColumnName.Name == columnAssociation.PrimaryColumn.Name),
+                            TimeUnit = (Dax.Metadata.TimeUnit)Enum.Parse(typeof(Dax.Metadata.TimeUnit), columnAssociation.TimeUnit.ToString(), ignoreCase: true)
+                        });
+                    }
+                    else {
+                        throw new NotImplementedException($"Calendar column group type '{group.GetType().FullName}' is not supported yet.");
+                    }
+                }
+            }
+        }
+
         private void AddMeasure(Table daxTable, Tom.Measure measure)
         {
             Dax.Metadata.Measure daxMeasure = new()
