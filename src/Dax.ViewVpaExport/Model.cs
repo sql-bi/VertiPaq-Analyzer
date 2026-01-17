@@ -92,7 +92,15 @@ namespace Dax.ViewVpaExport
                     select new CalculationItem(item);
             }
         }
-        
+
+        public IEnumerable<Function> Functions {
+            get {
+                return
+                    from f in this._Model.Functions
+                    select new Function(f);
+            }
+        }
+
         public Model(Dax.Metadata.Model model)
         {
             this._Model = model;
