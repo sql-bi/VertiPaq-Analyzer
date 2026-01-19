@@ -18,7 +18,7 @@ namespace Dax.ViewVpaExport
             _function = function;
         }
 
-        public string Name => _function.FunctionName.Name;
+        public string FunctionName => _function.FunctionName.Name;
         public string Description => _function.Description?.Note;
         public bool IsHidden => _function.IsHidden;
         
