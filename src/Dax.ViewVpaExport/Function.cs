@@ -1,10 +1,4 @@
-﻿using Dax.Metadata;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Dax.ViewVpaExport
 {
@@ -18,9 +12,9 @@ namespace Dax.ViewVpaExport
             _function = function;
         }
 
-        public string FunctionName => _function.FunctionName.Name;
         public string Description => _function.Description?.Note;
-        public bool IsHidden => _function.IsHidden;
-        
+        public string FunctionExpression => _function.FunctionExpression?.Expression;
+        public string FunctionName => _function.FunctionName.Name;
+        public bool IsHidden => _function.IsHidden;        
     }
 }
