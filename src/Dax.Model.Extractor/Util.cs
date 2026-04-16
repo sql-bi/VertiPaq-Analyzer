@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using Tom = Microsoft.AnalysisServices;
+using System.Reflection;
 
 namespace Dax.Model.Extractor
 {
@@ -28,12 +29,27 @@ namespace Dax.Model.Extractor
 
             var assembly = extractorInstance.GetType().Assembly;
             var assemblyName = assembly.GetName();
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+
+            string version;
+            if (!string.IsNullOrEmpty(assembly.Location))
+            {
+                var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+                version = fileVersionInfo.ProductVersion;
+            }
+            else
+            {
+                // Single-file published apps bundle assemblies in memory, 
+                // so Assembly.Location is empty. Fall back to informational version.
+                version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    ?.InformationalVersion
+                    ?? assemblyName.Version?.ToString()
+                    ?? "0.0.0";
+            }
 
             return new ExtractorInfo
             {
                 Name = assemblyName.Name,
-                Version = fileVersionInfo.ProductVersion
+                Version = version
             };
         }
 
