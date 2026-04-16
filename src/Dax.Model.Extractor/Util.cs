@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using Tom = Microsoft.AnalysisServices;
+using System.Reflection;
 
 namespace Dax.Model.Extractor
 {
@@ -28,12 +28,12 @@ namespace Dax.Model.Extractor
 
             var assembly = extractorInstance.GetType().Assembly;
             var assemblyName = assembly.GetName();
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "0.0.0";
 
             return new ExtractorInfo
             {
                 Name = assemblyName.Name,
-                Version = fileVersionInfo.ProductVersion
+                Version = version
             };
         }
 
