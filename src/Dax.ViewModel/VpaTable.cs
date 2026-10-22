@@ -54,7 +54,7 @@ namespace Dax.ViewModel
 
         public int SegmentsNumber {
             get {
-                return this.Table.Columns.First<Metadata.Column>().ColumnSegments.Count;
+                return this.Table.Columns.FirstOrDefault<Metadata.Column>()?.ColumnSegments.Count ?? 0;
             }
         }
 
