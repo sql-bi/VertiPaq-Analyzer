@@ -59,7 +59,15 @@ namespace Dax.ViewModel
         /// </summary>
         public double OneToManyRatio { get { return (this.Relationship.FromColumn.Table.RowsCount == 0) ? 0 : (double)this.Relationship.ToColumn.ColumnCardinality / (double)this.Relationship.FromColumn.Table.RowsCount; } }
 
-        public string FromColumnName => $"'{Relationship.FromColumn.Table.TableName.Name}'[{Relationship.FromColumn.ColumnName.Name}]";
-        public string ToColumnName => $"'{Relationship.ToColumn.Table.TableName.Name}'[{Relationship.ToColumn.ColumnName.Name}]";
+        public string FromColumnName => GetFullColumnName(Relationship.FromColumn);
+        public string ToColumnName => GetFullColumnName(Relationship.ToColumn);
+
+        /// <summary>
+        /// DAX reference 'table'[column]: ' is doubled in the table name, ] in the column name.
+        /// </summary>
+        private static string GetFullColumnName(Dax.Metadata.Column column)
+        {
+            return $"'{column.Table.TableName.Name?.Replace("'", "''")}'[{column.ColumnName.Name?.Replace("]", "]]")}]";
+        }
     }
 }

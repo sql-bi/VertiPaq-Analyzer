@@ -18,7 +18,7 @@ namespace Dax.ViewVpaExport
         public string TableName { get { return this._Measure.Table.TableName.Name; } }
         public string FullMeasureName {
             get {
-                return string.Format("'{0}'[{1}]", TableName, MeasureName);
+                return Column.GetFullColumnName(TableName, MeasureName);
             }
         }
 
