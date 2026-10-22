@@ -5,6 +5,11 @@ using System.Text;
 
 namespace Dax.ViewModel
 {
+    /// <summary>
+    /// View of a partition. The segments of the partition are, for each column of its table, the segments
+    /// whose partition has the same name; partition names are unique within a table.
+    /// RowsCount and SegmentsNumber are the maximum over the columns, DataSize and SegmentsTotalNumber the sum.
+    /// </summary>
     public class VpaPartition
     {
         private Dax.Metadata.Partition Partition;
