@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Dax.Metadata\Dax.Metadata.csproj" />
+    <ProjectReference Include="..\..\src\Dax.ViewModel\Dax.ViewModel.csproj" />
     <ProjectReference Include="..\..\src\Dax.Vpax\Dax.Vpax.csproj" />
   </ItemGroup>
 
