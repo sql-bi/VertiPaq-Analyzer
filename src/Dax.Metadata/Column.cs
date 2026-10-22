@@ -88,6 +88,11 @@ namespace Dax.Metadata
                 return DataSize + DictionarySize + HierarchiesSize;
             }
         }
+        /// <summary>
+        /// Distinct values per row: ColumnCardinality divided by the rows of the table.
+        /// Null when the table has no rows, or when the cardinality is 0, which means that it was not read
+        /// (as for the RowNumber columns): a column with rows has at least one distinct value.
+        /// </summary>
         public double? Selectivity {
             get {
                 var tableRowsCount = this.Table?.RowsCount ?? 0;
