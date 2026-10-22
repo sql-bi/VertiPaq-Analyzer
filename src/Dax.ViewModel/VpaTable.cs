@@ -122,16 +122,23 @@ namespace Dax.ViewModel
             }
         }
 
+        /// <summary>
+        /// Largest cardinality of the From columns of the relationships that start from this table; 0 without relationships.
+        /// </summary>
         public long MaxFromColumnCardinality {
             get {
                 var rFrom = this.Table.GetRelationshipsFrom();
                 return (rFrom?.Any() == true) ? rFrom.Max(r => r.FromColumn.ColumnCardinality) : 0;
             }
         }
+        /// <summary>
+        /// Largest cardinality of the To columns of the relationships that start from this table; 0 without relationships.
+        /// The relationships that end at this table are not considered.
+        /// </summary>
         public long MaxToColumnCardinality {
             get {
-                var rTo = this.Table.GetRelationshipsFrom();
-                return (rTo?.Any() == true) ? rTo.Max(r => r.ToColumn.ColumnCardinality) : 0;
+                var rFrom = this.Table.GetRelationshipsFrom();
+                return (rFrom?.Any() == true) ? rFrom.Max(r => r.ToColumn.ColumnCardinality) : 0;
             }
         }
 
