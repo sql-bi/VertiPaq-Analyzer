@@ -8,9 +8,12 @@ namespace Dax.ViewVpaExport
     public class Column
     {
         #region Utility functions
+        /// <summary>
+        /// DAX reference 'table'[name] of a column or a measure: ' is doubled in the table name, ] in the name.
+        /// </summary>
         internal static string GetFullColumnName(string tableName, string columnName)
         {
-            return string.Format("'{0}'[{1}]", tableName, columnName);
+            return string.Format("'{0}'[{1}]", tableName?.Replace("'", "''"), columnName?.Replace("]", "]]"));
         }
         internal static string GetFullColumnName(Dax.Metadata.Column column)
         {
@@ -33,7 +36,7 @@ namespace Dax.ViewVpaExport
         public string TableName { get { return this._Column.Table.TableName.Name; } }
         public string FullColumnName {
             get {
-                return string.Format("'{0}'[{1}]", TableName, ColumnName);
+                return GetFullColumnName(TableName, ColumnName);
             }
         }
         public long ColumnCardinality { get { return this._Column.ColumnCardinality; } }
