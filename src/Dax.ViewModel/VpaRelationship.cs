@@ -35,6 +35,10 @@ namespace Dax.ViewModel
         public long ToColumnCardinality { get { return this.Relationship.ToColumn.ColumnCardinality; } }
         public long MissingKeys { get { return this.Relationship.MissingKeys; } }
         public long InvalidRows { get { return this.Relationship.InvalidRows; } }
+        /// <summary>
+        /// Sample of missing keys, available only when the model was extracted in this process:
+        /// the list is not saved in a VPAX file, so this is an empty string for a model read from a file.
+        /// </summary>
         public string SampleReferentialIntegrityViolations { get { return string.Join(", ", this.Relationship.SampleReferentialIntegrityViolations); } }
 
         public bool RelyOnReferentialIntegrity { get { return this.Relationship.RelyOnReferentialIntegrity; } }
@@ -45,7 +49,8 @@ namespace Dax.ViewModel
         public string SecurityFilteringBehavior { get { return this.Relationship.SecurityFilteringBehavior; } }
 
         /// <summary>
-        /// The ration between dimension and fact table is meaningful only for 1:M relationships
+        /// The ratio between the cardinality of the To column and the rows of the From table, 0 when the From table has no rows.
+        /// It is computed for every relationship, but it is meaningful only for 1:M relationships, and it can be greater than 1.
         /// </summary>
         public double OneToManyRatio { get { return (this.Relationship.FromColumn.Table.RowsCount == 0) ? 0 : (double)this.Relationship.ToColumn.ColumnCardinality / (double)this.Relationship.FromColumn.Table.RowsCount; } }
 

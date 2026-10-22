@@ -55,7 +55,8 @@ namespace Dax.ViewVpaExport
         public long InvalidRows { get { return this._Relationship.InvalidRows; } }
 
         /// <summary>
-        /// The ration between dimension and fact table is meaningful only for 1:M relationships
+        /// The ratio between the cardinality of the To column and the rows of the From table, 0 when the From table has no rows.
+        /// It is computed for every relationship, but it is meaningful only for 1:M relationships, and it can be greater than 1.
         /// </summary>
         public double OneToManyRatio { get { return (this._Relationship.FromColumn.Table.RowsCount == 0) ? 0 : (double)this._Relationship.ToColumn.ColumnCardinality / (double)this._Relationship.FromColumn.Table.RowsCount; } }
 

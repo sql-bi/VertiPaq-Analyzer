@@ -20,6 +20,10 @@ namespace Dax.ViewModel
         public long RowsCount { get { return this.Table.RowsCount; } }
         public long ReferentialIntegrityViolationCount { get { return this.Table.ReferentialIntegrityViolationCount; } }
 
+        /// <summary>
+        /// HASH or VALUE when all the columns with a known encoding share it, Many when they differ,
+        /// ? when no column has an encoding. Columns without an encoding are ignored.
+        /// </summary>
         public string ColumnsEncoding {
             get {
                 string minEncoding = this.Table.Columns.Min(c => c.Encoding) ?? "?";
@@ -122,16 +126,23 @@ namespace Dax.ViewModel
             }
         }
 
+        /// <summary>
+        /// Largest cardinality of the From columns of the relationships that start from this table; 0 without relationships.
+        /// </summary>
         public long MaxFromColumnCardinality {
             get {
                 var rFrom = this.Table.GetRelationshipsFrom();
                 return (rFrom?.Any() == true) ? rFrom.Max(r => r.FromColumn.ColumnCardinality) : 0;
             }
         }
+        /// <summary>
+        /// Largest cardinality of the To columns of the relationships that start from this table; 0 without relationships.
+        /// The relationships that end at this table are not considered.
+        /// </summary>
         public long MaxToColumnCardinality {
             get {
-                var rTo = this.Table.GetRelationshipsFrom();
-                return (rTo?.Any() == true) ? rTo.Max(r => r.ToColumn.ColumnCardinality) : 0;
+                var rFrom = this.Table.GetRelationshipsFrom();
+                return (rFrom?.Any() == true) ? rFrom.Max(r => r.ToColumn.ColumnCardinality) : 0;
             }
         }
 
