@@ -16,6 +16,10 @@ namespace Dax.ViewVpaExport
 
         public string CalculationGroup { get { return this._CalculationItem.CalculationGroup.Table.TableName.Name; } }
         public string Attribute { get { return this._CalculationItem.CalculationGroup.Table.Columns.Find(c => c.IsCalculationGroupAttribute == true)?.ColumnName.Name; } }
+        /// <summary>
+        /// IsHidden of the attribute column of the calculation group (the first column with IsCalculationGroupAttribute),
+        /// false when there is none. CalculationGroup.IsHidden is instead the flag of the table of the group.
+        /// </summary>
         public bool IsHidden {
             get {
                 var column = this._CalculationItem.CalculationGroup.Table.Columns.Find(c => c.IsCalculationGroupAttribute == true);
