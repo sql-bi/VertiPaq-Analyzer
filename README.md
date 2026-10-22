@@ -9,6 +9,9 @@ VertiPaq Analyzer 2.0 is an open source project available on GitHub that include
 - **Dax.Vpax** supports the VPAX format.
 
 Using the VertiPaq Analyzer libraries, a client tool can easily extract the information from a Tabular model, export them in a standard file, and read the same information for visualization purposes.
+
+The sample of missing keys of a relationship (Relationship.SampleReferentialIntegrityViolations) is available only to a tool connected to the model: it is not saved in a VPAX file, to avoid exposing data, so it is empty when the model is read from a VPAX file.
+
 VPAX Format
 
 The VPAX file format is a ZIP file containing the following files:

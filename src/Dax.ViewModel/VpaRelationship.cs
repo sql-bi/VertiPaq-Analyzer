@@ -35,6 +35,10 @@ namespace Dax.ViewModel
         public long ToColumnCardinality { get { return this.Relationship.ToColumn.ColumnCardinality; } }
         public long MissingKeys { get { return this.Relationship.MissingKeys; } }
         public long InvalidRows { get { return this.Relationship.InvalidRows; } }
+        /// <summary>
+        /// Sample of missing keys, available only when the model was extracted in this process:
+        /// the list is not saved in a VPAX file, so this is an empty string for a model read from a file.
+        /// </summary>
         public string SampleReferentialIntegrityViolations { get { return string.Join(", ", this.Relationship.SampleReferentialIntegrityViolations); } }
 
         public bool RelyOnReferentialIntegrity { get { return this.Relationship.RelyOnReferentialIntegrity; } }
