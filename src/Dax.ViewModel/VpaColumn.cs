@@ -74,6 +74,12 @@ namespace Dax.ViewModel
                 return columnSize / modelSize;
             }
         }
+        /// <summary>
+        /// Share of the column in its table: the TotalSize of the column divided by the sum of the TotalSize
+        /// of the columns of the table (Table.ColumnsTotalSize), as the Table Size % measure of the Excel workbook.
+        /// The sizes of user hierarchies and relationships of the table are not in the denominator,
+        /// so the percentages of the columns of a table add up to 1.
+        /// </summary>
         public double PercentageTable {
             get {
                 double tableSize = this.Column.Table.ColumnsTotalSize;
