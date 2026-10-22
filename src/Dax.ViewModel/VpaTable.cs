@@ -48,7 +48,7 @@ namespace Dax.ViewModel
             get {
                 double modelSize = this.Table.Model.Tables.Sum(t => t.TableSize);
                 double tableSize = this.TableSize;
-                return tableSize / modelSize;
+                return modelSize == 0 ? 0 : tableSize / modelSize;
             }
         }
 
