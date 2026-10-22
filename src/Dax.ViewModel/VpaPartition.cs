@@ -20,7 +20,7 @@ namespace Dax.ViewModel
         public long DataSize => this.Partition.Table.Columns.Sum(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Sum(cs => cs.UsedSize));
         public long SegmentsNumber => this.Partition.Table.Columns.Max(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count());
 
-        public string Description => this.Partition.Description.ToString();
+        public string Description => this.Partition.Description?.ToString();
         public string PartitionState => this.Partition.State.ToString();
         public string PartitionType => this.Partition.Type.ToString();
         public string PartitionMode => this.Partition.Mode.ToString();
