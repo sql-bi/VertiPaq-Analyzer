@@ -20,6 +20,9 @@
         public string NoSelectionExpression => _calculationGroup.NoSelectionExpression?.Expression;
         public string NoSelectionExpressionDescription => _calculationGroup.NoSelectionExpressionDescription?.Note;
         public string NoSelectionFormatStringExpression => _calculationGroup.NoSelectionFormatStringExpression?.Expression;
+        /// <summary>
+        /// Precedence of the calculation group: a 32-bit integer, as in TOM, while the counts and sizes of the export are 64-bit.
+        /// </summary>
         public int Precedence => _calculationGroup.Precedence;
         public string TableName => _calculationGroup.Table.TableName.Name;
     }

@@ -19,6 +19,9 @@ namespace Dax.Metadata
         [JsonIgnore]
         public Table Table { get; set; }
 
+        /// <summary>
+        /// Precedence of the calculation group: a 32-bit integer, as in TOM.
+        /// </summary>
         public int Precedence { get; set; }
 
         public List<CalculationItem> CalculationItems { get; }
