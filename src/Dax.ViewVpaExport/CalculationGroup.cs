@@ -10,6 +10,9 @@
         }
 
         public string Description => _calculationGroup.Description?.Note;
+        /// <summary>
+        /// IsHidden of the table of the calculation group. CalculationItem.IsHidden is instead the flag of the attribute column.
+        /// </summary>
         public bool IsHidden => _calculationGroup.Table.IsHidden;
         public string MultipleOrEmptySelectionExpression => _calculationGroup.MultipleOrEmptySelectionExpression?.Expression;
         public string MultipleOrEmptySelectionExpressionDescription => _calculationGroup.MultipleOrEmptySelectionExpressionDescription?.Note;
