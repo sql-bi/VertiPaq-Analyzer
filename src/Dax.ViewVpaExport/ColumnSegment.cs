@@ -30,6 +30,11 @@ namespace Dax.ViewVpaExport
 
 
         public long SegmentNumber => this._ColumnSegment.SegmentNumber;
+        /// <summary>
+        /// The number of the partition of the segment: Dax.Metadata.ColumnSegment has no such field,
+        /// and the extractor writes the TABLE_PARTITION_NUMBER of the segments on the partition.
+        /// ColumnHierarchy.TablePartitionNumber is instead a field of the hierarchy.
+        /// </summary>
         public long TablePartitionNumber => this._ColumnSegment.Partition.PartitionNumber;
         public long SegmentRows => this._ColumnSegment.SegmentRows;
         public long UsedSize => this._ColumnSegment.UsedSize;
