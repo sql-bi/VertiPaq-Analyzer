@@ -16,7 +16,7 @@ namespace Dax.ViewModel
         
         public string TableName { get { return this.Table.TableName.ToString(); } }
         
-        public string TableExpression { get { return this.Table.TableExpression?.ToString(); } }
+        public string TableExpression { get { return this.Table.TableExpression?.Expression; } }
         public long RowsCount { get { return this.Table.RowsCount; } }
         public long ReferentialIntegrityViolationCount { get { return this.Table.ReferentialIntegrityViolationCount; } }
 
