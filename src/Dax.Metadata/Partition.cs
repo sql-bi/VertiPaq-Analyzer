@@ -7,6 +7,10 @@ namespace Dax.Metadata
     [DebuggerDisplay("{PartitionName.Name,nq}")]
     public class Partition
     {
+        /// <summary>
+        /// State of the partition: the values of ObjectState in TOM (Microsoft.AnalysisServices.Tabular).
+        /// DaxModel.json stores the number; a number that this enum does not define prints as the number.
+        /// </summary>
         public enum PartitionState
         {
             Read = 1,
@@ -20,6 +24,10 @@ namespace Dax.Metadata
             ForceCalculationNeeded = 10
         }
 
+        /// <summary>
+        /// Source type of the partition: the values of PartitionSourceType in TOM (Microsoft.AnalysisServices.Tabular).
+        /// DaxModel.json stores the number; a number that this enum does not define prints as the number.
+        /// </summary>
         public enum PartitionType
         {
             Query = 1,
@@ -29,9 +37,14 @@ namespace Dax.Metadata
             Entity = 5,
             PolicyRange = 6,
             CalculationGroup = 7,
-            Inferred = 8
+            Inferred = 8,
+            Parquet = 9
         }
 
+        /// <summary>
+        /// Storage mode of the partition: the values of ModeType in TOM (Microsoft.AnalysisServices.Tabular).
+        /// DaxModel.json stores the number; a number that this enum does not define prints as the number.
+        /// </summary>
         public enum PartitionMode
         {
             Import = 0,
