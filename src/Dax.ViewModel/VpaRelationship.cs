@@ -45,7 +45,8 @@ namespace Dax.ViewModel
         public string SecurityFilteringBehavior { get { return this.Relationship.SecurityFilteringBehavior; } }
 
         /// <summary>
-        /// The ration between dimension and fact table is meaningful only for 1:M relationships
+        /// The ratio between the cardinality of the To column and the rows of the From table, 0 when the From table has no rows.
+        /// It is computed for every relationship, but it is meaningful only for 1:M relationships, and it can be greater than 1.
         /// </summary>
         public double OneToManyRatio { get { return (this.Relationship.FromColumn.Table.RowsCount == 0) ? 0 : (double)this.Relationship.ToColumn.ColumnCardinality / (double)this.Relationship.FromColumn.Table.RowsCount; } }
 
