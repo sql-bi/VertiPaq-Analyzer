@@ -16,13 +16,18 @@ namespace Dax.ViewModel
 
         public long UsedSize { get { return this.Relationship.UsedSize; } }
 
+        /// <summary>
+        /// Label of the relationship: From table and column, three symbols, To table and column.
+        /// The cardinality symbols are ∞ for Many, 1 for any other value (None included), = when unknown.
+        /// The filter symbol is ↔ for BothDirections, ← for any other value (Automatic included), = when unknown.
+        /// </summary>
         public string RelationshipFromToName {
             get {
                 return string.Format(
                     "{0}[{1}] {2}{3}{4} {5}[{6}]",
                     this.Relationship.FromColumn.Table.TableName.Name,
                     this.Relationship.FromColumn.ColumnName.Name,
-                    this.Relationship.FromCardinalityType == null ? "<" : this.Relationship.FromCardinalityType == "Many" ? "∞" : "1",
+                    this.Relationship.FromCardinalityType == null ? "=" : this.Relationship.FromCardinalityType == "Many" ? "∞" : "1",
                     this.Relationship.CrossFilteringBehavior == null ? "=" : this.Relationship.CrossFilteringBehavior == "BothDirections" ? "↔" : "←",
                     this.Relationship.ToCardinalityType == null ? "=" : this.Relationship.ToCardinalityType == "Many" ? "∞" : "1",
                     this.Relationship.ToColumn.Table.TableName.Name,
