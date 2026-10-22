@@ -16,6 +16,6 @@ VPAX Format
 
 The VPAX file format is a ZIP file containing the following files:
 - **DaxModel.json** is a serialization of the Dax.Metadata.Model.
-- **DaxVpaView.json** is a serialization of the Dax.ViewVpaExport that is used to import data in the VertiPaq Analyzer 2.0 Excel file using a specific macro.
+- **DaxVpaView.json** is a serialization of the Dax.ViewVpaExport that is used to import data in the VertiPaq Analyzer 2.0 Excel file using a specific macro. Its rows follow the order of the model in DaxModel.json, table by table, and they are not sorted.
 - **Model.bim** is an optional file that exports the complete model in TOM format. This file is not used by current client tools, but it could be useful for future extensions.
 - **CompatabilityMode.txt** is written together with Model.bim and contains the compatibility mode of the database (for example, PowerBI), used to read Model.bim. The name of the part is spelled CompatabilityMode.txt, and readers must use this spelling.

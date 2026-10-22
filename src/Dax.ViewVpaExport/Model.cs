@@ -6,6 +6,11 @@ using Newtonsoft.Json;
 
 namespace Dax.ViewVpaExport
 {
+    /// <summary>
+    /// The view written to DaxVpaView.json. The rows of each collection follow the order of the model:
+    /// the tables of Model.Tables, then the lists of each table; Relationships, TablePermissions and Functions
+    /// follow Model.Relationships, Model.Roles and Model.Functions. Nothing is sorted.
+    /// </summary>
     public class Model
     {
         [JsonIgnore]
