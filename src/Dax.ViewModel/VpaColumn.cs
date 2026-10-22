@@ -71,7 +71,7 @@ namespace Dax.ViewModel
             get {
                 double modelSize = this.Column.Table.Model.Tables.Sum(t => t.TableSize);
                 double columnSize = this.TotalSize;
-                return columnSize / modelSize;
+                return modelSize == 0 ? 0 : columnSize / modelSize;
             }
         }
         /// <summary>
@@ -84,7 +84,7 @@ namespace Dax.ViewModel
             get {
                 double tableSize = this.Column.Table.ColumnsTotalSize;
                 double columnSize = this.TotalSize;
-                return columnSize / tableSize;
+                return tableSize == 0 ? 0 : columnSize / tableSize;
             }
         }
         public int SegmentsNumber {
