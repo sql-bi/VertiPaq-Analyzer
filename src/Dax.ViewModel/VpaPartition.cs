@@ -21,9 +21,9 @@ namespace Dax.ViewModel
 
         public string PartitionName => this.Partition.PartitionName.ToString();
 
-        public long RowsCount => this.Partition.Table.Columns.Max(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Sum(cs => cs.SegmentRows));
+        public long RowsCount => this.Partition.Table.Columns.Select(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Sum(cs => cs.SegmentRows)).DefaultIfEmpty().Max();
         public long DataSize => this.Partition.Table.Columns.Sum(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Sum(cs => cs.UsedSize));
-        public long SegmentsNumber => this.Partition.Table.Columns.Max(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count());
+        public long SegmentsNumber => this.Partition.Table.Columns.Select(c => c.ColumnSegments.Where(cs => cs.Partition.PartitionName.ToString() == this.PartitionName).Count()).DefaultIfEmpty().Max();
 
         public string Description => this.Partition.Description?.ToString();
         public string PartitionState => this.Partition.State.ToString();
