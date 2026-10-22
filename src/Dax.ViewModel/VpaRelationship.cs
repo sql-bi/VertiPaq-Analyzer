@@ -27,7 +27,7 @@ namespace Dax.ViewModel
                     "{0}[{1}] {2}{3}{4} {5}[{6}]",
                     this.Relationship.FromColumn.Table.TableName.Name,
                     this.Relationship.FromColumn.ColumnName.Name,
-                    this.Relationship.FromCardinalityType == null ? "=" :this.Relationship.FromCardinalityType == "Many" ? "∞" : "1",
+                    this.Relationship.FromCardinalityType == null ? "=" : this.Relationship.FromCardinalityType == "Many" ? "∞" : "1",
                     this.Relationship.CrossFilteringBehavior == null ? "=" : this.Relationship.CrossFilteringBehavior == "BothDirections" ? "↔" : "←",
                     this.Relationship.ToCardinalityType == null ? "=" : this.Relationship.ToCardinalityType == "Many" ? "∞" : "1",
                     this.Relationship.ToColumn.Table.TableName.Name,
