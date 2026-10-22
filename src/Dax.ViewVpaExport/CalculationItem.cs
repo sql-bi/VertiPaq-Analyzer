@@ -22,6 +22,9 @@ namespace Dax.ViewVpaExport
                 return (column != null) && column.IsHidden;
             }
         }
+        /// <summary>
+        /// Precedence of the calculation group of the item: a 32-bit integer, as in TOM, while the counts and sizes of the export are 64-bit.
+        /// </summary>
         public int Precedence { get { return this._CalculationItem.CalculationGroup.Precedence; } }
         public string ItemName { get { return this._CalculationItem.ItemName.Name; } }
         public string ItemExpression { get { return this._CalculationItem.ItemExpression?.Expression; } }
