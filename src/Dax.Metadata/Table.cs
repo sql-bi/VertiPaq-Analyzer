@@ -127,12 +127,23 @@ namespace Dax.Metadata
             }
         }
 
+        /// <summary>
+        /// Sum of UsedSizeFrom of the relationships that start from this table.
+        /// </summary>
         [JsonIgnore]
         public long RelationshipsFromSize { get { return GetRelationshipsFrom().Sum(r => r.UsedSizeFrom); } }
 
+        /// <summary>
+        /// Sum of UsedSizeTo of the relationships that end at this table.
+        /// </summary>
         [JsonIgnore]
         public long RelationshipsToSize { get { return GetRelationshipsTo().Sum(r => r.UsedSizeTo); } }
 
+        /// <summary>
+        /// Size of the relationship structures charged to this table: each relationship charges UsedSizeFrom
+        /// to its From table and UsedSizeTo to its To table, so the sum over the tables of the model
+        /// equals the sum of Relationship.UsedSize.
+        /// </summary>
         [JsonIgnore]
         public long RelationshipsSize {
             get {
@@ -184,6 +195,10 @@ namespace Dax.Metadata
             return queryTablePermissions;
         }
 
+        /// <summary>
+        /// Relationships of the model whose To column belongs to this table, matched by table name
+        /// (ordinal, case-sensitive comparison); null when the table has no model.
+        /// </summary>
         public IEnumerable<Relationship> GetRelationshipsTo()
         {
             if (this.Model == null) return null;
@@ -194,6 +209,10 @@ namespace Dax.Metadata
             return queryRelationshipsTo;
         }
 
+        /// <summary>
+        /// Relationships of the model whose From column belongs to this table, matched by table name
+        /// (ordinal, case-sensitive comparison); null when the table has no model.
+        /// </summary>
         public IEnumerable<Relationship> GetRelationshipsFrom()
         {
             if (this.Model == null) return null;
