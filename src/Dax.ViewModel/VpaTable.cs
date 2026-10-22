@@ -20,6 +20,10 @@ namespace Dax.ViewModel
         public long RowsCount { get { return this.Table.RowsCount; } }
         public long ReferentialIntegrityViolationCount { get { return this.Table.ReferentialIntegrityViolationCount; } }
 
+        /// <summary>
+        /// HASH or VALUE when all the columns with a known encoding share it, Many when they differ,
+        /// ? when no column has an encoding. Columns without an encoding are ignored.
+        /// </summary>
         public string ColumnsEncoding {
             get {
                 string minEncoding = this.Table.Columns.Min(c => c.Encoding) ?? "?";
