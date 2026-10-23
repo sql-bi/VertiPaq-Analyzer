@@ -13,7 +13,7 @@ namespace Dax.Metadata
         /// </summary>
         public enum PartitionState
         {
-            Read = 1,
+            Ready = 1,
             NoData = 3,
             CalculationNeeded = 4,
             SemanticError = 5,
