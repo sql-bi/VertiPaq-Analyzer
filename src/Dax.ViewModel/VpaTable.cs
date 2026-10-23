@@ -74,11 +74,12 @@ namespace Dax.ViewModel
         {
             get
             {
-                return this.Table.Columns.Sum<Metadata.Column>( 
+                var pageable = this.Table.Columns.Select<Metadata.Column, int?>(
                     c => c.ColumnSegments.Any(s => s.IsPageable.HasValue == true) ?
                         c.ColumnSegments.Count(s => s.IsPageable == true) :
                         (int?)null
-                );
+                ).ToList();
+                return pageable.Any(v => v.HasValue) ? pageable.Sum() : null;
             }
         }
 
@@ -86,11 +87,12 @@ namespace Dax.ViewModel
         {
             get
             {
-                return this.Table.Columns.Sum<Metadata.Column>( 
+                var resident = this.Table.Columns.Select<Metadata.Column, int?>(
                     c => (c.ColumnSegments.Any(s => s.IsResident.HasValue == true)) ?
                         c.ColumnSegments.Count(s => s.IsResident == true) :
                         (int?)null
-                );
+                ).ToList();
+                return resident.Any(v => v.HasValue) ? resident.Sum() : null;
             }
         }
 
