@@ -17,7 +17,7 @@ jobs:
       with:
         global-json-file: global.json
     - name: nbgv
-      uses: dotnet/nbgv@v0.4
+      uses: dotnet/nbgv@v0.5
       id: nbgv
       with:
         path: src/${{ env.PROJECT }}
