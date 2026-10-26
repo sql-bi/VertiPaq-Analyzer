@@ -13,7 +13,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: setup dotnet
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v6
       with:
         global-json-file: global.json
     - name: nbgv
